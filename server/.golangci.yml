@@ -1,0 +1,71 @@
+linters-settings:
+  govet:
+    shadow: true
+  gocyclo:
+    min-complexity: 10
+  dupl:
+    threshold: 100
+  goconst:
+    min-len: 2
+    min-occurrences: 2
+  funlen:
+    lines: 80
+  misspell:
+    locale: US
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - performance
+      - style
+      - experimental
+    disabled-checks:
+      - sloppyReassign
+  godot:
+    exclude:
+      - "@Router"
+  godox:
+    keywords:
+      - FIXME
+      - BUG
+      - HACK
+      - UNSAFE
+  goimports:
+    local-prefixes: github.com/lucianonooijen/capsa/server
+
+linters:
+  disable-all: false
+  enable:
+    - asciicheck
+    - bodyclose
+    - dogsled
+    - dupl
+    - errcheck
+    - funlen
+    - depguard
+    - gochecknoinits
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - godox
+    - gofmt
+    - goimports
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - misspell
+    - nakedret
+    - revive
+    - rowserrcheck
+    - staticcheck
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
+    - wsl
