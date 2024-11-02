@@ -1,0 +1,35 @@
+name: Webapp
+
+on:
+  push:
+    branches:
+      - main
+
+defaults:
+  run:
+    working-directory: ./webapp
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: webapp/.next/cache
+          # Generate a new cache whenever packages or source files change.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: npm install
+      - name: Build Next
+        run: npm run build
+      - name: Lint Next
+        run: npm run lint

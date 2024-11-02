@@ -1,9 +1,13 @@
-name: Commitlint PR
+name: Server
 
 on:
   push:
     branches:
       - main
+
+defaults:
+  run:
+    working-directory: ./server
 
 jobs:
   validation:
