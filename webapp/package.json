@@ -6,7 +6,7 @@
   "license": "UNLICENCED",
   "private": true,
   "engines": {
-    "node": ">=22.11.0",
+    "node": ">=22.10.0",
     "npm": ">=10.9.0"
   },
   "nextBundleAnalysis": {
