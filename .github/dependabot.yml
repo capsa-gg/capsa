@@ -1,0 +1,59 @@
+version: 2
+
+updates:
+  # Update .github/workflows
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    target-branch: "main"
+    labels:
+      - "commitlint"
+    reviewers:
+      - "lucianonooijen"
+    commit-message:
+      prefix: 'deps(tools)'
+      include: 'scope'
+
+  # Update npm dependencies in the repo root
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    target-branch: "main"
+    labels:
+      - "commitlint"
+    reviewers:
+      - "lucianonooijen"
+    commit-message:
+      prefix: 'deps(deployment)'
+      include: 'scope'
+
+  # Update Go dependencies in /server
+  - package-ecosystem: "gomod"
+    directory: "/server"
+    schedule:
+      interval: "daily"
+    target-branch: "main"
+    labels:
+      - "commitlint"
+    reviewers:
+      - "lucianonooijen"
+    commit-message:
+      prefix: 'deps(server)'
+      include: 'scope'
+
+
+  # Update npm dependencies in /webapp
+  - package-ecosystem: "npm"
+    directory: "/webapp"
+    schedule:
+      interval: "daily"
+    target-branch: "main"
+    labels:
+      - "commitlint"
+    reviewers:
+      - "lucianonooijen"
+    commit-message:
+      prefix: 'deps(webapp)'
+      include: 'scope'
