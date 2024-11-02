@@ -1,0 +1,28 @@
+{
+  "name": "capsa",
+  "version": "0.0.1",
+  "description": "Infrastructure for Project Capsa, an Unreal Engine log solution",
+  "author": "Luciano Nooijen <luciano@lucianonooijen.com>",
+  "license": "UNLICENCED",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.11.0",
+    "npm": ">=10.9.0"
+  },
+  "homepage": "https://github.com/lucianonooijen/capsa#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucianonooijen/capsa.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lucianonooijen/capsa/issues"
+  },
+  "scripts": {
+    "commitlint": "commitlint --from $(git rev-parse origin/main)"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0"
+  }
+}
