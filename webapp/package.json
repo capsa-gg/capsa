@@ -9,6 +9,12 @@
     "node": ">=22.11.0",
     "npm": ">=10.9.0"
   },
+  "nextBundleAnalysis": {
+    "budget": 1000000,
+    "budgetPercentIncreaseRed": 20,
+    "minimumChangeThreshold": 0,
+    "showDetails": true
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
