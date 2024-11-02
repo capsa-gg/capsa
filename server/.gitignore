@@ -1,0 +1,16 @@
+# Configuration files
+.env
+config.yml
+
+# Dependecies
+vendor/
+.gocache/
+
+# Temporary files and binaries
+tmp/
+/server
+
+# Coverage and testing output
+cobertura.xml
+coverage.txt
+junit.xml

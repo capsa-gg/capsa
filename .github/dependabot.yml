@@ -7,13 +7,10 @@ updates:
     schedule:
       interval: "daily"
     target-branch: "main"
-    labels:
-      - "commitlint"
     reviewers:
       - "lucianonooijen"
     commit-message:
       prefix: 'deps(tools)'
-      include: 'scope'
 
   # Update npm dependencies in the repo root
   - package-ecosystem: "npm"
@@ -21,13 +18,10 @@ updates:
     schedule:
       interval: "daily"
     target-branch: "main"
-    labels:
-      - "commitlint"
     reviewers:
       - "lucianonooijen"
     commit-message:
       prefix: 'deps(deployment)'
-      include: 'scope'
 
   # Update Go dependencies in /server
   - package-ecosystem: "gomod"
@@ -35,13 +29,10 @@ updates:
     schedule:
       interval: "daily"
     target-branch: "main"
-    labels:
-      - "commitlint"
     reviewers:
       - "lucianonooijen"
     commit-message:
       prefix: 'deps(server)'
-      include: 'scope'
 
 
   # Update npm dependencies in /webapp
@@ -50,10 +41,7 @@ updates:
     schedule:
       interval: "daily"
     target-branch: "main"
-    labels:
-      - "commitlint"
     reviewers:
       - "lucianonooijen"
     commit-message:
       prefix: 'deps(webapp)'
-      include: 'scope'
