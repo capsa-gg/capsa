@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+defaults:
+  run:
+    working-directory: ./server
+
 jobs:
   validation:
     runs-on: ubuntu-latest
@@ -18,10 +22,7 @@ jobs:
         run: go version
       - name: Bootstrap
         run: make bootstrap
-        working-directory: ./server
       - name: Run build
         run: make build
-        working-directory: ./server
       - name: Run ci script
         run: make ci
-        working-directory: ./server
