@@ -19,8 +19,7 @@
     "url": "https://github.com/lucianonooijen/capsa/issues"
   },
   "scripts": {
-    "commitlint:frommain": "commitlint --from $(git rev-parse origin/main) --verbose",
-    "commitlint:pr": "commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }}"
+    "commitlint": "commitlint --from $(git rev-parse origin/main) --verbose"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
