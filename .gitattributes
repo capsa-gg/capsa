@@ -1,0 +1,32 @@
+# Set the default behavior
+* text=auto
+
+# Declare line endings should be LF
+*.md text=lf
+*.txt text=lf
+*.json text=lf
+*.yml text=lf
+*.yaml text=lf
+*.js text=lf
+*.jsx text=lf
+*.ts text=lf
+*.tsx text=lf
+*.go text=lf
+*.mod text=lf
+*.sh text=lf
+*.editorconfig text=lf
+
+# Git files should also be lf
+*.gitattributes text eol=lf
+*.gitignore text eol=lf
+
+# Declare line endings that should be crlf
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
