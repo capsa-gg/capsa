@@ -7,7 +7,7 @@ bootstrap: ## Installs Go packages and sets defaults
 	@echo "Installing Go packages using 'go install'"
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	go install golang.org/x/tools/cmd/goimports@latest
-	go install github.com/cosmtrek/air@latest
+	go install github.com/air-verse/air@latest
 	go install go101.org/golds@latest
 	go install golang.org/x/lint/golint@latest
 	go install github.com/kyleconroy/sqlc/cmd/sqlc@latest
