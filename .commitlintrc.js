@@ -8,6 +8,7 @@ export default {
                 'build',
                 'ci',
                 'chore',
+                'deps',
                 'docs',
                 'feat',
                 'fix',
