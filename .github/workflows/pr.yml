@@ -1,4 +1,4 @@
-name: Run Commitlint on PR
+name: Commitlint PR
 
 on:
   pull_request:
@@ -17,4 +17,4 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Validate all commits from PR
-        run: npm run
+        run: npm run commitlint:pr
