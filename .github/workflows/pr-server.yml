@@ -18,10 +18,13 @@ jobs:
         run: go version
       - name: Bootstrap
         run: make bootstrap
+        working-directory: ./server
       - name: Run build
         run: make build
+        working-directory: ./server
       - name: Run ci script
         run: make ci
+        working-directory: ./server
       - name: Coverage report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
