@@ -10,7 +10,7 @@ bootstrap: ## Installs Go packages and sets defaults
 	go install github.com/air-verse/air@latest
 	go install go101.org/golds@latest
 	go install golang.org/x/lint/golint@latest
-	go install github.com/kyleconroy/sqlc/cmd/sqlc@latest
+	go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 	go install github.com/jstemmer/go-junit-report@latest
 	go install github.com/t-yuki/gocover-cobertura@latest
 	go install github.com/swaggo/swag/cmd/swag@latest
