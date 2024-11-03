@@ -12,8 +12,7 @@ const TopNav = () => (
     <AppBar
         position="static"
         sx={{
-            paddingLeft: `${sideNavWidthPx + topNavSidePaddingPx}px`,
-            paddingRight: `${topNavSidePaddingPx}px`,
+            paddingRight: `40px`,
             background: "transparent",
             boxShadow: "none",
         }}
