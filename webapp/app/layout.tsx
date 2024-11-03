@@ -1,9 +1,10 @@
 import React from "react";
 import type { Metadata } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
-import { ThemeProvider } from "@mui/system";
+import { ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "@/styles/theme";
+import ScreenTooSmall from "@/layouts/ScreenTooSmall/ScreenTooSmall";
 
 import "./globals.css";
 
@@ -18,7 +19,10 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
             <AppRouterCacheProvider>
                 <ThemeProvider theme={theme}>
                     <CssBaseline />
-                    {children}
+                    <div className="screen-too-small">
+                        <ScreenTooSmall />
+                    </div>
+                    <main className="main-contents">{children}</main>
                 </ThemeProvider>
             </AppRouterCacheProvider>
         </body>
