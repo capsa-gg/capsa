@@ -7,6 +7,7 @@ import theme from "@/styles/theme";
 import ScreenTooSmall from "@/layouts/ScreenTooSmall/ScreenTooSmall";
 
 import "./globals.css";
+import MainLayout from "@/layouts/MainLayout/MainLayout";
 
 export const metadata: Metadata = {
     title: "Capsa Webapp Homepage",
@@ -22,7 +23,9 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
                     <div className="screen-too-small">
                         <ScreenTooSmall />
                     </div>
-                    <main className="main-contents">{children}</main>
+                    <div className="main-contents">
+                        <MainLayout>{children}</MainLayout>
+                    </div>
                 </ThemeProvider>
             </AppRouterCacheProvider>
         </body>
