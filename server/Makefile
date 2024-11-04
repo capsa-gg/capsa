@@ -23,6 +23,10 @@ build: ## Runs the Golang build for production on Linux
 build-all: ## Runs the Golang build for production for all supported platforms
 	./bin/build-all
 
+.PHONY: dev
+dev: ## Runs the Capsa server with hot reloading for development
+	air
+
 .PHONY: run
 run: ## Runs the application without hot reloading
 	go run .

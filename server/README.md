@@ -31,6 +31,8 @@ Make sure to migrate up your database before running the application.
 
 For all commands, run `make`, which will print a help screen.
 
+For development on Mac and Linux, you can run `make dev` to run the application with hot-reloading. Do keep in mind that this hot reloading does _not_ generate the Swagger or SQL files, you need to manually run the commands for this. Hot-reloading under WSL works with caveats.
+
 ## Database code generation
 
 The Go code to access the database is code-generated with SQLc. Database queries are written in SQL directly, and then it's converted to Go.
