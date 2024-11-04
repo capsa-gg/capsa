@@ -88,3 +88,7 @@ migration: ## Asks for the new migration name and creates migration files
 newdb: ## Migrates db down and up - WARNING: ALL DB DATA IS DELETED
 	make migratedown
 	make migrateup
+
+.PHONY: jwkset
+jwkset: ## Generates a public and private key for JWKs and writes them to disk
+	go run . jwk genkeys -w

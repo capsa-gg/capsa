@@ -17,6 +17,8 @@ Development for the server should be done on Linux(/WSL) or MacOS. This is due t
 
 To configure the application, use `cp config.example.yml config.yml` and set the required values.
 
+The server requires a public/private key set to run. To do this, run `make jwkset`
+
 To add a new database and set up a superuser for your local database, run:
 
 ```psql

@@ -58,6 +58,8 @@ func New(services *interactor.Services) (*GinServer, error) {
 
 	log.Debug("Registering routes")
 
+	server.Router.GET(".well-known/jwks.json", initializedHandlers.Jwks)
+
 	routerGroup := server.Router.Group("v1")
 	registerRoutes(routerGroup, initializedHandlers, services)
 	registerSwagger(routerGroup, c)

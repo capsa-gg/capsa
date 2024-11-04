@@ -3,6 +3,8 @@
 config.yml
 config.*.yml
 !config.example.yml
+*.key
+*.pub
 
 # Dependecies
 vendor/

@@ -5,6 +5,8 @@ import (
 
 	"go.uber.org/zap"
 
+	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
+
 	"github.com/lucianonooijen/capsa/server/internal/data/database"
 	"github.com/lucianonooijen/capsa/server/internal/entities"
 )
@@ -19,6 +21,9 @@ type Services struct {
 
 	// Database is the instance of the SQLc generated database queries.
 	Database *database.Queries `validate:"required"`
+
+	// Token is used to generate and validate JWTs, JWKs
+	Token *token.Jwk `validate:"required"`
 }
 
 // GetDomainLogger generated a *zap.SugaredLogger instance for the domain and function.
