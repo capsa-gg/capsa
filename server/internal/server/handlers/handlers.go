@@ -2,8 +2,9 @@ package handlers
 
 import (
 	"github.com/go-playground/validator/v10"
-	"github.com/lucianonooijen/capsa/server/internal/interactor"
 	"go.uber.org/zap"
+
+	"github.com/lucianonooijen/capsa/server/internal/interactor"
 )
 
 // Handlers contains Gin request handlers as methods.

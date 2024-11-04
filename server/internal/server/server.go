@@ -2,11 +2,12 @@ package server
 
 import (
 	"fmt"
-	"github.com/lucianonooijen/capsa/server/internal/interactor"
-	"github.com/lucianonooijen/capsa/server/internal/server/handlers"
 	"io"
 	"os"
 	"strconv"
+
+	"github.com/lucianonooijen/capsa/server/internal/interactor"
+	"github.com/lucianonooijen/capsa/server/internal/server/handlers"
 
 	"github.com/gin-gonic/gin"
 )

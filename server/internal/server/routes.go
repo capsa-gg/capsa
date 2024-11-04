@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
+
 	"github.com/lucianonooijen/capsa/server/internal/interactor"
 	"github.com/lucianonooijen/capsa/server/internal/server/handlers"
 )

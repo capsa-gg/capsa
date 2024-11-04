@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
+
 	"github.com/lucianonooijen/capsa/server/constants"
 	"github.com/lucianonooijen/capsa/server/internal/server/bodies"
-	"net/http"
 )
 
 // Status returns a 200 status code if everything is fine
