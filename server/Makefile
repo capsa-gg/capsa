@@ -16,8 +16,12 @@ bootstrap: ## Installs Go packages and sets defaults
 	go install github.com/swaggo/swag/cmd/swag@latest
 
 .PHONY: build
-build: ## Runs the Golang build for production
+build: ## Runs the Golang build for production on Linux
 	./bin/build
+
+.PHONY: build-all
+build-all: ## Runs the Golang build for production for all supported platforms
+	./bin/build-all
 
 .PHONY: run
 run: ## Runs the application without hot reloading
@@ -53,6 +57,12 @@ ci: ## Runs the CI tasks
 	@echo "Running tests with coverage"
 	go test -coverprofile=coverage.txt -covermode count -v 2>&1 ./... | go-junit-report -set-exit-code > junit.xml
 	gocover-cobertura < coverage.txt > cobertura.xml
+
+.PHONY: sql
+sql: ## Checks SQL for syntax and type errors, then generates Go code for ./SQL/ files
+	@sqlc compile
+	@sqlc generate
+	@sqlc compile
 
 .PHONY: migrateup
 migrateup: ## Runs the database migrations up

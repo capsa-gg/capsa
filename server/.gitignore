@@ -11,6 +11,7 @@ vendor/
 # Temporary files and binaries
 tmp/
 /server
+builds/
 
 # Coverage and testing output
 cobertura.xml

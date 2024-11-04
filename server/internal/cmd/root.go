@@ -1,14 +1,11 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
-	"os"
 
 	"github.com/spf13/cobra"
 
 	"github.com/lucianonooijen/capsa/server/internal/entities"
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/config"
 )
 
 var configFile string
@@ -45,35 +42,4 @@ func Execute() {
 //nolint:gochecknoinits // Cobra needs usage of init functions
 func init() {
 	cobra.OnInitialize(initConfig)
-}
-
-func initConfig() {
-	configFile = "config.yml"
-
-	cfg, err := config.LoadConfig(configFile)
-	if err != nil {
-		fmt.Printf("error loading config: %s\n", err)
-		os.Exit(1)
-	}
-
-	logger := cfg.RootLogger
-	if err != nil {
-		logger.Named("initConfig").Sugar().Fatalf("error loading config: %s", err)
-	}
-
-	configuration = cfg
-}
-
-func getAndValidateConfig() *entities.Config {
-	if configuration == nil {
-		fmt.Println("config nil")
-		os.Exit(1)
-	}
-
-	if configuration.RootLogger == nil {
-		fmt.Println("rootlogger nil")
-		os.Exit(1)
-	}
-
-	return configuration
 }
