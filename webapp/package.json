@@ -23,6 +23,12 @@
         "format": "prettier -w ."
     },
     "dependencies": {
+        "@emotion/cache": "^11.13.1",
+        "@emotion/react": "^11.13.3",
+        "@emotion/styled": "^11.13.0",
+        "@mui/icons-material": "^6.1.6",
+        "@mui/material": "^6.1.6",
+        "@mui/material-nextjs": "^6.1.6",
         "next": "15.0.2",
         "react": "19.0.0-rc-02c0e824-20241028",
         "react-dom": "19.0.0-rc-02c0e824-20241028"
@@ -37,6 +43,7 @@
         "eslint-config-prettier": "^8.10.0",
         "eslint-plugin-import": "^2.31.0",
         "eslint-plugin-jsx-a11y": "^6.10.2",
+        "eslint-plugin-no-relative-import-paths": "^1.5.5",
         "eslint-plugin-prettier": "^4.2.1",
         "eslint-plugin-react": "^7.37.2",
         "eslint-plugin-react-hooks": "^4.6.2",
