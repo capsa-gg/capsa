@@ -2,8 +2,9 @@ package config
 
 import (
 	"fmt"
-	loggerCreator "github.com/lucianonooijen/capsa/server/internal/infrastructure/logger"
 	"reflect"
+
+	loggerCreator "github.com/lucianonooijen/capsa/server/internal/infrastructure/logger"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/spf13/viper"
@@ -59,6 +60,7 @@ func LoadConfig(configFile string) (*entities.Config, error) {
 	// Validate config
 	validate := validator.New()
 	err = validate.Struct(config)
+
 	if err != nil {
 		return nil, fmt.Errorf("error validating config: %w", err)
 	}

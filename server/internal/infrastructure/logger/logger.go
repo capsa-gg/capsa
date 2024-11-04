@@ -30,7 +30,7 @@ func newLogConfigDev(encodeLevel zapcore.LevelEncoder, output string) zap.Config
 	}
 }
 
-func newLogConfigProd(encodeLevel zapcore.LevelEncoder, output string) zap.Config {
+func newLogConfigProd(_ zapcore.LevelEncoder, _ string) zap.Config {
 	return zap.Config{
 		Level:       zap.NewAtomicLevelAt(zap.InfoLevel),
 		Development: false,

@@ -1,11 +1,13 @@
+//nolint:gochecknoinits // Cobra needs usage of init functions
 package cmd
 
 import (
 	"database/sql"
-	"github.com/lucianonooijen/capsa/server/internal/entities"
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/migrator"
+
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
+
+	"github.com/lucianonooijen/capsa/server/internal/infrastructure/migrator"
 )
 
 var (
@@ -20,7 +22,7 @@ var dbCmd = &cobra.Command{
 var dbMigrateCmd = &cobra.Command{
 	Use:   "migrate",
 	Short: "Runs server migrations",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		c := getAndValidateConfig()
 		log := c.RootLogger.Named("database").Named("migrations").Sugar()
 
@@ -29,11 +31,12 @@ var dbMigrateCmd = &cobra.Command{
 			log.Fatalf("error opening database connection: %s", err)
 		}
 
-		direction := getMigrationDirection(log, c)
+		direction := getMigrationDirection(log)
 		log.Infof("migration direction: %s", direction)
 
 		migrate := migrator.New(db, c.DatabaseName)
 		err = migrate(direction)
+
 		if err != nil {
 			log.Fatalf("error migrating database: %s", err)
 		}
@@ -42,7 +45,7 @@ var dbMigrateCmd = &cobra.Command{
 	},
 }
 
-func getMigrationDirection(log *zap.SugaredLogger, c *entities.Config) migrator.Direction {
+func getMigrationDirection(log *zap.SugaredLogger) migrator.Direction {
 	if dbMigrateDirection == "" {
 		log.Fatal("direction argument is required, use '-d up' or '-d down' when running the command")
 	}
@@ -56,10 +59,11 @@ func getMigrationDirection(log *zap.SugaredLogger, c *entities.Config) migrator.
 	}
 
 	log.Fatalf("direction '%s' is not a valid value", dbMigrateDirection)
+
 	return "" // Keep the compiler happy, this should never be reached due to fatal log
 }
 
-func init() { // nolint:gochecknoinits // needed for sane Cobra use
+func init() {
 	// Command flags
 	dbMigrateCmd.Flags().StringVarP(&dbMigrateDirection, "direction", "d", "", "The direction for the database migrations")
 

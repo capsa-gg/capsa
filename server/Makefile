@@ -16,8 +16,8 @@ bootstrap: ## Installs Go packages and sets defaults
 	go install github.com/swaggo/swag/cmd/swag@latest
 
 .PHONY: build
-build: ## Runs the Golang build for production, TODO: ./bin/build script
-	go build .
+build: ## Runs the Golang build for production
+	./bin/build
 
 .PHONY: run
 run: ## Runs the application without hot reloading

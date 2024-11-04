@@ -1,8 +1,10 @@
+//nolint:gochecknoinits // Cobra needs usage of init functions
 package cmd
 
 import (
-	"github.com/lucianonooijen/capsa/server/internal/server"
 	"github.com/spf13/cobra"
+
+	"github.com/lucianonooijen/capsa/server/internal/server"
 )
 
 var serverCmd = &cobra.Command{
@@ -13,7 +15,7 @@ var serverCmd = &cobra.Command{
 var serverStartCmd = &cobra.Command{
 	Use:   "start",
 	Short: "Starts the server",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		c := getAndValidateConfig()
 		log := c.RootLogger.Named("server").Sugar()
 

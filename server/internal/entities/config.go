@@ -2,6 +2,7 @@ package entities
 
 import (
 	"fmt"
+
 	"go.uber.org/zap"
 )
 
@@ -36,7 +37,7 @@ type Config struct {
 }
 
 // DatabaseConnectionString returns database connection string for connection to PostgreSQL.
-func (c Config) DatabaseConnectionString() string {
+func (c *Config) DatabaseConnectionString() string {
 	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s",
 		c.DatabaseHost, c.DatabasePort, c.DatabaseUser, c.DatabasePass, c.DatabaseName)
 

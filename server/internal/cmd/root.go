@@ -1,3 +1,4 @@
+//nolint:gochecknoinits // Cobra needs usage of init functions
 package cmd
 
 import (
@@ -11,11 +12,10 @@ import (
 	"github.com/lucianonooijen/capsa/server/internal/infrastructure/config"
 )
 
-var production bool
 var configFile string
 var configuration *entities.Config
 
-// rootCmd represents the base command when called without any subcommands
+// rootCmd represents the base command when called without any subcommands.
 var rootCmd = &cobra.Command{
 	Use:   "capsa",
 	Short: "Capsa's server-side application for running the web server and managed instances of Capsa",
@@ -38,13 +38,12 @@ func Execute() {
 	}
 }
 
+// TODO: Support config.prod.yml
+// rootCmd.PersistentFlags().BoolVarP(&production, "prod", "p", false, "use production configuration file (./config.prod.yml)").
+// TODO: use dynamic config loading f.e. https://github.com/spf13/cobra-cli/blob/main/tpl/main.go#L95
+// rootCmd.PersistentFlags().StringVar(&configFile, "config", "", "config file (default is ./config.yml, or ./config.prod.yml for production mode)").
 func init() {
 	cobra.OnInitialize(initConfig)
-
-	// TODO: Support config.prod.yml
-	//rootCmd.PersistentFlags().BoolVarP(&production, "prod", "p", false, "use production configuration file (./config.prod.yml)")
-	// TODO: use dynamic config loading f.e. https://github.com/spf13/cobra-cli/blob/main/tpl/main.go#L95
-	//rootCmd.PersistentFlags().StringVar(&configFile, "config", "", "config file (default is ./config.yml, or ./config.prod.yml for production mode)")
 }
 
 func initConfig() {
@@ -69,6 +68,7 @@ func getAndValidateConfig() *entities.Config {
 		fmt.Println("config nil")
 		os.Exit(1)
 	}
+
 	if configuration.RootLogger == nil {
 		fmt.Println("rootlogger nil")
 		os.Exit(1)
