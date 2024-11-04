@@ -1,4 +1,3 @@
-//nolint:gochecknoinits // Cobra needs usage of init functions
 package cmd
 
 import (
@@ -25,6 +24,7 @@ var serverStartCmd = &cobra.Command{
 	},
 }
 
+//nolint:gochecknoinits // Cobra needs usage of init functions
 func init() {
 	// Add sub commands to command
 	serverCmd.AddCommand(serverStartCmd)

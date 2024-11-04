@@ -1,4 +1,3 @@
-//nolint:gochecknoinits // Cobra needs usage of init functions
 package cmd
 
 import (
@@ -63,6 +62,7 @@ func getMigrationDirection(log *zap.SugaredLogger) migrator.Direction {
 	return "" // Keep the compiler happy, this should never be reached due to fatal log
 }
 
+//nolint:gochecknoinits // Cobra needs usage of init functions
 func init() {
 	// Command flags
 	dbMigrateCmd.Flags().StringVarP(&dbMigrateDirection, "direction", "d", "", "The direction for the database migrations")
