@@ -1,6 +1,9 @@
 package entities
 
-import "go.uber.org/zap"
+import (
+	"fmt"
+	"go.uber.org/zap"
+)
 
 // Config is the application configuration.
 type Config struct {
@@ -30,4 +33,16 @@ type Config struct {
 
 	// Application-wide config
 	RootLogger *zap.Logger `validate:"required"`
+}
+
+// DatabaseConnectionString returns database connection string for connection to PostgreSQL.
+func (c Config) DatabaseConnectionString() string {
+	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s",
+		c.DatabaseHost, c.DatabasePort, c.DatabaseUser, c.DatabasePass, c.DatabaseName)
+
+	if !c.DatabaseSSL {
+		connStr += " sslmode=disable"
+	}
+
+	return connStr
 }

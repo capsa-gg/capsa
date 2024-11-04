@@ -1,0 +1,29 @@
+#!/bin/sh
+
+MIGRATIONS_DIR="./migrations"
+
+# Print introduction text
+echo "What should the migration be called? "
+echo "(Please only use lowercase letters and spaces, for example 'create messages table')"
+
+# Read the migration name from stdin user input
+read MIGRATION_NAME_INPUT
+
+# Create variables for setting the up and down file paths
+LAST_MIGRATION_NUM=$(ls $MIGRATIONS_DIR | sort | tail -n 1 | awk -F '_' '{print $1}')
+NEW_MIGRATION_NUM=$(echo $LAST_MIGRATION_NUM | xargs -I {} expr {} + 1 | xargs -I {} printf '%04d_' {})
+NEW_MIGRATION_NAME=$(echo $MIGRATION_NAME_INPUT | sed 's/ /-/g')
+NEW_MIGRATION_STRING=$NEW_MIGRATION_NUM$NEW_MIGRATION_NAME
+
+# Creating the paths for file creation
+UP_FILE="$MIGRATIONS_DIR/$NEW_MIGRATION_STRING.up.sql"
+DOWN_FILE="$MIGRATIONS_DIR/$NEW_MIGRATION_STRING.down.sql"
+
+# Copying template code to up and done file
+echo 'BEGIN;\n\n--Up script\n\nCOMMIT;' > $UP_FILE
+echo 'BEGIN;\n\n--Down script\n\nCOMMIT;' > $DOWN_FILE
+
+# Print success messages
+echo "Success! Written to:"
+echo " -> $UP_FILE"
+echo " -> $DOWN_FILE"

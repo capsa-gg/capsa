@@ -53,3 +53,20 @@ ci: ## Runs the CI tasks
 	@echo "Running tests with coverage"
 	go test -coverprofile=coverage.txt -covermode count -v 2>&1 ./... | go-junit-report -set-exit-code > junit.xml
 	gocover-cobertura < coverage.txt > cobertura.xml
+
+.PHONY: migrateup
+migrateup: ## Runs the database migrations up
+	go run . db migrate -d up
+
+.PHONY: migratedown
+migratedown: ## Runs the database migrations down
+	go run . db migrate -d down
+
+.PHONY: migration
+migration: ## Asks for the new migration name and creates migration files
+	./bin/create_migration
+
+.PHONY: newdb
+newdb: ## Migrates db down and up - WARNING: ALL DB DATA IS DELETED
+	make migratedown
+	make migrateup

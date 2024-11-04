@@ -24,9 +24,9 @@ var serverStartCmd = &cobra.Command{
 }
 
 func init() {
-	// Add sub commands to DSM command
+	// Add sub commands to command
 	serverCmd.AddCommand(serverStartCmd)
 
-	// Add DSM to root command
+	// Add to root command
 	rootCmd.AddCommand(serverCmd)
 }
