@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: 22.x
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: webapp/.next/cache
           # Generate a new cache whenever packages or source files change.
