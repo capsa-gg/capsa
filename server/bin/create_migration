@@ -10,7 +10,7 @@ echo "(Please only use lowercase letters and spaces, for example 'create message
 read MIGRATION_NAME_INPUT
 
 # Create variables for setting the up and down file paths
-LAST_MIGRATION_NUM=$(ls $MIGRATIONS_DIR | sort | tail -n 1 | awk -F '_' '{print $1}')
+LAST_MIGRATION_NUM=$(ls $MIGRATIONS_DIR | grep sql | sort | tail -n 1 | awk -F '_' '{print $1}')
 NEW_MIGRATION_NUM=$(echo $LAST_MIGRATION_NUM | xargs -I {} expr {} + 1 | xargs -I {} printf '%04d_' {})
 NEW_MIGRATION_NAME=$(echo $MIGRATION_NAME_INPUT | sed 's/ /-/g')
 NEW_MIGRATION_STRING=$NEW_MIGRATION_NUM$NEW_MIGRATION_NAME

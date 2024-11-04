@@ -58,6 +58,12 @@ ci: ## Runs the CI tasks
 	go test -coverprofile=coverage.txt -covermode count -v 2>&1 ./... | go-junit-report -set-exit-code > junit.xml
 	gocover-cobertura < coverage.txt > cobertura.xml
 
+.PHONY: sql
+sql: ## Checks SQL for syntax and type errors, then generates Go code for ./SQL/ files
+	@sqlc compile
+	@sqlc generate
+	@sqlc compile
+
 .PHONY: migrateup
 migrateup: ## Runs the database migrations up
 	go run . db migrate -d up

@@ -1,0 +1,44 @@
+package interactor
+
+import (
+	"database/sql"
+	"fmt"
+
+	"github.com/go-playground/validator/v10"
+
+	"github.com/lucianonooijen/capsa/server/internal/data/database"
+	"github.com/lucianonooijen/capsa/server/internal/entities"
+)
+
+// NewServices initializes and validates a new instance of Services.
+func NewServices(c *entities.Config) (*Services, error) {
+	// Database connection
+	dbConn, err := sql.Open("postgres", c.DatabaseConnectionString())
+	if err != nil {
+		return nil, fmt.Errorf("error opening database connection: %w", err)
+	}
+
+	err = dbConn.Ping()
+	if err != nil {
+		return nil, fmt.Errorf("error pinging database: %w", err)
+	}
+
+	// Database instance
+	db := database.New(dbConn)
+
+	s := Services{
+		Config:   c,
+		DBConn:   dbConn,
+		Database: db,
+	}
+
+	// Validate config
+	validate := validator.New()
+	err = validate.Struct(s)
+
+	if err != nil {
+		return nil, fmt.Errorf("error validating config: %w", err)
+	}
+
+	return &s, nil
+}

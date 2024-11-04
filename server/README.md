@@ -29,4 +29,31 @@ Make sure to migrate up your database before running the application.
 
 ## Development and commands
 
-For all commands, run `make`.
+For all commands, run `make`, which will print a help screen.
+
+## Database code generation
+
+The Go code to access the database is code-generated with SQLc. Database queries are written in SQL directly, and then it's converted to Go.
+
+After modifying the SQL code in `./sql`, run `make sql` to generate the Go code. These changes must be committed to Git.
+
+## Creating new database migrations
+
+Database migrations are written in SQL and defined in `./migrations`.
+
+To add a new migration script, run `make migration` and follow the instructions on screen.
+
+Database migrations should have both up and down scripts.
+
+## Running tasks locally to know the CI will pass
+
+First, run the formatting/linter with `make fmt`.
+
+The commands the CI will use for testing:
+
+```sh
+make build-all
+make ci
+```
+
+If these commands succeed locally, it is quite probable the CI will pass as well.
