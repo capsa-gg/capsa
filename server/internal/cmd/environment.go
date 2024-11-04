@@ -54,11 +54,11 @@ var envListCmd = &cobra.Command{
 		}
 
 		log.Infof("")
-		log.Infof("| %-20s | %-20s | %s |", "Title", "Environment", "UE Config Key")
+		log.Infof("| %-20s | %-20s | %-36s |", "Title", "Environment", "Unreal Engine .ini Key")
 		log.Infof("| -------------------- | -------------------- | ------------------------------------ |")
 
 		for _, row := range res {
-			log.Infof("| %-20s | %-20s | %--36s |", row.Title, row.Environment, row.EnvironmentKey)
+			log.Infof("| %-20s | %-20s | %-36s |", row.Title, row.Environment, row.EnvironmentKey)
 		}
 
 		log.Infof("")

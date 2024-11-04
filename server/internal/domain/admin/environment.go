@@ -3,6 +3,7 @@ package admin
 import (
 	"context"
 	"fmt"
+
 	"github.com/lucianonooijen/capsa/server/internal/data/database"
 	"github.com/lucianonooijen/capsa/server/internal/interactor"
 )
