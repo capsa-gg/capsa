@@ -30,6 +30,7 @@ CREATE TABLE titles (
 CREATE TABLE environments (
     id SERIAL PRIMARY KEY,
     title int UNIQUE NOT NULL REFERENCES titles(id),
+    key uuid UNIQUE NOT NULL DEFAULT (uuid_generate_v4()),
     name varchar NOT NULL,
     created_on timestamp NOT NULL DEFAULT now(),
 

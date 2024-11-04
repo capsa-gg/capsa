@@ -28,3 +28,12 @@ AND name = $2;
 -- name: GetEnvironmentsForTitle :many
 SELECT * FROM environments
 WHERE title = $1;
+
+-- name: GetAllEnvironmentsAndTitles :many
+SELECT
+    t.name AS title,
+    e.name AS environment,
+    e.key AS environment_key
+FROM environments e
+JOIN titles t ON e.title = t.id;
+

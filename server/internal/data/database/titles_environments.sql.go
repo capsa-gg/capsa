@@ -7,6 +7,8 @@ package database
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 const addEnvironment = `-- name: AddEnvironment :exec
@@ -36,8 +38,46 @@ func (q *Queries) AddTitle(ctx context.Context, name string) error {
 	return err
 }
 
+const getAllEnvironmentsAndTitles = `-- name: GetAllEnvironmentsAndTitles :many
+SELECT
+    t.name AS title,
+    e.name AS environment,
+    e.key AS environment_key
+FROM environments e
+JOIN titles t ON e.title = t.id
+`
+
+type GetAllEnvironmentsAndTitlesRow struct {
+	Title          string    `json:"title"`
+	Environment    string    `json:"environment"`
+	EnvironmentKey uuid.UUID `json:"environmentKey"`
+}
+
+func (q *Queries) GetAllEnvironmentsAndTitles(ctx context.Context) ([]GetAllEnvironmentsAndTitlesRow, error) {
+	rows, err := q.db.QueryContext(ctx, getAllEnvironmentsAndTitles)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetAllEnvironmentsAndTitlesRow
+	for rows.Next() {
+		var i GetAllEnvironmentsAndTitlesRow
+		if err := rows.Scan(&i.Title, &i.Environment, &i.EnvironmentKey); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getEnvironmentById = `-- name: GetEnvironmentById :one
-SELECT id, title, name, created_on FROM environments
+SELECT id, title, key, name, created_on FROM environments
 WHERE id = $1
 `
 
@@ -47,6 +87,7 @@ func (q *Queries) GetEnvironmentById(ctx context.Context, id int32) (Environment
 	err := row.Scan(
 		&i.ID,
 		&i.Title,
+		&i.Key,
 		&i.Name,
 		&i.CreatedOn,
 	)
@@ -54,7 +95,7 @@ func (q *Queries) GetEnvironmentById(ctx context.Context, id int32) (Environment
 }
 
 const getEnvironmentByTitleName = `-- name: GetEnvironmentByTitleName :one
-SELECT id, title, name, created_on FROM environments
+SELECT id, title, key, name, created_on FROM environments
 WHERE title = $1
 AND name = $2
 `
@@ -70,6 +111,7 @@ func (q *Queries) GetEnvironmentByTitleName(ctx context.Context, arg GetEnvironm
 	err := row.Scan(
 		&i.ID,
 		&i.Title,
+		&i.Key,
 		&i.Name,
 		&i.CreatedOn,
 	)
@@ -77,7 +119,7 @@ func (q *Queries) GetEnvironmentByTitleName(ctx context.Context, arg GetEnvironm
 }
 
 const getEnvironmentsForTitle = `-- name: GetEnvironmentsForTitle :many
-SELECT id, title, name, created_on FROM environments
+SELECT id, title, key, name, created_on FROM environments
 WHERE title = $1
 `
 
@@ -93,6 +135,7 @@ func (q *Queries) GetEnvironmentsForTitle(ctx context.Context, title int32) ([]E
 		if err := rows.Scan(
 			&i.ID,
 			&i.Title,
+			&i.Key,
 			&i.Name,
 			&i.CreatedOn,
 		); err != nil {

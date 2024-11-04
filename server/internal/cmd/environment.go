@@ -41,6 +41,29 @@ var envAddCmd = &cobra.Command{
 	},
 }
 
+var envListCmd = &cobra.Command{
+	Use:   "list",
+	Short: "List all titles and environments with the associated keys",
+	Run: func(_ *cobra.Command, _ []string) {
+		s := getAndValidateServicesInteractor()
+		log := s.Config.RootLogger.Named("env").Named("list").Sugar()
+
+		res, err := admin.ListAllTitlesAndEnvironments(s)
+		if err != nil {
+			log.Fatalf("error listing environment and titles: %s", err)
+		}
+
+		log.Infof("%-20s | %-20s | %s", "Title", "Environment", "UE Config Key")
+		log.Infof("-------------------- | -------------------- | ------------------------------------")
+
+		for _, row := range res {
+			log.Infof("%-20s | %-20s | %--36s", row.Title, row.Environment, row.EnvironmentKey)
+		}
+
+		log.Info("all data printed")
+	},
+}
+
 //nolint:gochecknoinits // Cobra needs usage of init functions
 func init() {
 	// Command flags
@@ -49,6 +72,7 @@ func init() {
 
 	// Add sub commands to command
 	envCmd.AddCommand(envAddCmd)
+	envCmd.AddCommand(envListCmd)
 
 	// Add to root command
 	rootCmd.AddCommand(envCmd)

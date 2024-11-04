@@ -59,6 +59,7 @@ func (ns NullLogClientType) Value() (driver.Value, error) {
 type Environment struct {
 	ID        int32     `json:"id"`
 	Title     int32     `json:"title"`
+	Key       uuid.UUID `json:"key"`
 	Name      string    `json:"name"`
 	CreatedOn time.Time `json:"createdOn"`
 }
