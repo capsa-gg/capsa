@@ -25,7 +25,7 @@ export default {
             'always',
             ['protocol', 'server', 'webapp', 'deployment', 'tools']
         ],
-        'max-body-length': [2, 'always', 200]
+        'body-max-line-length': [2, 'always', 200]
     },
     ignores: [(commit) => commit.includes("Merge")],
 };

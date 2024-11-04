@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# CGO_ENABLED=0: build a statically-linked executable
+# -a: force rebuilding of packages that are already up-to-date
+# -ldflags '-s -w': strip DWARF, symbol table and debug info from binary
+# -o capsa: output build binary to ./capsa
+CGO_ENABLED=0 go build \
+    -a \
+    -ldflags '-s -w' \
+    -o capsa

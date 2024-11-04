@@ -1,6 +1,8 @@
 # Configuration files
 .env
 config.yml
+config.*.yml
+!config.example.yml
 
 # Dependecies
 vendor/

@@ -31,6 +31,20 @@ linters-settings:
       - UNSAFE
   goimports:
     local-prefixes: github.com/lucianonooijen/capsa/server
+  depguard:
+    rules:
+      prevent_unmaintained_packages:
+        list-mode: lax # allow unless explicitely denied
+        files:
+          - $all
+          - "!$test"
+        allow:
+          - $all
+        deny:
+          - pkg: io/ioutil
+            desc: "replaced by io and os packages since Go 1.16: https://tip.golang.org/doc/go1.16#ioutil"
+
+
 
 linters:
   disable-all: false

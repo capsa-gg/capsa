@@ -1,0 +1,24 @@
+# Application configuration
+development: true
+api_port: 5000
+api_hostname: localhost
+webapp_hostname: localhost:3000
+jwt_secret: addyoursecret
+
+
+# Databaseconfiguration
+db_host: localhost
+db_port: 5432
+db_name: capsadb
+db_user: capsauser
+db_pass: capsapass
+db_ssl: false
+
+# Email configuration
+email_sender_name: Capsa
+email_sender_email: capsa@lucianonooijen.com
+sendinblue_api_key: yourapikey
+
+#Application logic configuration
+log_retention_days: 90
+log_max_duration_hours: 48
