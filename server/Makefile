@@ -64,6 +64,10 @@ sql: ## Checks SQL for syntax and type errors, then generates Go code for ./SQL/
 	@sqlc generate
 	@sqlc compile
 
+.PHONY: swagger
+swagger: ## Generates Swagger (OpenAPI v2) documentation based on HTTP handlers
+	swag init --output swagger --generalInfo internal/server/swagger.go
+
 .PHONY: migrateup
 migrateup: ## Runs the database migrations up
 	go run . db migrate -d up

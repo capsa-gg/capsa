@@ -15,11 +15,18 @@ var serverStartCmd = &cobra.Command{
 	Use:   "start",
 	Short: "Starts the server",
 	Run: func(_ *cobra.Command, _ []string) {
-		c := getAndValidateConfig()
-		log := c.RootLogger.Named("server").Sugar()
+		s := getAndValidateServicesInteractor()
+		log := s.Config.RootLogger.Named("server").Sugar()
 
-		if err := server.Start(log, c); err != nil {
-			c.RootLogger.Sugar().Fatalf("server errored: %s", err)
+		log.Info("initializing server instance")
+
+		svr, err := server.New(s)
+		if err != nil {
+			log.Fatalf("error initializing server instance: %s", err)
+		}
+
+		if err := svr.Start(); err != nil {
+			log.Fatalf("server errored: %s", err)
 		}
 	},
 }
