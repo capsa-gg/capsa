@@ -22,7 +22,7 @@ jobs:
         run: go version
       - name: Bootstrap
         run: make bootstrap
-      - name: Run build
-        run: make build
+      - name: Run build on all platforms
+        run: make build-all
       - name: Run ci script
         run: make ci
