@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/spf13/cobra"
 
@@ -26,6 +28,7 @@ This CLI has multiple sub commands groups. Run with the --help flag to see a ful
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	err := rootCmd.Execute()
+
 	if err != nil {
 		if configuration != nil && configuration.RootLogger != nil {
 			configuration.RootLogger.Named("cmd.Execute").Sugar().Fatalf("error executing command: %s", err)
@@ -45,17 +48,31 @@ func init() {
 }
 
 func initConfig() {
-	//if production {
-	//	configFile = "config.prod.yml"
-	//} else {
 	configFile = "config.yml"
-	//}
 
 	cfg, err := config.LoadConfig(configFile)
+	if err != nil {
+		fmt.Printf("error loading config: %s\n", err)
+		os.Exit(1)
+	}
+
 	logger := cfg.RootLogger
 	if err != nil {
 		logger.Named("initConfig").Sugar().Fatalf("error loading config: %s", err)
 	}
 
 	configuration = cfg
+}
+
+func getAndValidateConfig() *entities.Config {
+	if configuration == nil {
+		fmt.Println("config nil")
+		os.Exit(1)
+	}
+	if configuration.RootLogger == nil {
+		fmt.Println("rootlogger nil")
+		os.Exit(1)
+	}
+
+	return configuration
 }
