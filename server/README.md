@@ -37,6 +37,18 @@ The Go code to access the database is code-generated with SQLc. Database queries
 
 After modifying the SQL code in `./sql`, run `make sql` to generate the Go code. These changes must be committed to Git.
 
+For details on how to use SQLc, see the [SQLc documentation](https://docs.sqlc.dev/en/latest/).
+
+## Swagger documentation
+
+API documentation is generated from the comments on the HTTP handlers. Therefore it is important that these comments are kept up-to-date and are added for every endpoint.
+
+When working in HTTP handlers, make sure to generate the Swagger documentation before commiting your code.
+
+To generate the Swagger documentation, run `make swagger`.
+
+For details on how to add proper documentation to route handlers, see [swaggo/swag on GitHub](https://github.com/swaggo/swag?tab=readme-ov-file#api-operation).
+
 ## Creating new database migrations
 
 Database migrations are written in SQL and defined in `./migrations`.

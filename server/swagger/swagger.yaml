@@ -8,6 +8,9 @@ definitions:
       message:
         example: ok
         type: string
+      version:
+        example: 0.0.1
+        type: string
     type: object
 host: example.com
 info:
@@ -29,10 +32,18 @@ paths:
       responses:
         "200":
           description: OK
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
           schema:
             $ref: '#/definitions/bodies.StatusResponse'
         "500":
           description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
           schema:
             $ref: '#/definitions/bodies.StatusResponse'
       summary: Status handler

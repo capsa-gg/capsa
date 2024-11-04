@@ -34,12 +34,24 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/bodies.StatusResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/bodies.StatusResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
                         }
                     }
                 }
@@ -57,6 +69,10 @@ const docTemplate = `{
                 "message": {
                     "type": "string",
                     "example": "ok"
+                },
+                "version": {
+                    "type": "string",
+                    "example": "0.0.1"
                 }
             }
         }

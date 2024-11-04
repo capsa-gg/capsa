@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/lucianonooijen/capsa/server/constants"
 	"github.com/lucianonooijen/capsa/server/internal/server/bodies"
 	"net/http"
 )
@@ -14,6 +15,7 @@ import (
 // @Produce     json
 // @Success		200		{object}	bodies.StatusResponse
 // @Failure     500		{object}	bodies.StatusResponse
+// @Header		all		{string} 	X-Capsa-Server-Version		"Current Capsa Server version"
 // @Router 		/status [get]
 func (h Handlers) Status(c *gin.Context) {
 	err := h.services.DBConn.Ping()
@@ -22,6 +24,7 @@ func (h Handlers) Status(c *gin.Context) {
 		statusBody := bodies.StatusResponse{
 			Code:    http.StatusInternalServerError,
 			Message: fmt.Sprintf("error pinnging database: %s", err),
+			Version: constants.Version,
 		}
 
 		c.JSON(statusBody.Code, statusBody)
@@ -32,6 +35,7 @@ func (h Handlers) Status(c *gin.Context) {
 	statusBody := bodies.StatusResponse{
 		Code:    http.StatusOK,
 		Message: "ok",
+		Version: constants.Version,
 	}
 
 	c.JSON(statusBody.Code, statusBody)

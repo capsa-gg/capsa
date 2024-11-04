@@ -13,7 +13,8 @@ import (
 
 func registerMiddleware(router *gin.Engine, logger *zap.Logger) {
 	router.Use(gin.Recovery())
-	router.Use(middleware.GinLogger(logger.Named("")))
+	router.Use(middleware.GinLogger(logger))
+	router.Use(middleware.ServerVersionMiddleware())
 
 	config := cors.DefaultConfig()
 	config.AllowAllOrigins = true
