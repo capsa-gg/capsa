@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -24,14 +25,17 @@ import (
 // @BasePath /v1
 
 func swaggerDoc(conf *entities.Config) func(c *gin.Context) {
-	// TODO: disable in non-dev builds
-	httpsReplacer := strings.NewReplacer(
-		"https://", "",
-		"http://", "")
+	if conf.IsDevMode {
+		httpsReplacer := strings.NewReplacer(
+			"https://", "",
+			"http://", "")
 
-	serverHostname := httpsReplacer.Replace(conf.ServerHostname)
+		serverHostname := httpsReplacer.Replace(conf.ServerHostname) + ":" + strconv.Itoa(conf.ServerPort)
 
-	swagger.SwaggerInfo.Host = serverHostname
+		swagger.SwaggerInfo.Host = serverHostname
+	} else {
+		swagger.SwaggerInfo.Host = conf.ServerHostname
+	}
 
 	return func(c *gin.Context) {
 		c.String(http.StatusOK, swagger.SwaggerInfo.ReadDoc())
