@@ -1,7 +1,6 @@
 export default {
     extends: ["@commitlint/config-conventional"],
     rules: {
-        'body-max-line-length': 200,
         'type-enum': [
             2,
             'always',
@@ -25,7 +24,8 @@ export default {
             2,
             'always',
             ['protocol', 'server', 'webapp', 'deployment', 'tools']
-        ]
+        ],
+        'max-body-length': [2, 'always', 200]
     },
     ignores: [(commit) => commit.includes("Merge")],
-}
+};
