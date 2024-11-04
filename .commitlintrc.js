@@ -24,7 +24,8 @@ export default {
             2,
             'always',
             ['protocol', 'server', 'webapp', 'deployment', 'tools']
-        ]
+        ],
+        'max-body-length': [2, 'always', 200]
     },
     ignores: [(commit) => commit.includes("Merge")],
-}
+};
