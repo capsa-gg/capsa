@@ -53,12 +53,15 @@ var envListCmd = &cobra.Command{
 			log.Fatalf("error listing environment and titles: %s", err)
 		}
 
-		log.Infof("%-20s | %-20s | %s", "Title", "Environment", "UE Config Key")
-		log.Infof("-------------------- | -------------------- | ------------------------------------")
+		log.Infof("")
+		log.Infof("| %-20s | %-20s | %s |", "Title", "Environment", "UE Config Key")
+		log.Infof("| -------------------- | -------------------- | ------------------------------------ |")
 
 		for _, row := range res {
-			log.Infof("%-20s | %-20s | %--36s", row.Title, row.Environment, row.EnvironmentKey)
+			log.Infof("| %-20s | %-20s | %--36s |", row.Title, row.Environment, row.EnvironmentKey)
 		}
+
+		log.Infof("")
 
 		log.Info("all data printed")
 	},
