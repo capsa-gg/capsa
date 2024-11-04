@@ -13,7 +13,10 @@ type Config struct {
 	ServerPort     int    `mapstructure:"api_port" validate:"required"`
 	ServerHostname string `mapstructure:"api_hostname" validate:"required"`
 	WebappHostname string `mapstructure:"webapp_hostname" validate:"required"`
-	JWTSecret      string `mapstructure:"jwt_secret" validate:"required"` // TODO: JWK
+
+	// JWK data
+	JwkPrivateKeyPath string `mapstructure:"jwk_private_key_path"` // Not marked as required, this is checked elsewhere
+	JwkPublicKeyPath  string `mapstructure:"jwk_public_key_path"`  // Not marked as required, this is checked elsewhere
 
 	// DBConn configuration
 	DatabaseHost string `mapstructure:"db_host" validate:"required"`

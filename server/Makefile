@@ -23,6 +23,10 @@ build: ## Runs the Golang build for production on Linux
 build-all: ## Runs the Golang build for production for all supported platforms
 	./bin/build-all
 
+.PHONY: dev
+dev: ## Runs the Capsa server with hot reloading for development
+	air
+
 .PHONY: run
 run: ## Runs the application without hot reloading
 	go run .
@@ -64,6 +68,10 @@ sql: ## Checks SQL for syntax and type errors, then generates Go code for ./SQL/
 	@sqlc generate
 	@sqlc compile
 
+.PHONY: swagger
+swagger: ## Generates Swagger (OpenAPI v2) documentation based on HTTP handlers
+	swag init --output swagger --generalInfo internal/server/swagger.go
+
 .PHONY: migrateup
 migrateup: ## Runs the database migrations up
 	go run . db migrate -d up
@@ -80,3 +88,7 @@ migration: ## Asks for the new migration name and creates migration files
 newdb: ## Migrates db down and up - WARNING: ALL DB DATA IS DELETED
 	make migratedown
 	make migrateup
+
+.PHONY: jwkset
+jwkset: ## Generates a public and private key for JWKs and writes them to disk
+	go run . jwk genkeys -w

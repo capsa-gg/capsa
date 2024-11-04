@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
+
 	"github.com/go-playground/validator/v10"
 
 	"github.com/lucianonooijen/capsa/server/internal/data/database"
@@ -18,6 +20,7 @@ func NewServices(c *entities.Config) (*Services, error) {
 		return nil, fmt.Errorf("error opening database connection: %w", err)
 	}
 
+	// Ping database
 	err = dbConn.Ping()
 	if err != nil {
 		return nil, fmt.Errorf("error pinging database: %w", err)
@@ -26,10 +29,23 @@ func NewServices(c *entities.Config) (*Services, error) {
 	// Database instance
 	db := database.New(dbConn)
 
+	// Load JWK key
+	jwkKeys, err := token.LoadPrivateKeyFromPath(c.JwkPrivateKeyPath)
+	if err != nil {
+		return nil, fmt.Errorf("error loading private key from path: %w", err)
+	}
+
+	// Token instance
+	tokenInstance, err := token.New(c, jwkKeys)
+	if err != nil {
+		return nil, fmt.Errorf("error generating jwk instance: %w", err)
+	}
+
 	s := Services{
 		Config:   c,
 		DBConn:   dbConn,
 		Database: db,
+		Token:    tokenInstance,
 	}
 
 	// Validate config

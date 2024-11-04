@@ -1,0 +1,52 @@
+basePath: /v1
+definitions:
+  bodies.StatusResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      message:
+        example: ok
+        type: string
+      version:
+        example: 0.0.1
+        type: string
+    type: object
+host: example.com
+info:
+  contact:
+    email: capsa@lucianonooijen.com
+    name: Luciano Nooijen
+    url: https://lucianonooijen.com
+  description: Storage server for Project Capsa, a ground-breaking Unreal Engine logging
+    solution
+  title: Capsa Server
+  version: "1"
+paths:
+  /status:
+    get:
+      description: To be used with for status pings to check readiness and liveliness
+        of the server
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.StatusResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.StatusResponse'
+      summary: Status handler
+      tags:
+      - Common
+swagger: "2.0"

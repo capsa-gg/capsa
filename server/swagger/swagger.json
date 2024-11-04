@@ -1,0 +1,74 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Storage server for Project Capsa, a ground-breaking Unreal Engine logging solution",
+        "title": "Capsa Server",
+        "contact": {
+            "name": "Luciano Nooijen",
+            "url": "https://lucianonooijen.com",
+            "email": "capsa@lucianonooijen.com"
+        },
+        "version": "1"
+    },
+    "host": "example.com",
+    "basePath": "/v1",
+    "paths": {
+        "/status": {
+            "get": {
+                "description": "To be used with for status pings to check readiness and liveliness of the server",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Status handler",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.StatusResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.StatusResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "bodies.StatusResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "message": {
+                    "type": "string",
+                    "example": "ok"
+                },
+                "version": {
+                    "type": "string",
+                    "example": "0.0.1"
+                }
+            }
+        }
+    }
+}

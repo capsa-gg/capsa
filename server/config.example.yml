@@ -5,6 +5,9 @@ api_hostname: localhost
 webapp_hostname: localhost:3000
 jwt_secret: addyoursecret
 
+# JWK keys
+jwk_private_key_path: jwk.key
+jwk_public_key_path: jwk.pub
 
 # Databaseconfiguration
 db_host: localhost
