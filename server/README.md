@@ -17,7 +17,7 @@ Development for the server should be done on Linux(/WSL) or MacOS. This is due t
 
 To configure the application, use `cp config.example.yml config.yml` and set the required values.
 
-The server requires a public/private key set to run. To do this, run `make jwkset`
+The server requires a public/private key set to run. To do this, run `make jwkset`. We use public/private keys for JWTs instead of the commonly used secret value, to make it possible for the webapp server to validate tokens without needing access to the signing secret.
 
 To add a new database and set up a superuser for your local database, run:
 
