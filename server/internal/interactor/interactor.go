@@ -23,7 +23,7 @@ type Services struct {
 	Database *database.Queries `validate:"required"`
 
 	// Token is used to generate and validate JWTs, JWKs
-	Token *token.Jwk `validate:"required"`
+	Token *token.Token `validate:"required"`
 }
 
 // GetDomainLogger generated a *zap.SugaredLogger instance for the domain and function.
