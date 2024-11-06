@@ -14,6 +14,7 @@ import (
 )
 
 // AddNewUser adds a new user and initializes the flow to set their password.
+// NOTE: if this becomes available in the API, the returned errors should be of type DomainError.
 func AddNewUser(s *interactor.Services, email, firstName, lastName string) error {
 	log := s.GetDomainLogger("user", "AddNewUser").
 		With("email", email, "first_name", firstName, "last_name", lastName)
@@ -43,9 +44,22 @@ func AddNewUser(s *interactor.Services, email, firstName, lastName string) error
 		return fmt.Errorf("error initializing password setting flow for user: %w", err)
 	}
 
-	// TODO: Send out email for verification
+	log.Debug("password flow initialized")
 
-	log.Infof("user added")
+	reset, err := s.Database.GetPasswordResetByUserId(ctx, user.ID)
+	if err != nil {
+		return fmt.Errorf("error getting password reset data flow for user with id %d: %w", user.ID, err)
+	}
+
+	log = log.With("reset_code", reset.ResetToken.String())
+	log.Debug("reset code retrieved")
+
+	err = s.Emails.SendAccountSetPassword(user.Email, user.FirstName, reset.ResetToken.String())
+	if err != nil {
+		return fmt.Errorf("error getting password reset data flow for user with id %d: %w", user.ID, err)
+	}
+
+	log.Infof("user added and email sent")
 
 	return nil
 }

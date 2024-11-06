@@ -64,6 +64,11 @@ func Login(s *interactor.Services, email, password string) (*entities.UserLoginR
 
 	log.Debug("token parsed")
 
+	err = s.Emails.SendLoginSuccessNotification(user.Email, user.FirstName)
+	if err != nil {
+		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "login confirmation email could not be sent", err)
+	}
+
 	// Assemble information
 	logSession := entities.UserLoginResult{
 		Token:       jwt,

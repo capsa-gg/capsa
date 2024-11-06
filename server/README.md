@@ -45,9 +45,9 @@ For details on how to use SQLc, see the [SQLc documentation](https://docs.sqlc.d
 
 ## Swagger documentation
 
-API documentation is generated from the comments on the HTTP handlers. Therefore it is important that these comments are kept up-to-date and are added for every endpoint.
+API documentation is generated from the comments on the HTTP handlers. Therefore, it is important that these comments are kept up-to-date and are added for every endpoint.
 
-When working in HTTP handlers, make sure to generate the Swagger documentation before commiting your code.
+When working in HTTP handlers, make sure to generate the Swagger documentation before commiting your code. Most likely, new req/res bodies will be defined in the `bodies` package, though sometimes it makes more sense to define them as `entities`.
 
 To generate the Swagger documentation, run `make swagger`.
 
@@ -76,16 +76,39 @@ If these commands succeed locally, it is quite probable the CI will pass as well
 
 ## Architecture
 
+what can import what
+
 ### Domains
+
+what are domains
 
 ### Configuration and services interactor
 
+dependency injection
+when config, when services
+
+
 ### HTTP handlers and middleware
+
+auth routes
 
 ### Tests
 
-## Misc
+std/testify
 
-## JSON field naming convention
+## Miscellaneous development notes
 
-For client requests, use snake_case, for user requests, use camelCase.
+### JSON field naming convention
+
+For client routes, use snake_case, for user routes, use camelCase. This way, we can use camelCase in the web app.
+
+### Error wrapping
+
+When handling error blocks, try to always wrap errors with extra context.
+
+For example, when receiving an error coming from the database when fetching a user, use:
+```go
+return nil, fmt.Errorf("error fetching user from database: %w", err)
+```
+
+The `%w` here is very important, this will add context, while keeping the error type the same (for `errors.Is` checks). Using `%s` in the `fmt.Errorf` call does _not_ work.

@@ -20,7 +20,7 @@ db_ssl: false
 # Email configuration
 email_sender_name: Capsa
 email_sender_email: capsa@lucianonooijen.com
-sendinblue_api_key: yourapikey
+brevo_api_key: see https://app-smtp.brevo.com/real-time
 
 #Application logic configuration
 log_retention_days: 90
