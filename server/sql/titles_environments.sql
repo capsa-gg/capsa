@@ -20,6 +20,10 @@ VALUES ($1, $2);
 SELECT * FROM environments
 WHERE id = $1;
 
+-- name: GetEnvironmentByKey :one
+SELECT * FROM environments
+WHERE key = $1;
+
 -- name: GetEnvironmentByTitleName :one
 SELECT * FROM environments
 WHERE title = $1

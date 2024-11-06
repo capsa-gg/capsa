@@ -7,7 +7,7 @@ import (
 
 var (
 	// ErrorJwtInvalidIssuer indicates an invalid Issuer.
-	ErrorJwtInvalidIssuer = errors.New("token Issuer is invalid")
+	ErrorJwtInvalidIssuer = errors.New("token issuer is invalid")
 
 	// ErrorJwtInvalidAudience indicates that the audience is not valid.
 	ErrorJwtInvalidAudience = errors.New("token audience is invalid")

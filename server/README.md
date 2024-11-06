@@ -73,3 +73,13 @@ make ci
 ```
 
 If these commands succeed locally, it is quite probable the CI will pass as well.
+
+## Architecture
+
+### Domains
+
+### Configuration and services interactor
+
+### HTTP handlers and middleware
+
+### Tests

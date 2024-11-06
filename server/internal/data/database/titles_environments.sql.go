@@ -94,6 +94,24 @@ func (q *Queries) GetEnvironmentById(ctx context.Context, id int32) (Environment
 	return i, err
 }
 
+const getEnvironmentByKey = `-- name: GetEnvironmentByKey :one
+SELECT id, title, key, name, created_on FROM environments
+WHERE key = $1
+`
+
+func (q *Queries) GetEnvironmentByKey(ctx context.Context, key uuid.UUID) (Environment, error) {
+	row := q.db.QueryRowContext(ctx, getEnvironmentByKey, key)
+	var i Environment
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Key,
+		&i.Name,
+		&i.CreatedOn,
+	)
+	return i, err
+}
+
 const getEnvironmentByTitleName = `-- name: GetEnvironmentByTitleName :one
 SELECT id, title, key, name, created_on FROM environments
 WHERE title = $1

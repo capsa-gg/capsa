@@ -1,7 +1,13 @@
 -- name: AddUser :exec
--- Inserts new user into database
+-- Inserts new user into database without a password hash
 INSERT INTO users (email, first_name, last_name)
 VALUES ($1, $2, $3);
+
+-- name: AddUserWithPassHash :one
+-- Inserts new user into database with a password hash
+INSERT INTO users (email, first_name, last_name, password_hash)
+VALUES ($1, $2, $3, $4)
+RETURNING user_uuid;
 
 -- name: UpdateUserPassword :exec
 -- Update password_hash for user based on id.

@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/lucianonooijen/capsa/server/internal/infrastructure/passhash"
+
 	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
 
 	"github.com/go-playground/validator/v10"
@@ -41,11 +43,15 @@ func NewServices(c *entities.Config) (*Services, error) {
 		return nil, fmt.Errorf("error generating jwk instance: %w", err)
 	}
 
+	// Passhash instance
+	passHash := passhash.New()
+
 	s := Services{
 		Config:   c,
 		DBConn:   dbConn,
 		Database: db,
 		Token:    tokenInstance,
+		Passhash: passHash,
 	}
 
 	// Validate config

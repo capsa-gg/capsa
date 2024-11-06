@@ -13,7 +13,7 @@ func AddNewEnvironment(s *interactor.Services, title, env string) error {
 	log := s.GetDomainLogger("admin", "AddNewEnvironment").With("title", title, "environment", env)
 	ctx := context.TODO()
 
-	log.Debugf("attempting to add environment")
+	log.Debug("attempting to add environment")
 
 	titleInfo, err := s.Database.GetTitleByName(ctx, title)
 	if err != nil {
@@ -21,7 +21,7 @@ func AddNewEnvironment(s *interactor.Services, title, env string) error {
 	}
 
 	log = log.With("title_id", titleInfo.ID)
-	log.Debugf("fetched title data")
+	log.Debug("fetched title data")
 
 	err = s.Database.AddEnvironment(ctx, database.AddEnvironmentParams{
 		Title: titleInfo.ID,
@@ -32,7 +32,7 @@ func AddNewEnvironment(s *interactor.Services, title, env string) error {
 		return fmt.Errorf("error creating environment: %w", err)
 	}
 
-	log.Infof("environment added")
+	log.Info("environment added")
 
 	return nil
 }
@@ -43,7 +43,6 @@ func ListAllTitlesAndEnvironments(s *interactor.Services) ([]database.GetAllEnvi
 	ctx := context.TODO()
 
 	res, err := s.Database.GetAllEnvironmentsAndTitles(ctx)
-
 	if err != nil {
 		return nil, fmt.Errorf("error listing environments and titles: %w", err)
 	}

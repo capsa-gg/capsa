@@ -10,6 +10,7 @@ var (
 	userAddEmail     string
 	userAddFirstName string
 	userAddLastName  string
+	userAddPassword  string
 )
 
 var userCmd = &cobra.Command{
@@ -36,9 +37,23 @@ var userAddCmd = &cobra.Command{
 			log.Fatalf("last name argument is required")
 		}
 
-		err := user.AddNewUser(s, userAddEmail, userAddFirstName, userAddLastName)
-		if err != nil {
-			log.Fatalf("error adding new user: %s", err)
+		if !s.Config.IsDevMode && userAddPassword != "" {
+			log.Fatalf("adding a user with a password is only enabled development mode")
+		}
+
+		//nolint:ineffassign // Being explicit here is nice
+		var err error = nil
+
+		if userAddPassword == "" {
+			err = user.AddNewUser(s, userAddEmail, userAddFirstName, userAddLastName)
+			if err != nil {
+				log.Fatalf("error adding new user: %s", err)
+			}
+		} else {
+			_, err := user.AddNewUserWithPassword(s, userAddEmail, userAddFirstName, userAddLastName, userAddPassword)
+			if err != nil {
+				log.Fatalf("error adding new user: %s", err)
+			}
 		}
 
 		log.Info("user successfully added")
@@ -51,6 +66,7 @@ func init() {
 	userAddCmd.Flags().StringVarP(&userAddEmail, "email", "e", "", "New user email")
 	userAddCmd.Flags().StringVarP(&userAddFirstName, "firstname", "f", "", "New user first name")
 	userAddCmd.Flags().StringVarP(&userAddLastName, "lastname", "l", "", "New user last name")
+	userAddCmd.Flags().StringVarP(&userAddPassword, "password", "p", "", "New user last name")
 
 	// Add sub commands to command
 	userCmd.AddCommand(userAddCmd)
