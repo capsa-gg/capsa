@@ -4,12 +4,14 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
-
 	"github.com/go-playground/validator/v10"
 
 	"github.com/lucianonooijen/capsa/server/internal/data/database"
+	"github.com/lucianonooijen/capsa/server/internal/data/emails"
 	"github.com/lucianonooijen/capsa/server/internal/entities"
+	"github.com/lucianonooijen/capsa/server/internal/infrastructure/mailer"
+	"github.com/lucianonooijen/capsa/server/internal/infrastructure/passhash"
+	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
 )
 
 // NewServices initializes and validates a new instance of Services.
@@ -41,11 +43,20 @@ func NewServices(c *entities.Config) (*Services, error) {
 		return nil, fmt.Errorf("error generating jwk instance: %w", err)
 	}
 
+	// Passhash instance
+	passHash := passhash.New()
+
+	// Mailer instance (used for Emails instance)
+	mail := mailer.New(c)
+	email := emails.New(c, mail)
+
 	s := Services{
 		Config:   c,
 		DBConn:   dbConn,
 		Database: db,
 		Token:    tokenInstance,
+		Passhash: passHash,
+		Emails:   email,
 	}
 
 	// Validate config

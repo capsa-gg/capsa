@@ -23,10 +23,36 @@ type AddUserParams struct {
 	LastName  string `json:"lastName"`
 }
 
-// Inserts new user into database
+// Inserts new user into database without a password hash
 func (q *Queries) AddUser(ctx context.Context, arg AddUserParams) error {
 	_, err := q.db.ExecContext(ctx, addUser, arg.Email, arg.FirstName, arg.LastName)
 	return err
+}
+
+const addUserWithPassHash = `-- name: AddUserWithPassHash :one
+INSERT INTO users (email, first_name, last_name, password_hash, password_uuid)
+VALUES ($1, $2, $3, $4, uuid_generate_v4())
+RETURNING user_uuid
+`
+
+type AddUserWithPassHashParams struct {
+	Email        string         `json:"email"`
+	FirstName    string         `json:"firstName"`
+	LastName     string         `json:"lastName"`
+	PasswordHash sql.NullString `json:"passwordHash"`
+}
+
+// Inserts new user into database with a password hash
+func (q *Queries) AddUserWithPassHash(ctx context.Context, arg AddUserWithPassHashParams) (uuid.UUID, error) {
+	row := q.db.QueryRowContext(ctx, addUserWithPassHash,
+		arg.Email,
+		arg.FirstName,
+		arg.LastName,
+		arg.PasswordHash,
+	)
+	var user_uuid uuid.UUID
+	err := row.Scan(&user_uuid)
+	return user_uuid, err
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one

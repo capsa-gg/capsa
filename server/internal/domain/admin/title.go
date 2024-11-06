@@ -2,7 +2,8 @@ package admin
 
 import (
 	"context"
-	"fmt"
+
+	"github.com/lucianonooijen/capsa/server/internal/entities"
 
 	"github.com/lucianonooijen/capsa/server/internal/interactor"
 )
@@ -12,14 +13,16 @@ func AddNewTitle(s *interactor.Services, title string) error {
 	log := s.GetDomainLogger("admin", "AddNewTitle").With("title", title)
 	ctx := context.TODO()
 
-	log.Debugf("attempting to add title")
+	log.Debug("attempting to add title")
 
 	err := s.Database.AddTitle(ctx, title)
 	if err != nil {
-		return fmt.Errorf("error creating title: %w", err)
+		log.Warnf("cannot add title: %s", err)
+
+		return entities.NewDomainErrorFromDatabaseError(err)
 	}
 
-	log.Infof("title added")
+	log.Info("title added")
 
 	return nil
 }

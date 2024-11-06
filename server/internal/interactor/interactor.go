@@ -3,6 +3,10 @@ package interactor
 import (
 	"database/sql"
 
+	"github.com/lucianonooijen/capsa/server/internal/data/emails"
+
+	"github.com/lucianonooijen/capsa/server/internal/infrastructure/passhash"
+
 	"go.uber.org/zap"
 
 	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
@@ -22,8 +26,14 @@ type Services struct {
 	// Database is the instance of the SQLc generated database queries.
 	Database *database.Queries `validate:"required"`
 
-	// Token is used to generate and validate JWTs, JWKs
+	// Token is used to generate and validate JWTs, JWKs.
 	Token *token.Token `validate:"required"`
+
+	// Passhash is used to generate and compare password hashes.
+	Passhash *passhash.PassHash `validate:"required"`
+
+	// Emails is used to send transactional emails.
+	Emails *emails.Emails `validate:"required"`
 }
 
 // GetDomainLogger generated a *zap.SugaredLogger instance for the domain and function.

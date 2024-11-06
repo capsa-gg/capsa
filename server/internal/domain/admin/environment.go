@@ -2,9 +2,9 @@ package admin
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/lucianonooijen/capsa/server/internal/data/database"
+	"github.com/lucianonooijen/capsa/server/internal/entities"
 	"github.com/lucianonooijen/capsa/server/internal/interactor"
 )
 
@@ -13,15 +13,17 @@ func AddNewEnvironment(s *interactor.Services, title, env string) error {
 	log := s.GetDomainLogger("admin", "AddNewEnvironment").With("title", title, "environment", env)
 	ctx := context.TODO()
 
-	log.Debugf("attempting to add environment")
+	log.Debug("attempting to add environment")
 
 	titleInfo, err := s.Database.GetTitleByName(ctx, title)
 	if err != nil {
-		return fmt.Errorf("error getting title %s by name: %w", title, err)
+		log.Warnf("cannot get title: %s", err)
+
+		return entities.NewDomainErrorFromDatabaseError(err)
 	}
 
 	log = log.With("title_id", titleInfo.ID)
-	log.Debugf("fetched title data")
+	log.Debug("fetched title data")
 
 	err = s.Database.AddEnvironment(ctx, database.AddEnvironmentParams{
 		Title: titleInfo.ID,
@@ -29,10 +31,12 @@ func AddNewEnvironment(s *interactor.Services, title, env string) error {
 	})
 
 	if err != nil {
-		return fmt.Errorf("error creating environment: %w", err)
+		log.Warnf("cannot add environment: %s", err)
+
+		return entities.NewDomainErrorFromDatabaseError(err)
 	}
 
-	log.Infof("environment added")
+	log.Info("environment added")
 
 	return nil
 }
@@ -43,9 +47,10 @@ func ListAllTitlesAndEnvironments(s *interactor.Services) ([]database.GetAllEnvi
 	ctx := context.TODO()
 
 	res, err := s.Database.GetAllEnvironmentsAndTitles(ctx)
-
 	if err != nil {
-		return nil, fmt.Errorf("error listing environments and titles: %w", err)
+		log.Warnf("cannot get titles and environments: %s", err)
+
+		return nil, entities.NewDomainErrorFromDatabaseError(err)
 	}
 
 	log.Infof("fetched %d items", len(res))

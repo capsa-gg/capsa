@@ -29,7 +29,7 @@ type Config struct {
 	// Email configuration
 	EmailSenderName  string `mapstructure:"email_sender_name" validate:"required"`
 	EmailSenderEmail string `mapstructure:"email_sender_email" validate:"required"`
-	SendinblueAPIKey string `mapstructure:"sendinblue_api_key" validate:"required"`
+	BrevoAPIKey      string `mapstructure:"brevo_api_key" validate:"required"`
 
 	// Application logic configuration
 	LogRetentionDays    int `mapstructure:"log_retention_days" validate:"required"`

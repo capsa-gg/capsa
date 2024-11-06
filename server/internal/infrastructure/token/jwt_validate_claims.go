@@ -7,10 +7,14 @@ import (
 
 var (
 	// ErrorJwtInvalidIssuer indicates an invalid Issuer.
-	ErrorJwtInvalidIssuer = errors.New("token Issuer is invalid")
+	ErrorJwtInvalidIssuer = errors.New("token issuer is invalid")
 
 	// ErrorJwtInvalidAudience indicates that the audience is not valid.
 	ErrorJwtInvalidAudience = errors.New("token audience is invalid")
+
+	// ErrorJwtIncorrectJwtID indicates that the jwt id value does not match the expected value.
+	// This happens when a user has changed their password and attempts to use an old token.
+	ErrorJwtIncorrectJwtID = errors.New("jwt id does not match expected value")
 
 	// ErrorJwtExpired indicates that the token is expired.
 	ErrorJwtExpired = errors.New("token is expired")

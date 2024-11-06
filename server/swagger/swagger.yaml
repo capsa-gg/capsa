@@ -1,5 +1,42 @@
 basePath: /v1
 definitions:
+  bodies.ClientLogCreationRequest:
+    properties:
+      key:
+        type: string
+      platform:
+        type: string
+      type:
+        description: Needs manual validation
+        type: string
+    type: object
+  bodies.ClientLogCreationResponse:
+    properties:
+      expiry:
+        type: string
+      link_web:
+        type: string
+      log_id:
+        type: string
+      token:
+        type: string
+    type: object
+  bodies.ErrorResponse:
+    properties:
+      details:
+        description: |-
+          Details contains details about the error.
+          This field is mostly for development, but is used in production for adding request body validation errors.
+        type: string
+      error:
+        description: Error contains the error string.
+        type: string
+      raw_error:
+        description: |-
+          RawError contains the raw error.
+          This field is only sent in development mode.
+        type: string
+    type: object
   bodies.StatusResponse:
     properties:
       code:
@@ -10,6 +47,37 @@ definitions:
         type: string
       version:
         example: 0.0.1
+        type: string
+    type: object
+  bodies.UserLoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        description: Needs manual validation
+        type: string
+    type: object
+  bodies.UserPasswordResetCompleteRequest:
+    properties:
+      password:
+        description: Needs manual validation
+        type: string
+      resetToken:
+        type: string
+    type: object
+  entities.UserLoginResult:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      token:
+        type: string
+      tokenExpiry:
+        type: string
+      userUUID:
         type: string
     type: object
 host: example.com
@@ -23,6 +91,81 @@ info:
   title: Capsa Server
   version: "1"
 paths:
+  /client/auth:
+    post:
+      consumes:
+      - application/json
+      description: Allows clients to create a log session and receive a token to send
+        logs with
+      parameters:
+      - description: ClientLogCreationRequest
+        in: body
+        name: creation_request
+        required: true
+        schema:
+          $ref: '#/definitions/bodies.ClientLogCreationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ClientLogCreationResponse'
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "401":
+          description: Unauthorized
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "403":
+          description: Forbidden
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "409":
+          description: Conflict
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      summary: Client authentication handler
+      tags:
+      - Client
   /status:
     get:
       description: To be used with for status pings to check readiness and liveliness
@@ -49,4 +192,176 @@ paths:
       summary: Status handler
       tags:
       - Common
+  /user/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Allows clients to create a log session and receive a token to send
+        logs with
+      parameters:
+      - description: UserLoginRequest
+        in: body
+        name: login_request
+        required: true
+        schema:
+          $ref: '#/definitions/bodies.UserLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/entities.UserLoginResult'
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "401":
+          description: Unauthorized
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "403":
+          description: Forbidden
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "409":
+          description: Conflict
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      summary: User login handler
+      tags:
+      - UserAuthentication
+  /user/auth/password-reset:
+    get:
+      description: Allows clients to create a log session and receive a token to send
+        logs with
+      parameters:
+      - description: UserEmail
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      summary: User password reset request
+      tags:
+      - UserAuthentication
+    post:
+      description: Allows clients to create a log session and receive a token to send
+        logs with
+      parameters:
+      - description: UserEmail
+        in: query
+        name: email
+        required: true
+        type: string
+      - description: UserPasswordCompleteRequest
+        in: body
+        name: password_reset_data
+        required: true
+        schema:
+          $ref: '#/definitions/bodies.UserPasswordResetCompleteRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      summary: User password reset set password
+      tags:
+      - UserAuthentication
 swagger: "2.0"
