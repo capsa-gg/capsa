@@ -274,6 +274,149 @@
                     }
                 }
             }
+        },
+        "/user/auth/password-reset": {
+            "get": {
+                "description": "Allows clients to create a log session and receive a token to send logs with",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserAuthentication"
+                ],
+                "summary": "User password reset request",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "UserEmail",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Allows clients to create a log session and receive a token to send logs with",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserAuthentication"
+                ],
+                "summary": "User password reset set password",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "UserEmail",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "description": "UserPasswordCompleteRequest",
+                        "name": "password_reset_data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bodies.UserPasswordResetCompleteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -351,6 +494,18 @@
                 },
                 "password": {
                     "description": "Needs manual validation",
+                    "type": "string"
+                }
+            }
+        },
+        "bodies.UserPasswordResetCompleteRequest": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "description": "Needs manual validation",
+                    "type": "string"
+                },
+                "resetToken": {
                     "type": "string"
                 }
             }

@@ -8,9 +8,9 @@ import (
 
 // ClientLogCreationRequest contains the data to request the creation of a new log session.
 type ClientLogCreationRequest struct {
-	Key      uuid.UUID `json:"key" validation:"required"`
-	Platform string    `json:"platform" validation:"required"`
-	Type     string    `json:"type" validation:"required"` // Needs manual validation
+	Key      uuid.UUID `json:"key" validate:"required"`
+	Platform string    `json:"platform" validate:"required,max=64"`
+	Type     string    `json:"type" validate:"required,max=32"` // Needs manual validation for enum
 }
 
 // ClientLogCreationResponse contains the after a client has successfully authenticated and a log session has been created.

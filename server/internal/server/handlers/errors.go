@@ -25,10 +25,14 @@ func (h Handlers) sendErrorResponse(c *gin.Context, err error) {
 		res.RawError = err.Error()
 	}
 
+	h.logger.Named("sendErrorResponse").Errorf("unhandled internal server error: %s", err)
+
 	c.JSON(http.StatusInternalServerError, res)
 }
 
 func (h Handlers) sendDomainError(c *gin.Context, domainError entities.DomainError) {
+	log := h.logger.Named("sendDomainError")
+
 	res := bodies.ErrorResponse{
 		Error: domainError.Error(),
 	}
@@ -52,9 +56,16 @@ func (h Handlers) sendDomainError(c *gin.Context, domainError entities.DomainErr
 		c.JSON(http.StatusConflict, res)
 		return
 	case entities.DomainErrorUnexpected:
+		log.Errorf("unexpected domain error: %#v", domainError)
+
 		c.JSON(http.StatusInternalServerError, res)
+
 		return
 	default:
+		log.Errorf("unhandled domain error: %#v", domainError)
+
+		c.JSON(http.StatusInternalServerError, res)
+
 		return
 	}
 }

@@ -43,3 +43,40 @@ func userLoginSuccessTemplate(firstName string) hermes.Email {
 
 	return email
 }
+
+func resetPasswordCodeTemplate(firstName, resetToken string) hermes.Email {
+	email := hermes.Email{
+		Body: hermes.Body{
+			Name: firstName,
+			Intros: []string{
+				"Reset your Capsa password.",
+				"Please use the code " + resetToken + " to reset your password.",
+				"If you have not requested your password reset, you can ignore this email.",
+			},
+			Outros: []string{
+				"If you don't reset your password before the code expires, you need to request a new code.",
+			},
+		},
+	}
+	addDefaultValuesToTemplate(&email)
+
+	return email
+}
+
+func resetPasswordConfirmationTemplate(firstName string) hermes.Email {
+	email := hermes.Email{
+		Body: hermes.Body{
+			Name: firstName,
+			Intros: []string{
+				"Your Capsa password has been reset.",
+				"If you have not performed this action, please reach out to your Capsa administrator right away.",
+			},
+			Outros: []string{
+				"Do you need help, or do you have a question? Feel free to reach out by replying to this email, we are happy to help out!",
+			},
+		},
+	}
+	addDefaultValuesToTemplate(&email)
+
+	return email
+}

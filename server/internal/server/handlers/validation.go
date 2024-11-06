@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/lucianonooijen/capsa/server/internal/interactor"
-	"github.com/lucianonooijen/capsa/server/internal/server/bodies"
-
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
+
+	"github.com/lucianonooijen/capsa/server/internal/interactor"
+	"github.com/lucianonooijen/capsa/server/internal/server/bodies"
 )
 
 // Extracts the response body and validates the data structure (for required fields).

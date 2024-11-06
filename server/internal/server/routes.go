@@ -3,10 +3,9 @@ package server
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/lucianonooijen/capsa/server/internal/server/middleware"
-
 	"github.com/lucianonooijen/capsa/server/internal/interactor"
 	"github.com/lucianonooijen/capsa/server/internal/server/handlers"
+	"github.com/lucianonooijen/capsa/server/internal/server/middleware"
 )
 
 //nolint:gocritic // We use blocks to show nested routes more cleanly
@@ -28,9 +27,9 @@ func registerRoutes(r *gin.RouterGroup, h *handlers.Handlers, s *interactor.Serv
 	// User authentication routes
 	userAuth := r.Group("/user/auth")
 	{
-		userAuth.POST("/login", h.UserLogin)       // TODO: implement
-		userAuth.GET("/password-reset", h.Status)  // TODO: implement
-		userAuth.POST("/password-reset", h.Status) // TODO: implement
+		userAuth.POST("/login", h.UserLogin)
+		userAuth.GET("/password-reset", h.UserPasswordRequest)
+		userAuth.POST("/password-reset", h.UserPasswordComplete)
 	}
 
 	// Authenticated user routes

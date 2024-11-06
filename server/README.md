@@ -100,6 +100,8 @@ For small utilities, it is best to use `*entities.Config` if you just need a con
 
 For easier iteration, the `*interactor.Services` contains direct references to structs and not to interfaces. At some point, when there will be different implementations of the same service (for example different file storage systems), these can be moved to the `interactor` package. For now, that is not worth doing as it would be quite cumbersome to have to change signatures in different places for very little benefit.
 
+In modules where the configuration or services are often used, the pointer to the instance can be stored as a struct member.
+
 ### HTTP handlers and middleware
 
 The HTTP routes are defined in `server/routes.go`. These, in turn, call the with Swagger comments annotated handler methods in `server/handlers`.
