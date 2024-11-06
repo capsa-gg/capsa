@@ -1,13 +1,12 @@
-package client
+package logs
 
 import (
 	"context"
 	"fmt"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
-
 	"github.com/google/uuid"
 
+	"github.com/lucianonooijen/capsa/server/internal/entities"
 	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
 	"github.com/lucianonooijen/capsa/server/internal/interactor"
 )
