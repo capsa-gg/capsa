@@ -131,6 +131,81 @@ const docTemplate = `{
                 }
             }
         },
+        "/client/log/metadata": {
+            "post": {
+                "security": [
+                    {
+                        "JwtClient": []
+                    }
+                ],
+                "description": "Allows clients to store linked logs and additional metadata for their log session",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ClientAuthenticated"
+                ],
+                "summary": "Log metadata storage",
+                "parameters": [
+                    {
+                        "description": "LogMetadataSaveRequest",
+                        "name": "metadata",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bodies.LogMetadataSaveRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/status": {
             "get": {
                 "description": "To be used with for status pings to check readiness and liveliness of the server",
@@ -428,16 +503,23 @@ const docTemplate = `{
     "definitions": {
         "bodies.ClientLogCreationRequest": {
             "type": "object",
+            "required": [
+                "key",
+                "platform",
+                "type"
+            ],
             "properties": {
                 "key": {
                     "type": "string"
                 },
                 "platform": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 64
                 },
                 "type": {
-                    "description": "Needs manual validation",
-                    "type": "string"
+                    "description": "Needs manual validation for enum",
+                    "type": "string",
+                    "maxLength": 32
                 }
             }
         },
@@ -475,6 +557,21 @@ const docTemplate = `{
                 }
             }
         },
+        "bodies.LogMetadataSaveRequest": {
+            "type": "object",
+            "properties": {
+                "additional_metadata": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "log_links": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "bodies.StatusResponse": {
             "type": "object",
             "properties": {
@@ -494,22 +591,32 @@ const docTemplate = `{
         },
         "bodies.UserLoginRequest": {
             "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
             "properties": {
                 "email": {
                     "type": "string"
                 },
                 "password": {
-                    "description": "Needs manual validation",
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 64,
+                    "minLength": 12
                 }
             }
         },
         "bodies.UserPasswordResetCompleteRequest": {
             "type": "object",
+            "required": [
+                "password",
+                "resetToken"
+            ],
             "properties": {
                 "password": {
-                    "description": "Needs manual validation",
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 64,
+                    "minLength": 12
                 },
                 "resetToken": {
                     "type": "string"
@@ -538,6 +645,14 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "JwtClient": {
+            "description": "Header value should be \"Bearer JwtString\"",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

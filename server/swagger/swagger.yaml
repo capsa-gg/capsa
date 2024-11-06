@@ -5,10 +5,16 @@ definitions:
       key:
         type: string
       platform:
+        maxLength: 64
         type: string
       type:
-        description: Needs manual validation
+        description: Needs manual validation for enum
+        maxLength: 32
         type: string
+    required:
+    - key
+    - platform
+    - type
     type: object
   bodies.ClientLogCreationResponse:
     properties:
@@ -37,6 +43,16 @@ definitions:
           This field is only sent in development mode.
         type: string
     type: object
+  bodies.LogMetadataSaveRequest:
+    properties:
+      additional_metadata:
+        additionalProperties: {}
+        type: object
+      log_links:
+        additionalProperties:
+          type: string
+        type: object
+    type: object
   bodies.StatusResponse:
     properties:
       code:
@@ -54,16 +70,24 @@ definitions:
       email:
         type: string
       password:
-        description: Needs manual validation
+        maxLength: 64
+        minLength: 12
         type: string
+    required:
+    - email
+    - password
     type: object
   bodies.UserPasswordResetCompleteRequest:
     properties:
       password:
-        description: Needs manual validation
+        maxLength: 64
+        minLength: 12
         type: string
       resetToken:
         type: string
+    required:
+    - password
+    - resetToken
     type: object
   entities.UserLoginResult:
     properties:
@@ -166,6 +190,55 @@ paths:
       summary: Client authentication handler
       tags:
       - Client
+  /client/log/metadata:
+    post:
+      consumes:
+      - application/json
+      description: Allows clients to store linked logs and additional metadata for
+        their log session
+      parameters:
+      - description: LogMetadataSaveRequest
+        in: body
+        name: metadata
+        required: true
+        schema:
+          $ref: '#/definitions/bodies.LogMetadataSaveRequest'
+      responses:
+        "201":
+          description: Created
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      security:
+      - JwtClient: []
+      summary: Log metadata storage
+      tags:
+      - ClientAuthenticated
   /status:
     get:
       description: To be used with for status pings to check readiness and liveliness
@@ -364,4 +437,10 @@ paths:
       summary: User password reset set password
       tags:
       - UserAuthentication
+securityDefinitions:
+  JwtClient:
+    description: Header value should be "Bearer JwtString"
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

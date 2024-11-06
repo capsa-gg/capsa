@@ -21,6 +21,12 @@ import (
 // @contact.url https://lucianonooijen.com
 // @contact.email capsa@lucianonooijen.com
 
+// NOTE: there is securitydefinitions.bearerauth, but this does not allow setting the bearer value, this is better.
+// @securitydefinitions.apikey JwtClient
+// @in header
+// @name Authorization
+// @description Header value should be "Bearer JwtString"
+
 // @host example.com
 // @BasePath /v1
 

@@ -7,9 +7,45 @@ package database
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/google/uuid"
 )
+
+const addLogLink = `-- name: AddLogLink :exec
+INSERT INTO logs_links(source, link, description)
+VALUES ($1, $2, $3)
+ON CONFLICT (source, link)
+DO UPDATE SET description = $3
+`
+
+type AddLogLinkParams struct {
+	Source      int64  `json:"source"`
+	Link        int64  `json:"link"`
+	Description string `json:"description"`
+}
+
+// Inserts a link between a source and another log session, with a description
+func (q *Queries) AddLogLink(ctx context.Context, arg AddLogLinkParams) error {
+	_, err := q.db.ExecContext(ctx, addLogLink, arg.Source, arg.Link, arg.Description)
+	return err
+}
+
+const addLogMetadata = `-- name: AddLogMetadata :exec
+INSERT INTO logs_metadata(log, metadata)
+VALUES ($1, $2)
+`
+
+type AddLogMetadataParams struct {
+	Log      int64           `json:"log"`
+	Metadata json.RawMessage `json:"metadata"`
+}
+
+// Inserts metadata for a given log
+func (q *Queries) AddLogMetadata(ctx context.Context, arg AddLogMetadataParams) error {
+	_, err := q.db.ExecContext(ctx, addLogMetadata, arg.Log, arg.Metadata)
+	return err
+}
 
 const addNewLogSession = `-- name: AddNewLogSession :one
 INSERT INTO logs (environment, log_type, platform)
