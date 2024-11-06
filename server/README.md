@@ -83,3 +83,9 @@ If these commands succeed locally, it is quite probable the CI will pass as well
 ### HTTP handlers and middleware
 
 ### Tests
+
+## Misc
+
+## JSON field naming convention
+
+For client requests, use snake_case, for user requests, use camelCase.

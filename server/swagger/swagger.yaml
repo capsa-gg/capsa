@@ -49,6 +49,29 @@ definitions:
         example: 0.0.1
         type: string
     type: object
+  bodies.UserLoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        description: Needs manual validation
+        type: string
+    type: object
+  entities.UserLoginResult:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      token:
+        type: string
+      tokenExpiry:
+        type: string
+      userUUID:
+        type: string
+    type: object
 host: example.com
 info:
   contact:
@@ -134,7 +157,7 @@ paths:
             $ref: '#/definitions/bodies.ErrorResponse'
       summary: Client authentication handler
       tags:
-      - ClientUnauthenticated
+      - Client
   /status:
     get:
       description: To be used with for status pings to check readiness and liveliness
@@ -161,4 +184,79 @@ paths:
       summary: Status handler
       tags:
       - Common
+  /user/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Allows clients to create a log session and receive a token to send
+        logs with
+      parameters:
+      - description: UserLoginRequest
+        in: body
+        name: login_request
+        required: true
+        schema:
+          $ref: '#/definitions/bodies.UserLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/entities.UserLoginResult'
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "401":
+          description: Unauthorized
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "403":
+          description: Forbidden
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "409":
+          description: Conflict
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      summary: User login handler
+      tags:
+      - UserAuthentication
 swagger: "2.0"

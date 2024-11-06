@@ -70,7 +70,7 @@ func CreateNewLogSession(s *interactor.Services, envKey uuid.UUID, platform stri
 		TokenExpiry: time.Unix(jwtClaims.Expiry, 0),
 	}
 
-	log.Debug("log session creation succeeded")
+	log.Info("log session creation succeeded")
 
 	return &logSession, nil
 }

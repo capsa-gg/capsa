@@ -30,8 +30,8 @@ func (q *Queries) AddUser(ctx context.Context, arg AddUserParams) error {
 }
 
 const addUserWithPassHash = `-- name: AddUserWithPassHash :one
-INSERT INTO users (email, first_name, last_name, password_hash)
-VALUES ($1, $2, $3, $4)
+INSERT INTO users (email, first_name, last_name, password_hash, password_uuid)
+VALUES ($1, $2, $3, $4, uuid_generate_v4())
 RETURNING user_uuid
 `
 

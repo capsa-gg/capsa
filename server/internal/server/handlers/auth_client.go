@@ -13,7 +13,7 @@ import (
 
 // ClientAuth returns a 201 status code if a client has correctly authenticated
 // @Summary 	Client authentication handler
-// @Tags        ClientUnauthenticated
+// @Tags        Client
 // @Accept 		json
 // @Produce     json
 // @Param		creation_request 	body 	bodies.ClientLogCreationRequest 	true 	"ClientLogCreationRequest"

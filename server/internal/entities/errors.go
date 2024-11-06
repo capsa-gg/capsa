@@ -1,6 +1,7 @@
 package entities
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 
@@ -37,7 +38,7 @@ type DomainError struct {
 
 // Error implements the error interface.
 func (de DomainError) Error() string {
-	return fmt.Sprintf("[]: %s", de.Message)
+	return fmt.Sprintf("[%s]: %s", de.Type, de.Message)
 }
 
 // NewDomainError returns a new instance of DomainError.
@@ -51,6 +52,18 @@ func NewDomainError(errorType DomainErrorType, message string, err error) Domain
 
 // NewDomainErrorFromDatabaseError accepts a database error and returns a domain error.
 func NewDomainErrorFromDatabaseError(err error) DomainError {
+	// Not found in database => 404
+	if errors.Is(err, sql.ErrNoRows) {
+		detail := fmt.Sprintf("Database not found error: %s", err)
+
+		return DomainError{
+			Type:     DomainErrorNotFound,
+			Message:  "item not found",
+			Details:  detail,
+			RawError: err,
+		}
+	}
+
 	var pqErr *pq.Error
 	ok := errors.As(err, &pqErr)
 
