@@ -39,7 +39,7 @@ For development on Mac and Linux, you can run `make dev` to run the application 
 
 The Go code to access the database is code-generated with SQLc. Database queries are written in SQL directly, and then it's converted to Go.
 
-After modifying the SQL code in `./sql`, run `make sql` to generate the Go code. These changes must be committed to Git.
+After modifying the SQL code in `./sql`, run `make sql` to generate the Go code. These changes must be committed to Git. For new SQL queries, please follow the existing casing and style patterns.
 
 For details on how to use SQLc, see the [SQLc documentation](https://docs.sqlc.dev/en/latest/).
 
