@@ -76,25 +76,51 @@ If these commands succeed locally, it is quite probable the CI will pass as well
 
 ## Architecture
 
-what can import what
+This architecture is loosely inspired by Clean Architecture and Domain Driven Design, but adopted to be a bit more flexible.
+
+### Import rules
+
+Please make sure to adhere to the current import rules. The rules here are not overly strict. It is fine to import a package if you need to refer to types for example, but not to call functions from them. If you need to access instances, they should be passed as arguments, but not created.
+
+Specific guidelines need to be established, but for now it's best to follow existing patterns. For example: `domain` only imports types but does not create new instances.
 
 ### Domains
 
-what are domains
+Domains contain the business logic of the application. Think of authentication handling and log parsing. Domain instances are not created, but the public functions are called by passing a services interactor to use different systems.
+
+The functions in domains should be seen as the heart of the application logic, where no input/output validation should take place and where logic should be as clean and pure as possible.
 
 ### Configuration and services interactor
 
-dependency injection
-when config, when services
+Two very commonly used data types are `*entities.Config` and `*interactor.Services`. These are used as a form of dependency injection for the called code to call instances created in the calling code. This services interactor also includes an instance of the generated database module, which can be used for database access, so domain code does not need to import the database directly or manage connections.
 
+The configuration is loaded on application start and validated. With the configuration, different services are created, the instances of which are used to create the interactor.
+
+For small utilities, it is best to use `*entities.Config` if you just need a configuration value to access outside services or configuration values. For situations like the http server, you want to use `*interactor.Services` so you can use instances of all services created during the application start.
+
+For easier iteration, the `*interactor.Services` contains direct references to structs and not to interfaces. At some point, when there will be different implementations of the same service (for example different file storage systems), these can be moved to the `interactor` package. For now, that is not worth doing as it would be quite cumbersome to have to change signatures in different places for very little benefit.
 
 ### HTTP handlers and middleware
 
-auth routes
+The HTTP routes are defined in `server/routes.go`. These, in turn, call the with Swagger comments annotated handler methods in `server/handlers`.
+
+The handlers are responsible for validating the request data (which can be done by using the `extractBodyJSON` method and validation tags in the request types) and returning the correct HTTP codes (which can be done with the `sendErrorResponse` method).
+
+All request and response types should have struct tags for JSON (de)marshaling.
+
+Authenticated routes in the `routes.go` file should be placed in router groups and use a middleware handler to validate the request before processing. In case the middleware does not succeed, it _must_ call `c.Abort()` to prevent the handler from being executed. The handlers themselves should not check token validation.
+
+### Returning the correct errors
+
+Application logic should return `entities.DomainError` where possible, with the correct values set (this is ensured by using the `NewDomainError` functions). The `sendErrorResponse` method of the `handlers` package will ensure the correct error code will be sent.
+
+Database errors are also handled in the same method and should be wrapped, rather than returning `DomainError`.
 
 ### Tests
 
-std/testify
+Simple tests can be written with the standard library or with `testify/require`, according to preference.
+
+Larger tests can best be written using `testify`.
 
 ## Miscellaneous development notes
 
