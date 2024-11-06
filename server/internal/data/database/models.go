@@ -68,6 +68,7 @@ type Log struct {
 	ID          int64         `json:"id"`
 	LogUuid     uuid.UUID     `json:"logUuid"`
 	Environment int32         `json:"environment"`
+	Platform    string        `json:"platform"`
 	LogType     LogClientType `json:"logType"`
 	CreatedOn   time.Time     `json:"createdOn"`
 	LogStart    sql.NullTime  `json:"logStart"`

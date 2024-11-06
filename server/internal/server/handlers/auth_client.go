@@ -7,40 +7,58 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/lucianonooijen/capsa/server/constants"
+	"github.com/lucianonooijen/capsa/server/internal/domain/logs"
 	"github.com/lucianonooijen/capsa/server/internal/server/bodies"
 )
 
-// TODO: Finish this
-
 // ClientAuth returns a 201 status code if a client has correctly authenticated
 // @Summary 	Client authentication handler
-// @Tags        Client
-// @Description	Allows clients to create a log session and receive a token to send logs with
+// @Tags        ClientUnauthenticated
+// @Accept 		json
 // @Produce     json
-// @Success		201		{object}	bodies.StatusResponse
-// @Failure     500		{object}	bodies.StatusResponse
+// @Param		creation_request 	body 	bodies.ClientLogCreationRequest 	true 	"ClientLogCreationRequest"
+// @Description	Allows clients to create a log session and receive a token to send logs with
+// @Success		201		{object}	bodies.ClientLogCreationResponse
+// @Failure     400		{object}	bodies.ErrorResponse
+// @Failure     401		{object}	bodies.ErrorResponse
+// @Failure     403		{object}	bodies.ErrorResponse
+// @Failure     404		{object}	bodies.ErrorResponse
+// @Failure     409		{object}	bodies.ErrorResponse
+// @Failure     500		{object}	bodies.ErrorResponse
 // @Header		all		{string} 	X-Capsa-Server-Version		"Current Capsa Server version"
 // @Router 		/client/auth [post]
 func (h Handlers) ClientAuth(c *gin.Context) {
-	err := h.services.DBConn.Ping()
+	log := h.logger.Named("ClientAuth")
 
+	req, err := extractBodyJSON[bodies.ClientLogCreationRequest](c, h.services)
 	if err != nil {
-		statusBody := bodies.StatusResponse{
-			Code:    http.StatusInternalServerError,
-			Message: fmt.Sprintf("error pinnging database: %s", err),
-			Version: constants.Version,
-		}
+		return // Error sent by extractBodyJSON
+	}
 
-		c.JSON(statusBody.Code, statusBody)
+	logType, err := constants.LogTypeFromString(req.Type)
+	if err != nil {
+		log.Infof("error getting logtype from string: %s", err)
+
+		c.JSON(http.StatusBadRequest, bodies.ErrorResponse{
+			Error: fmt.Sprintf("%s is not a valid log type", req.Type),
+		})
 
 		return
 	}
 
-	statusBody := bodies.StatusResponse{
-		Code:    http.StatusOK,
-		Message: "ok",
-		Version: constants.Version,
+	sesInfo, err := logs.CreateNewLogSession(h.services, req.Key, req.Platform, logType)
+	if err != nil {
+		h.sendErrorResponse(c, err)
+
+		return
 	}
 
-	c.JSON(statusBody.Code, statusBody)
+	res := bodies.ClientLogCreationResponse{
+		Token:   sesInfo.ClientJWT,
+		LogID:   sesInfo.UUID,
+		Expiry:  sesInfo.TokenExpiry,
+		LinkWeb: "[UNIMPLEMENTED]", // TODO: implement
+	}
+
+	c.JSON(http.StatusCreated, res)
 }

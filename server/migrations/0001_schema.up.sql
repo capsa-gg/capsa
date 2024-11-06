@@ -45,6 +45,7 @@ CREATE TABLE logs (
     id BIGSERIAL PRIMARY KEY,
     log_uuid uuid UNIQUE NOT NULL DEFAULT (uuid_generate_v4()),
     environment int NOT NULL REFERENCES environments(id),
+    platform varchar NOT NULL,
     log_type log_client_type NOT NULL,
     created_on timestamp NOT NULL DEFAULT now(),
     log_start timestamp,

@@ -1,7 +1,7 @@
 -- name: AddNewLogSession :one
 -- Inserts new log session into the database
-INSERT INTO logs (environment, log_type)
-VALUES ($1, $2)
+INSERT INTO logs (environment, log_type, platform)
+VALUES ($1, $2, $3)
 RETURNING log_uuid;
 
 -- name: GetLogByUuid :one

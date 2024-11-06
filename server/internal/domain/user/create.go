@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/lucianonooijen/capsa/server/internal/entities"
+
 	"github.com/google/uuid"
 
 	"github.com/lucianonooijen/capsa/server/internal/data/database"
@@ -64,7 +66,7 @@ func AddNewUserWithPassword(s *interactor.Services, email, firstName, lastName, 
 
 	passHash, err := s.Passhash.PlainTextToHash(password)
 	if err != nil {
-		return nil, fmt.Errorf("error generating password hash: %w", err)
+		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot generate password hash", err)
 	}
 
 	userUUID, err := s.Database.AddUserWithPassHash(ctx, database.AddUserWithPassHashParams{
@@ -75,7 +77,9 @@ func AddNewUserWithPassword(s *interactor.Services, email, firstName, lastName, 
 	})
 
 	if err != nil {
-		return nil, fmt.Errorf("error creating new user: %w", err)
+		log.Warnf("cannot add user: %s", err)
+
+		return nil, entities.NewDomainErrorFromDatabaseError(err)
 	}
 
 	log = log.With("user_uuid", userUUID)

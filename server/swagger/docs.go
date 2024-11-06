@@ -19,6 +19,118 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/client/auth": {
+            "post": {
+                "description": "Allows clients to create a log session and receive a token to send logs with",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ClientUnauthenticated"
+                ],
+                "summary": "Client authentication handler",
+                "parameters": [
+                    {
+                        "description": "ClientLogCreationRequest",
+                        "name": "creation_request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ClientLogCreationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ClientLogCreationResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/status": {
             "get": {
                 "description": "To be used with for status pings to check readiness and liveliness of the server",
@@ -59,6 +171,55 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "bodies.ClientLogCreationRequest": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "platform": {
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Needs manual validation",
+                    "type": "string"
+                }
+            }
+        },
+        "bodies.ClientLogCreationResponse": {
+            "type": "object",
+            "properties": {
+                "expiry": {
+                    "type": "string"
+                },
+                "link_web": {
+                    "type": "string"
+                },
+                "log_id": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "bodies.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "description": "Details contains details about the error.\nThis field is mostly for development, but is used in production for adding request body validation errors.",
+                    "type": "string"
+                },
+                "error": {
+                    "description": "Error contains the error string.",
+                    "type": "string"
+                },
+                "raw_error": {
+                    "description": "RawError contains the raw error.\nThis field is only sent in development mode.",
+                    "type": "string"
+                }
+            }
+        },
         "bodies.StatusResponse": {
             "type": "object",
             "properties": {

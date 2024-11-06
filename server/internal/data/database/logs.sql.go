@@ -12,26 +12,27 @@ import (
 )
 
 const addNewLogSession = `-- name: AddNewLogSession :one
-INSERT INTO logs (environment, log_type)
-VALUES ($1, $2)
+INSERT INTO logs (environment, log_type, platform)
+VALUES ($1, $2, $3)
 RETURNING log_uuid
 `
 
 type AddNewLogSessionParams struct {
 	Environment int32         `json:"environment"`
 	LogType     LogClientType `json:"logType"`
+	Platform    string        `json:"platform"`
 }
 
 // Inserts new log session into the database
 func (q *Queries) AddNewLogSession(ctx context.Context, arg AddNewLogSessionParams) (uuid.UUID, error) {
-	row := q.db.QueryRowContext(ctx, addNewLogSession, arg.Environment, arg.LogType)
+	row := q.db.QueryRowContext(ctx, addNewLogSession, arg.Environment, arg.LogType, arg.Platform)
 	var log_uuid uuid.UUID
 	err := row.Scan(&log_uuid)
 	return log_uuid, err
 }
 
 const getLogByUuid = `-- name: GetLogByUuid :one
-SELECT id, log_uuid, environment, log_type, created_on, log_start, log_end FROM logs
+SELECT id, log_uuid, environment, platform, log_type, created_on, log_start, log_end FROM logs
 WHERE log_uuid = $1
 `
 
@@ -42,6 +43,7 @@ func (q *Queries) GetLogByUuid(ctx context.Context, logUuid uuid.UUID) (Log, err
 		&i.ID,
 		&i.LogUuid,
 		&i.Environment,
+		&i.Platform,
 		&i.LogType,
 		&i.CreatedOn,
 		&i.LogStart,
