@@ -34,3 +34,35 @@ func (h Handlers) LogsList(c *gin.Context) {
 
 	c.JSON(http.StatusOK, res)
 }
+
+// LogGetMetadata allows users to fetch metadata for a log
+// @Summary 	Log metadata
+// @Tags        UserLogs
+// @Produce    	json
+// @Description	Allows users to fetch metadata for a log
+// @Security	JwtUser
+// @Success		200		{object}	entities.LogMetadata
+// @Failure     400		{object}	bodies.ErrorResponse
+// @Failure     404		{object}	bodies.ErrorResponse
+// @Failure     500		{object}	bodies.ErrorResponse
+// @Header		all		{string} 	X-Capsa-Server-Version			"Current Capsa Server version"
+// @Router 		/user/logs/{logid}/metadata [get]
+func (h Handlers) LogGetMetadata(c *gin.Context) {
+	log := h.logger.Named("LogGetMetadata")
+
+	logUUID, ok := getLogUUIDParamFromURI(c)
+	if !ok {
+		return // Response sent by getLogUUIDParamFromURI
+	}
+
+	res, err := logs.GetMetadataForLog(h.services, logUUID)
+	if err != nil {
+		h.sendErrorResponse(c, err)
+
+		return
+	}
+
+	log.Debug("metadata fetched")
+
+	c.JSON(http.StatusOK, res)
+}

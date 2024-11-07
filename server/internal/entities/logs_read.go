@@ -24,3 +24,21 @@ type LogOverview struct {
 	TimestampFirstLine *time.Time        `json:"tsFirstLine"`
 	TimestampLastLine  *time.Time        `json:"tsLastLine"`
 }
+
+// LogMetadata contains the metadata for a stored log.
+type LogMetadata struct {
+	AdditionalMetadata []LogAdditionalMetadata `json:"additionalMetadata"`
+	Links              []LogLink               `json:"linkedLogs"`
+}
+
+// LogAdditionalMetadata contains the arbitrary metadata that can be set for logs.
+type LogAdditionalMetadata struct {
+	SavedOn  time.Time      `json:"savedOn"`
+	Metadata map[string]any `json:"metadata"`
+}
+
+// LogLink shows the data for logs linked to the source log.
+type LogLink struct {
+	LinkedLog   uuid.UUID `json:"linkedLog"`
+	Description string    `json:"description"`
+}

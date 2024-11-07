@@ -99,6 +99,8 @@ Domains contain the business logic of the application. Think of authentication h
 
 The functions in domains should be seen as the heart of the application logic, where no input/output validation should take place and where logic should be as clean and pure as possible.
 
+The domain logic should not return types from the `body` package, for this, move the body definition to the `entities` package.
+
 ### Configuration and services interactor
 
 Two very commonly used data types are `*entities.Config` and `*interactor.Services`. These are used as a form of dependency injection for the called code to call instances created in the calling code. This services interactor also includes an instance of the generated database module, which can be used for database access, so domain code does not need to import the database directly or manage connections.

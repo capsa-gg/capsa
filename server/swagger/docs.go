@@ -638,6 +638,73 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/logs/{logid}/metadata": {
+            "get": {
+                "security": [
+                    {
+                        "JwtUser": []
+                    }
+                ],
+                "description": "Allows users to fetch metadata for a log",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserLogs"
+                ],
+                "summary": "Log metadata",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.LogMetadata"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -760,6 +827,46 @@ const docTemplate = `{
                 },
                 "resetToken": {
                     "type": "string"
+                }
+            }
+        },
+        "entities.LogAdditionalMetadata": {
+            "type": "object",
+            "properties": {
+                "metadata": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "savedOn": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.LogLink": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "linkedLog": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.LogMetadata": {
+            "type": "object",
+            "properties": {
+                "additionalMetadata": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entities.LogAdditionalMetadata"
+                    }
+                },
+                "linkedLogs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entities.LogLink"
+                    }
                 }
             }
         },

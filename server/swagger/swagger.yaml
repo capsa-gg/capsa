@@ -89,6 +89,32 @@ definitions:
     - password
     - resetToken
     type: object
+  entities.LogAdditionalMetadata:
+    properties:
+      metadata:
+        additionalProperties: {}
+        type: object
+      savedOn:
+        type: string
+    type: object
+  entities.LogLink:
+    properties:
+      description:
+        type: string
+      linkedLog:
+        type: string
+    type: object
+  entities.LogMetadata:
+    properties:
+      additionalMetadata:
+        items:
+          $ref: '#/definitions/entities.LogAdditionalMetadata'
+        type: array
+      linkedLogs:
+        items:
+          $ref: '#/definitions/entities.LogLink'
+        type: array
+    type: object
   entities.LogOverview:
     properties:
       id:
@@ -549,6 +575,49 @@ paths:
       security:
       - JwtUser: []
       summary: Log listing
+      tags:
+      - UserLogs
+  /user/logs/{logid}/metadata:
+    get:
+      description: Allows users to fetch metadata for a log
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/entities.LogMetadata'
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      security:
+      - JwtUser: []
+      summary: Log metadata
       tags:
       - UserLogs
 securityDefinitions:

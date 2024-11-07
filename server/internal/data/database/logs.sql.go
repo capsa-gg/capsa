@@ -8,6 +8,7 @@ package database
 import (
 	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -67,6 +68,45 @@ func (q *Queries) AddNewLogSession(ctx context.Context, arg AddNewLogSessionPara
 	return log_uuid, err
 }
 
+const getLinkedLogsForLog = `-- name: GetLinkedLogsForLog :many
+SELECT
+    l.log_uuid AS linked_log,
+    links.description AS description
+FROM logs_links links
+JOIN logs l ON links.link = l.id
+WHERE source = $1
+ORDER BY links.created_on
+`
+
+type GetLinkedLogsForLogRow struct {
+	LinkedLog   uuid.UUID `json:"linkedLog"`
+	Description string    `json:"description"`
+}
+
+// Fetches the linked logs for a log
+func (q *Queries) GetLinkedLogsForLog(ctx context.Context, source int64) ([]GetLinkedLogsForLogRow, error) {
+	rows, err := q.db.QueryContext(ctx, getLinkedLogsForLog, source)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetLinkedLogsForLogRow
+	for rows.Next() {
+		var i GetLinkedLogsForLogRow
+		if err := rows.Scan(&i.LinkedLog, &i.Description); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getLogByUuid = `-- name: GetLogByUuid :one
 SELECT id, log_uuid, environment, platform, log_type, created_on, log_start, log_end FROM logs
 WHERE log_uuid = $1
@@ -86,6 +126,42 @@ func (q *Queries) GetLogByUuid(ctx context.Context, logUuid uuid.UUID) (Log, err
 		&i.LogEnd,
 	)
 	return i, err
+}
+
+const getMetadataForLog = `-- name: GetMetadataForLog :many
+SELECT saved_on, metadata
+FROM logs_metadata
+WHERE log = $1
+ORDER BY saved_on
+`
+
+type GetMetadataForLogRow struct {
+	SavedOn  time.Time       `json:"savedOn"`
+	Metadata json.RawMessage `json:"metadata"`
+}
+
+// Fetches the stored additional metadata for the log
+func (q *Queries) GetMetadataForLog(ctx context.Context, log int64) ([]GetMetadataForLogRow, error) {
+	rows, err := q.db.QueryContext(ctx, getMetadataForLog, log)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetMetadataForLogRow
+	for rows.Next() {
+		var i GetMetadataForLogRow
+		if err := rows.Scan(&i.SavedOn, &i.Metadata); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const listAllAvailableLogs = `-- name: ListAllAvailableLogs :many

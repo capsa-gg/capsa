@@ -72,3 +72,31 @@ func extractJwtClaimsFromContext(c *gin.Context, log *zap.SugaredLogger, context
 
 	return jwtClaims, logID, true
 }
+
+// getLogUUIDParamFromURI extracts the "loguuid" from the parameters.
+// If the boolean return argument is false, stop handler execution. The response has already been sent.
+func getLogUUIDParamFromURI(c *gin.Context) (uuid.UUID, bool) {
+	return getLogUUIDFromURI(c, "loguuid")
+}
+
+// getLogUUIDFromURI extracts the uuid for a given parameter from the context parameters, parses it and returns the UUID.
+// If the boolean return argument is false, stop handler execution. The response has already been sent.
+// For re-used parameters, create a wrapper to not duplicate the Param name.
+func getLogUUIDFromURI(c *gin.Context, param string) (uuid.UUID, bool) {
+	val := c.Param(param)
+
+	if val == "" || len(val) > 40 {
+		c.JSON(http.StatusBadRequest, bodies.ErrorResponse{Error: param + " is a required uuid value"})
+
+		return uuid.Nil, false
+	}
+
+	valUUID, err := uuid.Parse(val)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, bodies.ErrorResponse{Error: param + " cannot be parsed to uuid"})
+
+		return uuid.Nil, false
+	}
+
+	return valUUID, true
+}

@@ -8,6 +8,10 @@ import (
 	"github.com/lucianonooijen/capsa/server/internal/server/middleware"
 )
 
+// NOTE: the routes defined here should only have a single handler attached to them.
+// If you need to add more than one handler, make a router group and add middleware.
+// The reason for this is that the handlers from the handler package don't call c.Abort().
+
 //nolint:gocritic // We use blocks to show nested routes more cleanly
 func registerRoutes(r *gin.RouterGroup, h *handlers.Handlers, s *interactor.Services) {
 	// Status route for health checks
@@ -38,8 +42,8 @@ func registerRoutes(r *gin.RouterGroup, h *handlers.Handlers, s *interactor.Serv
 	{
 		// Log routes
 		userRoutes.GET("/logs", h.LogsList)
-		userRoutes.GET("/logs/:logid/log", h.Status)      // TODO: implement
-		userRoutes.GET("/logs/:logid/metadata", h.Status) // TODO: implement
+		userRoutes.GET("/logs/:loguuid/log", h.Status) // TODO: implement
+		userRoutes.GET("/logs/:loguuid/metadata", h.LogGetMetadata)
 
 		// Environments
 		userRoutes.GET("/environments", h.EnvironmentsList)

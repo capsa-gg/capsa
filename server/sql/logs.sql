@@ -33,3 +33,20 @@ SELECT
 FROM logs AS l
 JOIN logs_chunks lf ON l.id = lf.log
 GROUP BY l.id;
+
+-- name: GetMetadataForLog :many
+-- Fetches the stored additional metadata for the log
+SELECT saved_on, metadata
+FROM logs_metadata
+WHERE log = $1
+ORDER BY saved_on;
+
+-- name: GetLinkedLogsForLog :many
+-- Fetches the linked logs for a log
+SELECT
+    l.log_uuid AS linked_log,
+    links.description AS description
+FROM logs_links links
+JOIN logs l ON links.link = l.id
+WHERE source = $1
+ORDER BY links.created_on;
