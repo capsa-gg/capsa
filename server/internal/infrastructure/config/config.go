@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/spf13/viper"
@@ -57,6 +58,9 @@ func LoadConfig(configFile string) (*entities.Config, error) {
 	// Attach root logger
 	config.RootLogger = logger
 
+	// Correct hostname
+	config.ServerHostname = correctServerHostname(config.ServerHostname)
+
 	// Validate config
 	validate := validator.New()
 	err = validate.Struct(config)
@@ -66,4 +70,12 @@ func LoadConfig(configFile string) (*entities.Config, error) {
 	}
 
 	return &config, nil
+}
+
+func correctServerHostname(hostname string) string {
+	correctedHostname := strings.TrimPrefix(hostname, "https://")
+	correctedHostname = strings.TrimPrefix(correctedHostname, "http://")
+	correctedHostname = strings.TrimSuffix(correctedHostname, "/")
+
+	return correctedHostname
 }

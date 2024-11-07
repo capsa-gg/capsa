@@ -731,6 +731,9 @@ paths:
       summary: Log metadata
       tags:
       - UserLogs
+schemes:
+- http
+- https
 securityDefinitions:
   JwtClient:
     description: Header value should be "Bearer ClientJwtString"

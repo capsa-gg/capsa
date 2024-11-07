@@ -1120,7 +1120,7 @@ var SwaggerInfo = &swag.Spec{
 	Version:          "1",
 	Host:             "example.com",
 	BasePath:         "/v1",
-	Schemes:          []string{},
+	Schemes:          []string{"http", "https"},
 	Title:            "Capsa Server",
 	Description:      "Storage server for Project Capsa, a ground-breaking Unreal Engine logging solution",
 	InfoInstanceName: "swagger",

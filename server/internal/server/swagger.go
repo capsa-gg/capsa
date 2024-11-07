@@ -33,20 +33,17 @@ import (
 // @description Header value should be "Bearer UserJwtString"
 
 // @host example.com
+// @schemes http https
 // @BasePath /v1
 
 func swaggerDoc(conf *entities.Config) func(c *gin.Context) {
 	// TODO: allow dev mode on deployed servers but with the correct hostname, otherwise the uri would become .tld/:[port]/path
 	if strings.Contains(conf.ServerHostname, "local") {
-		httpsReplacer := strings.NewReplacer(
-			"https://", "",
-			"http://", "")
-
-		serverHostname := httpsReplacer.Replace(conf.ServerHostname) + ":" + strconv.Itoa(conf.ServerPort)
+		serverHostname := conf.ServerHostname + ":" + strconv.Itoa(conf.ServerPort)
 
 		swagger.SwaggerInfo.Host = serverHostname
 	} else {
-		swagger.SwaggerInfo.Host = strings.TrimSuffix(conf.ServerHostname, "/")
+		swagger.SwaggerInfo.Host = conf.ServerHostname
 	}
 
 	return func(c *gin.Context) {
