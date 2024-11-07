@@ -244,7 +244,16 @@ paths:
     post:
       consumes:
       - text/plain
-      description: Allows clients to upload log chunks for their log sessions
+      description: Allows clients to upload log chunks for their log sessions. To
+        test this endpoint, please run the upload locally to add the correct request
+        body.
+      parameters:
+      - description: Plain text log
+        in: body
+        name: log
+        required: true
+        schema:
+          type: string
       responses:
         "201":
           description: Created
@@ -630,6 +639,53 @@ paths:
       security:
       - JwtUser: []
       summary: Log listing
+      tags:
+      - UserLogs
+  /user/logs/{logid}/log:
+    get:
+      description: Allows users to stream all uploaded chunks for a given log id
+      produces:
+      - text/plain
+      - application/json
+      responses:
+        "200":
+          description: Log chunk stream
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Error:
+              description: Server error information
+              type: string
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      security:
+      - JwtUser: []
+      summary: Log chunk storage
       tags:
       - UserLogs
   /user/logs/{logid}/metadata:

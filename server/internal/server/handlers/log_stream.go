@@ -17,7 +17,7 @@ import (
 // @Produce    	json
 // @Description	Allows users to stream all uploaded chunks for a given log id
 // @Security	JwtUser
-// @Success		200		{string}	"Log chunk stream"
+// @Success		200		{string}	string 							"Log chunk stream"
 // @Failure     400		{object}	bodies.ErrorResponse
 // @Failure     404		{object}	bodies.ErrorResponse
 // @Failure     500		{object}	bodies.ErrorResponse

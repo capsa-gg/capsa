@@ -15,8 +15,10 @@ type Config struct {
 	WebappHostname string `mapstructure:"webapp_hostname" validate:"required"`
 
 	// JWK data
-	JwkPrivateKeyPath string `mapstructure:"jwk_private_key_path"` // Not marked as required, this is checked elsewhere
-	JwkPublicKeyPath  string `mapstructure:"jwk_public_key_path"`  // Not marked as required, this is checked elsewhere
+	JwkPrivateKeyPath   string `mapstructure:"jwk_private_key_path"`   // Not marked as required, this is checked elsewhere
+	JwkPrivateKeyBase64 string `mapstructure:"jwk_private_key_base64"` // Not marked as required, this is checked elsewhere
+	JwkPublicKeyPath    string `mapstructure:"jwk_public_key_path"`    // Not marked as required, this is checked elsewhere
+	JwkPublicKeyBase64  string `mapstructure:"jwk_public_key_base64"`  // Not marked as required, this is checked elsewhere
 
 	// DBConn configuration
 	DatabaseHost string `mapstructure:"db_host" validate:"required"`

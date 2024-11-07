@@ -4,9 +4,11 @@ api_port: 5000
 api_hostname: localhost
 webapp_hostname: localhost:3000
 
-# JWK keys
+# JWK keys, must use one or the other
 jwk_private_key_path: jwk.key
 jwk_public_key_path: jwk.pub
+#jwk_private_key_base64:
+#jwk_public_key_base64:
 
 # Databaseconfiguration
 db_host: localhost
