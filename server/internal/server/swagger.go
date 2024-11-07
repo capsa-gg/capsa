@@ -57,6 +57,7 @@ func swaggerRedirect(c *gin.Context) {
 	c.Redirect(http.StatusPermanentRedirect, "/v1/swagger/index.html")
 }
 
+// TODO: do we want to disable Swagger for non-dev builds?
 func registerSwagger(r *gin.RouterGroup, conf *entities.Config) {
 	r.GET("/swagger.json", swaggerDoc(conf))
 	r.GET("/swagger", swaggerRedirect)

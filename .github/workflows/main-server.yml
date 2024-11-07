@@ -10,7 +10,7 @@ defaults:
     working-directory: ./server
 
 jobs:
-  validation:
+  validate-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,3 +26,13 @@ jobs:
         run: make build-all
       - name: Run ci script
         run: make ci
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Build container image
+        run: docker build -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_CONTAINER_NAME }}:latest .
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 1200
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_CONTAINER_NAME }}:latest

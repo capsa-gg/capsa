@@ -138,7 +138,7 @@ const docTemplate = `{
                         "JwtClient": []
                     }
                 ],
-                "description": "Allows clients to upload log chunks for their log sessions",
+                "description": "Allows clients to upload log chunks for their log sessions. To test this endpoint, please run the upload locally to add the correct request body.",
                 "consumes": [
                     "text/plain"
                 ],
@@ -146,6 +146,17 @@ const docTemplate = `{
                     "ClientAuthenticated"
                 ],
                 "summary": "Log chunk storage",
+                "parameters": [
+                    {
+                        "description": "Plain text log",
+                        "name": "log",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -715,6 +726,78 @@ const docTemplate = `{
                             "$ref": "#/definitions/bodies.ErrorResponse"
                         },
                         "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/logs/{logid}/log": {
+            "get": {
+                "security": [
+                    {
+                        "JwtUser": []
+                    }
+                ],
+                "description": "Allows users to stream all uploaded chunks for a given log id",
+                "produces": [
+                    "text/plain",
+                    "application/json"
+                ],
+                "tags": [
+                    "UserLogs"
+                ],
+                "summary": "Log chunk storage",
+                "responses": {
+                    "200": {
+                        "description": "Log chunk stream",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Error": {
+                                "type": "string",
+                                "description": "Server error information"
+                            },
                             "X-Capsa-Server-Version": {
                                 "type": "string",
                                 "description": "Current Capsa Server version"
