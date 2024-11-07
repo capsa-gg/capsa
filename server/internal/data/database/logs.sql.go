@@ -7,11 +7,39 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"time"
 
 	"github.com/google/uuid"
 )
+
+const addLogChunk = `-- name: AddLogChunk :exec
+INSERT INTO logs_chunks(log, blob_path, chunk_start, chunk_end, category_counts, severity_counts)
+VALUES ($1, $2, $3, $4, $5, $6)
+`
+
+type AddLogChunkParams struct {
+	Log            int64           `json:"log"`
+	BlobPath       string          `json:"blobPath"`
+	ChunkStart     sql.NullTime    `json:"chunkStart"`
+	ChunkEnd       sql.NullTime    `json:"chunkEnd"`
+	CategoryCounts json.RawMessage `json:"categoryCounts"`
+	SeverityCounts json.RawMessage `json:"severityCounts"`
+}
+
+// Adds data for an uploaded log chunk
+func (q *Queries) AddLogChunk(ctx context.Context, arg AddLogChunkParams) error {
+	_, err := q.db.ExecContext(ctx, addLogChunk,
+		arg.Log,
+		arg.BlobPath,
+		arg.ChunkStart,
+		arg.ChunkEnd,
+		arg.CategoryCounts,
+		arg.SeverityCounts,
+	)
+	return err
+}
 
 const addLogLink = `-- name: AddLogLink :exec
 INSERT INTO logs_links(source, link, description)
@@ -126,6 +154,42 @@ func (q *Queries) GetLogByUuid(ctx context.Context, logUuid uuid.UUID) (Log, err
 		&i.LogEnd,
 	)
 	return i, err
+}
+
+const getLogChunksForLog = `-- name: GetLogChunksForLog :many
+SELECT created_on, blob_path
+FROM logs_chunks
+WHERE log = $1
+ORDER BY created_on
+`
+
+type GetLogChunksForLogRow struct {
+	CreatedOn time.Time `json:"createdOn"`
+	BlobPath  string    `json:"blobPath"`
+}
+
+// Gets the log chunk information for a given log
+func (q *Queries) GetLogChunksForLog(ctx context.Context, log int64) ([]GetLogChunksForLogRow, error) {
+	rows, err := q.db.QueryContext(ctx, getLogChunksForLog, log)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetLogChunksForLogRow
+	for rows.Next() {
+		var i GetLogChunksForLogRow
+		if err := rows.Scan(&i.CreatedOn, &i.BlobPath); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const getMetadataForLog = `-- name: GetMetadataForLog :many

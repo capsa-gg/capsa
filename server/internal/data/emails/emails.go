@@ -20,7 +20,7 @@ type Emails struct {
 
 // New returns a new instance of Emails.
 func New(c *entities.Config, mailer entities.EmailSender) *Emails {
-	logger := c.RootLogger.Named("emails").Sugar()
+	logger := c.RootLogger.Named("Emails").Sugar()
 
 	hermesInstance := hermes.Hermes{
 		Product: hermes.Product{

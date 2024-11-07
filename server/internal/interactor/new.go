@@ -8,7 +8,9 @@ import (
 
 	"github.com/lucianonooijen/capsa/server/internal/data/database"
 	"github.com/lucianonooijen/capsa/server/internal/data/emails"
+	"github.com/lucianonooijen/capsa/server/internal/data/logchunks"
 	"github.com/lucianonooijen/capsa/server/internal/entities"
+	"github.com/lucianonooijen/capsa/server/internal/infrastructure/blobstorage"
 	"github.com/lucianonooijen/capsa/server/internal/infrastructure/mailer"
 	"github.com/lucianonooijen/capsa/server/internal/infrastructure/passhash"
 	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
@@ -50,13 +52,23 @@ func NewServices(c *entities.Config) (*Services, error) {
 	mail := mailer.New(c)
 	email := emails.New(c, mail)
 
+	// Blob storage
+	blobStorage, err := blobstorage.New(c)
+	if err != nil {
+		return nil, fmt.Errorf("error generating blobstorage instance: %w", err)
+	}
+
+	// Logblobs
+	logChunks := logchunks.New(c, blobStorage)
+
 	s := Services{
-		Config:   c,
-		DBConn:   dbConn,
-		Database: db,
-		Token:    tokenInstance,
-		Passhash: passHash,
-		Emails:   email,
+		Config:    c,
+		DBConn:    dbConn,
+		Database:  db,
+		Token:     tokenInstance,
+		Passhash:  passHash,
+		Emails:    email,
+		LogChunks: logChunks,
 	}
 
 	// Validate config

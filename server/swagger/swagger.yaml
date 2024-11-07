@@ -240,6 +240,61 @@ paths:
       summary: Client authentication handler
       tags:
       - Client
+  /client/log/chunk:
+    post:
+      consumes:
+      - text/plain
+      description: Allows clients to upload log chunks for their log sessions
+      responses:
+        "201":
+          description: Created
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+        "304":
+          description: Not Modified
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "415":
+          description: Unsupported Media Type
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      security:
+      - JwtClient: []
+      summary: Log chunk storage
+      tags:
+      - ClientAuthenticated
   /client/log/metadata:
     post:
       consumes:

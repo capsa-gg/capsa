@@ -50,9 +50,9 @@ func (h Handlers) LogsList(c *gin.Context) {
 func (h Handlers) LogGetMetadata(c *gin.Context) {
 	log := h.logger.Named("LogGetMetadata")
 
-	logUUID, ok := getLogUUIDParamFromURI(c)
+	logUUID, ok := getLogUUIDFromURI(c)
 	if !ok {
-		return // Response sent by getLogUUIDParamFromURI
+		return // Response sent by getLogUUIDFromURI
 	}
 
 	res, err := logs.GetMetadataForLog(h.services, logUUID)

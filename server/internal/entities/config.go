@@ -26,6 +26,13 @@ type Config struct {
 	DatabasePass string `mapstructure:"db_pass" validate:"required"`
 	DatabaseSSL  bool   `mapstructure:"db_ssl"` // Not marked required as it would fail when `false` is given as value
 
+	// Blob storage configuration
+	BlobStorageEndpoint string `mapstructure:"blobstorage_endpoint" validate:"required"`
+	BlobStorageRegion   string `mapstructure:"blobstorage_region" validate:"required"`
+	BlobStorageKey      string `mapstructure:"blobstorage_key" validate:"required"`
+	BlobStorageSecret   string `mapstructure:"blobstorage_secret" validate:"required"`
+	BlobStorageBucket   string `mapstructure:"blobstorage_bucket" validate:"required"`
+
 	// Email configuration
 	EmailSenderName  string `mapstructure:"email_sender_name" validate:"required"`
 	EmailSenderEmail string `mapstructure:"email_sender_email" validate:"required"`
