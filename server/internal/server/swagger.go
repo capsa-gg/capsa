@@ -45,7 +45,7 @@ func swaggerDoc(conf *entities.Config) func(c *gin.Context) {
 
 		swagger.SwaggerInfo.Host = serverHostname
 	} else {
-		swagger.SwaggerInfo.Host = conf.ServerHostname
+		swagger.SwaggerInfo.Host = strings.TrimSuffix(conf.ServerHostname, "/")
 	}
 
 	return func(c *gin.Context) {
