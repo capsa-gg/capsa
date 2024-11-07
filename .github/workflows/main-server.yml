@@ -48,6 +48,8 @@ jobs:
         run: make build-all
       - name: Run ci script
         run: make ci
+
+      # Deployment
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -58,6 +60,8 @@ jobs:
         run: doctl registry login --expiry-seconds 1200
       - name: Push image to DigitalOcean Container Registry
         run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_CONTAINER_NAME }}:latest
+
+      # Slackbot message
       - name: Send message via Slack webhook
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{"text":"The main branch on GitHub has just received a new commit. The new version will be deployed in a few seconds."}' ${{ secrets.SLACK_WEBHOOK }}
