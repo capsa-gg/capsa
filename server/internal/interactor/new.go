@@ -19,7 +19,7 @@ import (
 )
 
 // NewServices initializes and validates a new instance of Services.
-func NewServices(c *entities.Config) (*Services, error) {
+func NewServices(c *entities.Config) (*Services, error) { //nolint:gocyclo // This is expected in this init logic
 	// Database connection
 	dbConn, err := sql.Open("postgres", c.DatabaseConnectionString())
 	if err != nil {

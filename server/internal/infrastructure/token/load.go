@@ -9,6 +9,8 @@ import (
 	"os"
 )
 
+const blockTypeRsaPrivateKey = "RSA PRIVATE KEY"
+
 // LoadPrivateKeyFromPath reads the private key from a file and returns a rsa.PrivateKey struct.
 func LoadPrivateKeyFromPath(path string) (*rsa.PrivateKey, error) {
 	// Read the file
@@ -19,7 +21,7 @@ func LoadPrivateKeyFromPath(path string) (*rsa.PrivateKey, error) {
 
 	// Decode the PEM block
 	block, _ := pem.Decode(keyBytes)
-	if block == nil || block.Type != "RSA PRIVATE KEY" {
+	if block == nil || block.Type != blockTypeRsaPrivateKey {
 		return nil, fmt.Errorf("failed to decode PEM block containing private key")
 	}
 
@@ -41,7 +43,7 @@ func LoadPrivateKeyFromBase64String(b64 string) (*rsa.PrivateKey, error) {
 
 	// Decode the PEM block
 	block, _ := pem.Decode(keyBytes)
-	if block == nil || block.Type != "RSA PRIVATE KEY" {
+	if block == nil || block.Type != blockTypeRsaPrivateKey {
 		return nil, fmt.Errorf("failed to decode PEM block containing private key")
 	}
 
