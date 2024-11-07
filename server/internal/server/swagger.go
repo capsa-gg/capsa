@@ -25,7 +25,12 @@ import (
 // @securitydefinitions.apikey JwtClient
 // @in header
 // @name Authorization
-// @description Header value should be "Bearer JwtString"
+// @description Header value should be "Bearer ClientJwtString"
+
+// @securitydefinitions.apikey JwtUser
+// @in header
+// @name Authorization
+// @description Header value should be "Bearer UserJwtString"
 
 // @host example.com
 // @BasePath /v1

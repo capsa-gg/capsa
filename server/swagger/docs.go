@@ -498,6 +498,146 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/environments": {
+            "get": {
+                "security": [
+                    {
+                        "JwtUser": []
+                    }
+                ],
+                "description": "Allows users to fetch all available environments from the database",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserEnvironments"
+                ],
+                "summary": "Environment listing",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.TitleEnvironment"
+                            }
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/logs": {
+            "get": {
+                "security": [
+                    {
+                        "JwtUser": []
+                    }
+                ],
+                "description": "Allows users to fetch available logs from the database",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserLogs"
+                ],
+                "summary": "Log listing",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.LogOverview"
+                            }
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -623,6 +763,43 @@ const docTemplate = `{
                 }
             }
         },
+        "entities.LogOverview": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "lineCount": {
+                    "type": "integer"
+                },
+                "logType": {
+                    "type": "string"
+                },
+                "platform": {
+                    "type": "string"
+                },
+                "tsFirstLine": {
+                    "type": "string"
+                },
+                "tsLastLine": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.TitleEnvironment": {
+            "type": "object",
+            "properties": {
+                "environment_key": {
+                    "type": "string"
+                },
+                "environment_name": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "entities.UserLoginResult": {
             "type": "object",
             "properties": {
@@ -649,7 +826,13 @@ const docTemplate = `{
     },
     "securityDefinitions": {
         "JwtClient": {
-            "description": "Header value should be \"Bearer JwtString\"",
+            "description": "Header value should be \"Bearer ClientJwtString\"",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        },
+        "JwtUser": {
+            "description": "Header value should be \"Bearer UserJwtString\"",
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"

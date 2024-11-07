@@ -92,7 +92,7 @@ func PasswordResetComplete(s *interactor.Services, resetToken uuid.UUID, newPass
 	}
 
 	// Remove token as it has been used
-	err = s.Database.RemovePasswordResetForUser(ctx, user.ID)
+	err = s.Database.DeletePasswordResetForUser(ctx, user.ID)
 	if err != nil {
 		log.Warn("user password reset could not be removed")
 

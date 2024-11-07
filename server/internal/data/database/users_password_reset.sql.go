@@ -11,6 +11,17 @@ import (
 	"github.com/google/uuid"
 )
 
+const deletePasswordResetForUser = `-- name: DeletePasswordResetForUser :exec
+DELETE FROM users_password_reset
+WHERE user_id = $1
+`
+
+// Marks a password_forgot entry used based on user_id
+func (q *Queries) DeletePasswordResetForUser(ctx context.Context, userID int32) error {
+	_, err := q.db.ExecContext(ctx, deletePasswordResetForUser, userID)
+	return err
+}
+
 const getPasswordResetByResetToken = `-- name: GetPasswordResetByResetToken :one
 SELECT user_id, reset_token, valid_until FROM users_password_reset
 WHERE reset_token = $1
@@ -49,16 +60,5 @@ DO UPDATE SET
 // the existing entry will be reset with new values
 func (q *Queries) InitializeUserPasswordReset(ctx context.Context, userID int32) error {
 	_, err := q.db.ExecContext(ctx, initializeUserPasswordReset, userID)
-	return err
-}
-
-const removePasswordResetForUser = `-- name: RemovePasswordResetForUser :exec
-DELETE FROM users_password_reset
-WHERE user_id = $1
-`
-
-// Marks a password_forgot entry used based on user_id
-func (q *Queries) RemovePasswordResetForUser(ctx context.Context, userID int32) error {
-	_, err := q.db.ExecContext(ctx, removePasswordResetForUser, userID)
 	return err
 }

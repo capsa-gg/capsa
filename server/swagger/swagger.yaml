@@ -89,6 +89,30 @@ definitions:
     - password
     - resetToken
     type: object
+  entities.LogOverview:
+    properties:
+      id:
+        type: string
+      lineCount:
+        type: integer
+      logType:
+        type: string
+      platform:
+        type: string
+      tsFirstLine:
+        type: string
+      tsLastLine:
+        type: string
+    type: object
+  entities.TitleEnvironment:
+    properties:
+      environment_key:
+        type: string
+      environment_name:
+        type: string
+      title:
+        type: string
+    type: object
   entities.UserLoginResult:
     properties:
       email:
@@ -437,9 +461,104 @@ paths:
       summary: User password reset set password
       tags:
       - UserAuthentication
+  /user/environments:
+    get:
+      description: Allows users to fetch all available environments from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            items:
+              $ref: '#/definitions/entities.TitleEnvironment'
+            type: array
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      security:
+      - JwtUser: []
+      summary: Environment listing
+      tags:
+      - UserEnvironments
+  /user/logs:
+    get:
+      description: Allows users to fetch available logs from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            items:
+              $ref: '#/definitions/entities.LogOverview'
+            type: array
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      security:
+      - JwtUser: []
+      summary: Log listing
+      tags:
+      - UserLogs
 securityDefinitions:
   JwtClient:
-    description: Header value should be "Bearer JwtString"
+    description: Header value should be "Bearer ClientJwtString"
+    in: header
+    name: Authorization
+    type: apiKey
+  JwtUser:
+    description: Header value should be "Bearer UserJwtString"
     in: header
     name: Authorization
     type: apiKey

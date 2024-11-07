@@ -10,9 +10,8 @@ import (
 
 	"github.com/lucianonooijen/capsa/server/constants"
 	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
-	"github.com/lucianonooijen/capsa/server/internal/server/bodies"
-
 	"github.com/lucianonooijen/capsa/server/internal/interactor"
+	"github.com/lucianonooijen/capsa/server/internal/server/bodies"
 )
 
 // Handlers contains Gin request handlers as methods.

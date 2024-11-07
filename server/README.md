@@ -43,6 +43,15 @@ After modifying the SQL code in `./sql`, run `make sql` to generate the Go code.
 
 For details on how to use SQLc, see the [SQLc documentation](https://docs.sqlc.dev/en/latest/).
 
+The database methods should be following the pattern `[Verb][Entity][OptionalArgument][OptionalBy]`, for example `GetUserById`, `ListAvailableLogs` or `GetChunksForLogByUuid`. For verbs, please use the correctly matching verbs:
+
+* `Add`: add one or multiple entries to the database
+* `List`: list all entries without filtering
+* `Get`: list single or multiple entries with filtering
+* `Initialize`: initialize a flow, often touching multiple data, or with more logic than an update
+* `Update`: update an entry
+* `Delete`: delete one or multiple entries
+
 ## Swagger documentation
 
 API documentation is generated from the comments on the HTTP handlers. Therefore, it is important that these comments are kept up-to-date and are added for every endpoint.

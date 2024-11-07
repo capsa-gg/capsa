@@ -82,6 +82,7 @@ type LogsChunk struct {
 	BlobPath       string          `json:"blobPath"`
 	ChunkStart     sql.NullTime    `json:"chunkStart"`
 	ChunkEnd       sql.NullTime    `json:"chunkEnd"`
+	LineCount      int32           `json:"lineCount"`
 	CategoryCounts json.RawMessage `json:"categoryCounts"`
 	SeverityCounts json.RawMessage `json:"severityCounts"`
 }

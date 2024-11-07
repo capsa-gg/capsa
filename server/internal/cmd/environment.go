@@ -58,7 +58,7 @@ var envListCmd = &cobra.Command{
 		log.Infof("| -------------------- | -------------------- | ------------------------------------ |")
 
 		for _, row := range res {
-			log.Infof("| %-20s | %-20s | %-36s |", row.Title, row.Environment, row.EnvironmentKey)
+			log.Infof("| %-20s | %-20s | %-36s |", row.Title, row.EnvironmentName, row.EnvironmentKey)
 		}
 
 		log.Infof("")

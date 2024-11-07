@@ -38,44 +38,6 @@ func (q *Queries) AddTitle(ctx context.Context, name string) error {
 	return err
 }
 
-const getAllEnvironmentsAndTitles = `-- name: GetAllEnvironmentsAndTitles :many
-SELECT
-    t.name AS title,
-    e.name AS environment,
-    e.key AS environment_key
-FROM environments e
-JOIN titles t ON e.title = t.id
-`
-
-type GetAllEnvironmentsAndTitlesRow struct {
-	Title          string    `json:"title"`
-	Environment    string    `json:"environment"`
-	EnvironmentKey uuid.UUID `json:"environmentKey"`
-}
-
-func (q *Queries) GetAllEnvironmentsAndTitles(ctx context.Context) ([]GetAllEnvironmentsAndTitlesRow, error) {
-	rows, err := q.db.QueryContext(ctx, getAllEnvironmentsAndTitles)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []GetAllEnvironmentsAndTitlesRow
-	for rows.Next() {
-		var i GetAllEnvironmentsAndTitlesRow
-		if err := rows.Scan(&i.Title, &i.Environment, &i.EnvironmentKey); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const getEnvironmentById = `-- name: GetEnvironmentById :one
 SELECT id, title, key, name, created_on FROM environments
 WHERE id = $1
@@ -192,4 +154,42 @@ func (q *Queries) GetTitleByName(ctx context.Context, name string) (Title, error
 	var i Title
 	err := row.Scan(&i.ID, &i.Name, &i.CreatedOn)
 	return i, err
+}
+
+const listAllEnvironmentsAndTitles = `-- name: ListAllEnvironmentsAndTitles :many
+SELECT
+    t.name AS title,
+    e.name AS environment,
+    e.key AS environment_key
+FROM environments e
+JOIN titles t ON e.title = t.id
+`
+
+type ListAllEnvironmentsAndTitlesRow struct {
+	Title          string    `json:"title"`
+	Environment    string    `json:"environment"`
+	EnvironmentKey uuid.UUID `json:"environmentKey"`
+}
+
+func (q *Queries) ListAllEnvironmentsAndTitles(ctx context.Context) ([]ListAllEnvironmentsAndTitlesRow, error) {
+	rows, err := q.db.QueryContext(ctx, listAllEnvironmentsAndTitles)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ListAllEnvironmentsAndTitlesRow
+	for rows.Next() {
+		var i ListAllEnvironmentsAndTitlesRow
+		if err := rows.Scan(&i.Title, &i.Environment, &i.EnvironmentKey); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

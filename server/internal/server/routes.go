@@ -36,8 +36,12 @@ func registerRoutes(r *gin.RouterGroup, h *handlers.Handlers, s *interactor.Serv
 	userRoutes := r.Group("/user")
 	userRoutes.Use(middleware.AuthUserMiddleware(s)) // Add authentication middleware
 	{
-		userRoutes.GET("/logs", h.Status)                 // TODO: implement
+		// Log routes
+		userRoutes.GET("/logs", h.LogsList)
 		userRoutes.GET("/logs/:logid/log", h.Status)      // TODO: implement
 		userRoutes.GET("/logs/:logid/metadata", h.Status) // TODO: implement
+
+		// Environments
+		userRoutes.GET("/environments", h.EnvironmentsList)
 	}
 }
