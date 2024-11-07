@@ -9,15 +9,37 @@ defaults:
   run:
     working-directory: ./server
 
+env:
+  DOCKER_REGISTRY: registry.digitalocean.com/lucianonooijen
+  DOCKER_CONTAINER_NAME: capsa-server
+
 jobs:
   validate-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
       - name: Setup Go 1.23
         uses: actions/setup-go@v5
         with:
           go-version: '1.23'
+
+      # Caching
+      - id: go-cache-paths
+        run: |
+          echo "::set-output name=go-build::$(go env GOCACHE)"
+          echo "::set-output name=go-mod::$(go env GOMODCACHE)"
+      - uses: actions/checkout@v4
+      - name: Go Build Cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-build }}
+          key: ${{ runner.os }}-go-build-${{ hashFiles('**/go.sum') }}
+      - name: Go Mod Cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-mod }}
+          key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.sum') }}
+
+      # Run CI scripts
       - name: Display Go version
         run: go version
       - name: Bootstrap
