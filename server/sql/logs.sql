@@ -50,3 +50,8 @@ FROM logs_links links
 JOIN logs l ON links.link = l.id
 WHERE source = $1
 ORDER BY links.created_on;
+
+-- name: AddLogChunk :exec
+-- Adds data for an uploaded log chunk
+INSERT INTO logs_chunks(log, blob_path, chunk_start, chunk_end, category_counts, severity_counts)
+VALUES ($1, $2, $3, $4, $5, $6);

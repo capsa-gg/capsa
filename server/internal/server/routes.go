@@ -25,7 +25,7 @@ func registerRoutes(r *gin.RouterGroup, h *handlers.Handlers, s *interactor.Serv
 	clientLogs.Use(middleware.AuthClientMiddleware(s)) // Add authentication middleware
 	{
 		clientLogs.POST("/metadata", h.LogMetadataSave)
-		clientLogs.POST("/chunk", h.Status) // TODO: implement
+		clientLogs.POST("/chunk", h.LogStoreChunk)
 	}
 
 	// User authentication routes

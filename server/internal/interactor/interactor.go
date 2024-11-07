@@ -3,16 +3,14 @@ package interactor
 import (
 	"database/sql"
 
-	"github.com/lucianonooijen/capsa/server/internal/data/emails"
-
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/passhash"
-
 	"go.uber.org/zap"
 
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
-
 	"github.com/lucianonooijen/capsa/server/internal/data/database"
+	"github.com/lucianonooijen/capsa/server/internal/data/emails"
+	"github.com/lucianonooijen/capsa/server/internal/data/logchunks"
 	"github.com/lucianonooijen/capsa/server/internal/entities"
+	"github.com/lucianonooijen/capsa/server/internal/infrastructure/passhash"
+	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
 )
 
 // Services contains all the shared services in the application that can be passed to .
@@ -34,6 +32,9 @@ type Services struct {
 
 	// Emails is used to send transactional emails.
 	Emails *emails.Emails `validate:"required"`
+
+	// LogChunks is used to manage blobs for log chunks.
+	LogChunks *logchunks.LogChunks `validate:"required"`
 }
 
 // GetDomainLogger generated a *zap.SugaredLogger instance for the domain and function.

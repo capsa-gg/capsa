@@ -3,7 +3,6 @@ development: true
 api_port: 5000
 api_hostname: localhost
 webapp_hostname: localhost:3000
-jwt_secret: addyoursecret
 
 # JWK keys
 jwk_private_key_path: jwk.key
@@ -16,6 +15,13 @@ db_name: capsadb
 db_user: capsauser
 db_pass: capsapass
 db_ssl: false
+
+# Blob storage
+blobstorage_endpoint: s3endpoint
+blobstorage_region: s3region
+blobstorage_key: s3key
+blobstorage_secret: s3secret
+blobstorage_bucket: capsa
 
 # Email configuration
 email_sender_name: Capsa

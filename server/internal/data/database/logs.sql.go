@@ -7,11 +7,39 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"time"
 
 	"github.com/google/uuid"
 )
+
+const addLogChunk = `-- name: AddLogChunk :exec
+INSERT INTO logs_chunks(log, blob_path, chunk_start, chunk_end, category_counts, severity_counts)
+VALUES ($1, $2, $3, $4, $5, $6)
+`
+
+type AddLogChunkParams struct {
+	Log            int64           `json:"log"`
+	BlobPath       string          `json:"blobPath"`
+	ChunkStart     sql.NullTime    `json:"chunkStart"`
+	ChunkEnd       sql.NullTime    `json:"chunkEnd"`
+	CategoryCounts json.RawMessage `json:"categoryCounts"`
+	SeverityCounts json.RawMessage `json:"severityCounts"`
+}
+
+// Adds data for an uploaded log chunk
+func (q *Queries) AddLogChunk(ctx context.Context, arg AddLogChunkParams) error {
+	_, err := q.db.ExecContext(ctx, addLogChunk,
+		arg.Log,
+		arg.BlobPath,
+		arg.ChunkStart,
+		arg.ChunkEnd,
+		arg.CategoryCounts,
+		arg.SeverityCounts,
+	)
+	return err
+}
 
 const addLogLink = `-- name: AddLogLink :exec
 INSERT INTO logs_links(source, link, description)
