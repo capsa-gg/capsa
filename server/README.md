@@ -43,6 +43,15 @@ After modifying the SQL code in `./sql`, run `make sql` to generate the Go code.
 
 For details on how to use SQLc, see the [SQLc documentation](https://docs.sqlc.dev/en/latest/).
 
+The database methods should be following the pattern `[Verb][Entity][OptionalArgument][OptionalBy]`, for example `GetUserById`, `ListAvailableLogs` or `GetChunksForLogByUuid`. For verbs, please use the correctly matching verbs:
+
+* `Add`: add one or multiple entries to the database
+* `List`: list all entries without filtering
+* `Get`: list single or multiple entries with filtering
+* `Initialize`: initialize a flow, often touching multiple data, or with more logic than an update
+* `Update`: update an entry
+* `Delete`: delete one or multiple entries
+
 ## Swagger documentation
 
 API documentation is generated from the comments on the HTTP handlers. Therefore, it is important that these comments are kept up-to-date and are added for every endpoint.
@@ -89,6 +98,8 @@ Specific guidelines need to be established, but for now it's best to follow exis
 Domains contain the business logic of the application. Think of authentication handling and log parsing. Domain instances are not created, but the public functions are called by passing a services interactor to use different systems.
 
 The functions in domains should be seen as the heart of the application logic, where no input/output validation should take place and where logic should be as clean and pure as possible.
+
+The domain logic should not return types from the `body` package, for this, move the body definition to the `entities` package.
 
 ### Configuration and services interactor
 

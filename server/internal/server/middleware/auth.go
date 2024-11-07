@@ -5,12 +5,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/lucianonooijen/capsa/server/constants"
-	"github.com/lucianonooijen/capsa/server/internal/domain/user"
-
 	"github.com/gin-gonic/gin"
 
-	"github.com/lucianonooijen/capsa/server/internal/domain/client"
+	"github.com/lucianonooijen/capsa/server/constants"
+	"github.com/lucianonooijen/capsa/server/internal/domain/logs"
+	"github.com/lucianonooijen/capsa/server/internal/domain/user"
 	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
 	"github.com/lucianonooijen/capsa/server/internal/interactor"
 	"github.com/lucianonooijen/capsa/server/internal/server/bodies"
@@ -28,7 +27,7 @@ func AuthClientMiddleware(s *interactor.Services) gin.HandlerFunc { //nolint:dup
 		}
 
 		// Validate the token
-		claims, err := client.ValidateClientJwt(s, tok)
+		claims, err := logs.ValidateClientJwt(s, tok)
 		if err != nil {
 			sendValidationError(c, err)
 

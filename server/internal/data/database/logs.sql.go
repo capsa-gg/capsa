@@ -7,9 +7,46 @@ package database
 
 import (
 	"context"
+	"encoding/json"
+	"time"
 
 	"github.com/google/uuid"
 )
+
+const addLogLink = `-- name: AddLogLink :exec
+INSERT INTO logs_links(source, link, description)
+VALUES ($1, $2, $3)
+ON CONFLICT (source, link)
+DO UPDATE SET description = $3
+`
+
+type AddLogLinkParams struct {
+	Source      int64  `json:"source"`
+	Link        int64  `json:"link"`
+	Description string `json:"description"`
+}
+
+// Inserts a link between a source and another log session, with a description
+func (q *Queries) AddLogLink(ctx context.Context, arg AddLogLinkParams) error {
+	_, err := q.db.ExecContext(ctx, addLogLink, arg.Source, arg.Link, arg.Description)
+	return err
+}
+
+const addLogMetadata = `-- name: AddLogMetadata :exec
+INSERT INTO logs_metadata(log, metadata)
+VALUES ($1, $2)
+`
+
+type AddLogMetadataParams struct {
+	Log      int64           `json:"log"`
+	Metadata json.RawMessage `json:"metadata"`
+}
+
+// Inserts metadata for a given log
+func (q *Queries) AddLogMetadata(ctx context.Context, arg AddLogMetadataParams) error {
+	_, err := q.db.ExecContext(ctx, addLogMetadata, arg.Log, arg.Metadata)
+	return err
+}
 
 const addNewLogSession = `-- name: AddNewLogSession :one
 INSERT INTO logs (environment, log_type, platform)
@@ -31,6 +68,45 @@ func (q *Queries) AddNewLogSession(ctx context.Context, arg AddNewLogSessionPara
 	return log_uuid, err
 }
 
+const getLinkedLogsForLog = `-- name: GetLinkedLogsForLog :many
+SELECT
+    l.log_uuid AS linked_log,
+    links.description AS description
+FROM logs_links links
+JOIN logs l ON links.link = l.id
+WHERE source = $1
+ORDER BY links.created_on
+`
+
+type GetLinkedLogsForLogRow struct {
+	LinkedLog   uuid.UUID `json:"linkedLog"`
+	Description string    `json:"description"`
+}
+
+// Fetches the linked logs for a log
+func (q *Queries) GetLinkedLogsForLog(ctx context.Context, source int64) ([]GetLinkedLogsForLogRow, error) {
+	rows, err := q.db.QueryContext(ctx, getLinkedLogsForLog, source)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetLinkedLogsForLogRow
+	for rows.Next() {
+		var i GetLinkedLogsForLogRow
+		if err := rows.Scan(&i.LinkedLog, &i.Description); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getLogByUuid = `-- name: GetLogByUuid :one
 SELECT id, log_uuid, environment, platform, log_type, created_on, log_start, log_end FROM logs
 WHERE log_uuid = $1
@@ -50,4 +126,94 @@ func (q *Queries) GetLogByUuid(ctx context.Context, logUuid uuid.UUID) (Log, err
 		&i.LogEnd,
 	)
 	return i, err
+}
+
+const getMetadataForLog = `-- name: GetMetadataForLog :many
+SELECT saved_on, metadata
+FROM logs_metadata
+WHERE log = $1
+ORDER BY saved_on
+`
+
+type GetMetadataForLogRow struct {
+	SavedOn  time.Time       `json:"savedOn"`
+	Metadata json.RawMessage `json:"metadata"`
+}
+
+// Fetches the stored additional metadata for the log
+func (q *Queries) GetMetadataForLog(ctx context.Context, log int64) ([]GetMetadataForLogRow, error) {
+	rows, err := q.db.QueryContext(ctx, getMetadataForLog, log)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetMetadataForLogRow
+	for rows.Next() {
+		var i GetMetadataForLogRow
+		if err := rows.Scan(&i.SavedOn, &i.Metadata); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listAllAvailableLogs = `-- name: ListAllAvailableLogs :many
+SELECT
+    l.log_uuid AS log_uuid,
+    l.platform AS platform,
+    l.log_type AS log_type,
+    SUM(lf.line_count) AS line_count,
+    MIN(lf.chunk_start) AS earliest,
+    MAX(lf.chunk_end) AS last
+FROM logs AS l
+JOIN logs_chunks lf ON l.id = lf.log
+GROUP BY l.id
+`
+
+type ListAllAvailableLogsRow struct {
+	LogUuid   uuid.UUID     `json:"logUuid"`
+	Platform  string        `json:"platform"`
+	LogType   LogClientType `json:"logType"`
+	LineCount int64         `json:"lineCount"`
+	Earliest  interface{}   `json:"earliest"`
+	Last      interface{}   `json:"last"`
+}
+
+// Fetches all logs and aggregates the results.
+// TODO: json_object_agg the log chunk severities
+func (q *Queries) ListAllAvailableLogs(ctx context.Context) ([]ListAllAvailableLogsRow, error) {
+	rows, err := q.db.QueryContext(ctx, listAllAvailableLogs)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ListAllAvailableLogsRow
+	for rows.Next() {
+		var i ListAllAvailableLogsRow
+		if err := rows.Scan(
+			&i.LogUuid,
+			&i.Platform,
+			&i.LogType,
+			&i.LineCount,
+			&i.Earliest,
+			&i.Last,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

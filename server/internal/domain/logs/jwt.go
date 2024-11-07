@@ -1,20 +1,19 @@
-package client
+package logs
 
 import (
 	"context"
 	"fmt"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
-
 	"github.com/google/uuid"
 
+	"github.com/lucianonooijen/capsa/server/internal/entities"
 	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
 	"github.com/lucianonooijen/capsa/server/internal/interactor"
 )
 
 // ValidateClientJwt validates if the token passed in is valid for a client.
 func ValidateClientJwt(s *interactor.Services, tok string) (*token.JwtClaims, error) {
-	log := s.GetDomainLogger("client", "ValidateClientJwt")
+	log := s.GetDomainLogger("logs", "ValidateClientJwt")
 	ctx := context.TODO()
 
 	log.Debug("starting client jwt validation")

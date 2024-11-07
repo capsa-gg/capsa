@@ -17,7 +17,7 @@ WHERE user_id = $1;
 SELECT * FROM users_password_reset
 WHERE reset_token = $1;
 
--- name: RemovePasswordResetForUser :exec
+-- name: DeletePasswordResetForUser :exec
 -- Marks a password_forgot entry used based on user_id
 DELETE FROM users_password_reset
 WHERE user_id = $1;

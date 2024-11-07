@@ -60,6 +60,7 @@ CREATE TABLE logs_chunks (
     blob_path varchar UNIQUE NOT NULL,
     chunk_start timestamp,
     chunk_end timestamp,
+    line_count int NOT NULL,
     category_counts jsonb NOT NULL,
     severity_counts jsonb NOT NULL,
 
