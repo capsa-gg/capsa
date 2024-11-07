@@ -42,7 +42,7 @@ func registerRoutes(r *gin.RouterGroup, h *handlers.Handlers, s *interactor.Serv
 	{
 		// Log routes
 		userRoutes.GET("/logs", h.LogsList)
-		userRoutes.GET("/logs/:loguuid/log", h.Status) // TODO: implement
+		userRoutes.GET("/logs/:loguuid/log", h.StreamLogChunks)
 		userRoutes.GET("/logs/:loguuid/metadata", h.LogGetMetadata)
 
 		// Environments

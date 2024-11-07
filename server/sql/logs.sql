@@ -55,3 +55,10 @@ ORDER BY links.created_on;
 -- Adds data for an uploaded log chunk
 INSERT INTO logs_chunks(log, blob_path, chunk_start, chunk_end, category_counts, severity_counts)
 VALUES ($1, $2, $3, $4, $5, $6);
+
+-- name: GetLogChunksForLog :many
+-- Gets the log chunk information for a given log
+SELECT created_on, blob_path
+FROM logs_chunks
+WHERE log = $1
+ORDER BY created_on;

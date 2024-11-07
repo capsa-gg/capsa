@@ -39,8 +39,6 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 		return entities.NewDomainError(entities.DomainErrorUnexpected, "cannot store chunk in storage", err)
 	}
 
-	// For development
-
 	// Assemble database params
 	addLogChunkParams := database.AddLogChunkParams{
 		Log:      logInfo.ID,

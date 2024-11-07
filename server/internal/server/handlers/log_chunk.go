@@ -21,8 +21,9 @@ var allowedLogChunkUploadContentTypes = []string{
 // @Summary 	Log chunk storage
 // @Tags        ClientAuthenticated
 // @Accept     	plain
-// @Description	Allows clients to upload log chunks for their log sessions
+// @Description	Allows clients to upload log chunks for their log sessions. To test this endpoint, please run the upload locally to add the correct request body.
 // @Security	JwtClient
+// @Param 		log		body 		string 		true 	"Plain text log"
 // @Success		201
 // @Success		304
 // @Failure     400		{object}	bodies.ErrorResponse

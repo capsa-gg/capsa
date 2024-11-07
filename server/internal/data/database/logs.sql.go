@@ -156,6 +156,42 @@ func (q *Queries) GetLogByUuid(ctx context.Context, logUuid uuid.UUID) (Log, err
 	return i, err
 }
 
+const getLogChunksForLog = `-- name: GetLogChunksForLog :many
+SELECT created_on, blob_path
+FROM logs_chunks
+WHERE log = $1
+ORDER BY created_on
+`
+
+type GetLogChunksForLogRow struct {
+	CreatedOn time.Time `json:"createdOn"`
+	BlobPath  string    `json:"blobPath"`
+}
+
+// Gets the log chunk information for a given log
+func (q *Queries) GetLogChunksForLog(ctx context.Context, log int64) ([]GetLogChunksForLogRow, error) {
+	rows, err := q.db.QueryContext(ctx, getLogChunksForLog, log)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetLogChunksForLogRow
+	for rows.Next() {
+		var i GetLogChunksForLogRow
+		if err := rows.Scan(&i.CreatedOn, &i.BlobPath); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getMetadataForLog = `-- name: GetMetadataForLog :many
 SELECT saved_on, metadata
 FROM logs_metadata
