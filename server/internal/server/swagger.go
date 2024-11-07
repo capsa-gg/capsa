@@ -36,7 +36,8 @@ import (
 // @BasePath /v1
 
 func swaggerDoc(conf *entities.Config) func(c *gin.Context) {
-	if conf.IsDevMode {
+	// TODO: allow dev mode on deployed servers but with the correct hostname, otherwise the uri would become .tld/:[port]/path
+	if strings.Contains(conf.ServerHostname, "local") {
 		httpsReplacer := strings.NewReplacer(
 			"https://", "",
 			"http://", "")
