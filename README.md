@@ -1,5 +1,8 @@
 # Capsa
 
+[![Server](https://github.com/lucianonooijen/capsa/actions/workflows/main-server.yml/badge.svg)](https://github.com/lucianonooijen/capsa/actions/workflows/main-server.yml)
+[![Webapp](https://github.com/lucianonooijen/capsa/actions/workflows/main-webapp.yml/badge.svg)](https://github.com/lucianonooijen/capsa/actions/workflows/main-webapp.yml)
+
 ## Getting started
 
 _TODO: write_
