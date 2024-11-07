@@ -2,14 +2,14 @@ package config
 
 import (
 	"fmt"
+	"log"
 	"reflect"
-
-	loggerCreator "github.com/lucianonooijen/capsa/server/internal/infrastructure/logger"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/spf13/viper"
 
 	"github.com/lucianonooijen/capsa/server/internal/entities"
+	loggerCreator "github.com/lucianonooijen/capsa/server/internal/infrastructure/logger"
 )
 
 // LoadConfig reads in config file and ENV variables if set, creates the root Zap logger.
@@ -41,7 +41,7 @@ func LoadConfig(configFile string) (*entities.Config, error) {
 
 	// If a config file is found, read it in.
 	if err := v.ReadInConfig(); err != nil {
-		return nil, fmt.Errorf("error reading config: %w", err)
+		log.Printf("[WARN] config file not found, falling back to environment variables")
 	}
 
 	// Marshal Viper config to struct and return

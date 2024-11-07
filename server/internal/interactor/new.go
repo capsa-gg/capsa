@@ -1,8 +1,10 @@
 package interactor
 
 import (
+	"crypto/rsa"
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 
@@ -33,8 +35,22 @@ func NewServices(c *entities.Config) (*Services, error) {
 	// Database instance
 	db := database.New(dbConn)
 
+	// Validate JWK config options
+	if (c.JwkPrivateKeyPath != "" && c.JwkPrivateKeyBase64 != "") || (c.JwkPrivateKeyPath == "" && c.JwkPrivateKeyBase64 == "") {
+		return nil, fmt.Errorf("either jwk private key path, or base64 should be defined, but not both")
+	}
+
 	// Load JWK key
-	jwkKeys, err := token.LoadPrivateKeyFromPath(c.JwkPrivateKeyPath)
+	var jwkKeys *rsa.PrivateKey
+	if c.JwkPrivateKeyPath != "" { // Loading from disk
+		jwkKeys, err = token.LoadPrivateKeyFromPath(c.JwkPrivateKeyPath)
+	} else {
+		// Remove spaces
+		base64StringNoSpaces := strings.ReplaceAll(c.JwkPrivateKeyBase64, " ", "")
+
+		jwkKeys, err = token.LoadPrivateKeyFromBase64String(base64StringNoSpaces)
+	}
+
 	if err != nil {
 		return nil, fmt.Errorf("error loading private key from path: %w", err)
 	}
