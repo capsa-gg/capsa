@@ -39,3 +39,8 @@ func New(c *entities.Config, mailer entities.EmailSender) *Emails {
 		hermes: &hermesInstance,
 	}
 }
+
+func (e Emails) generatePasswordResetLink(token string) string {
+	// TODO: read http/https from config
+	return fmt.Sprintf("https://%s/auth/password-reset?resetToken=%s", e.config.WebappHostname, token)
+}

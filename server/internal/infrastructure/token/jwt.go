@@ -15,9 +15,11 @@ const (
 	AudienceClient = "capsa-client"
 
 	// AudienceUser is the audience for log readers.
+	// Note: do not change this value, the webapp depends on this for middleware.
 	AudienceUser = "capsa-user"
 
 	// Issuer is the identification of the server when signing JWTs.
+	// Note: do not change this value, the webapp depends on this for middleware.
 	Issuer = "capsa-server"
 )
 

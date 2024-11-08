@@ -7,15 +7,23 @@ func addDefaultValuesToTemplate(template *hermes.Email) {
 	template.Body.Signature = "With kind regards"
 }
 
-func setPasswordTemplate(firstName, resetToken string) hermes.Email {
+func setPasswordTemplate(firstName, resetToken, resetLink string) hermes.Email {
 	email := hermes.Email{
 		Body: hermes.Body{
 			Name: firstName,
 			Intros: []string{
 				"Your Capsa account has been created.",
-				"Please use the code " + resetToken + " to set your password.",
+				"The code is " + resetToken + " to set your password.",
 			},
-			// TODO: button element
+			Actions: []hermes.Action{
+				{
+					Instructions: "Please set your password here:",
+					Button: hermes.Button{
+						Text: "Set your password",
+						Link: resetLink,
+					},
+				},
+			},
 			Outros: []string{
 				"If you don't set your password before the code expires, you can request a password reset to set your password.",
 			},
@@ -44,7 +52,7 @@ func userLoginSuccessTemplate(firstName string) hermes.Email {
 	return email
 }
 
-func resetPasswordCodeTemplate(firstName, resetToken string) hermes.Email {
+func resetPasswordCodeTemplate(firstName, resetToken, resetLink string) hermes.Email {
 	email := hermes.Email{
 		Body: hermes.Body{
 			Name: firstName,
@@ -52,6 +60,15 @@ func resetPasswordCodeTemplate(firstName, resetToken string) hermes.Email {
 				"Reset your Capsa password.",
 				"Please use the code " + resetToken + " to reset your password.",
 				"If you have not requested your password reset, you can ignore this email.",
+			},
+			Actions: []hermes.Action{
+				{
+					Instructions: "Set your new password here:",
+					Button: hermes.Button{
+						Text: "Reset password",
+						Link: resetLink,
+					},
+				},
 			},
 			Outros: []string{
 				"If you don't reset your password before the code expires, you need to request a new code.",

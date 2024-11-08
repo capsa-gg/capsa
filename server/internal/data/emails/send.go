@@ -22,7 +22,7 @@ func returnEmailSendingError(log *zap.SugaredLogger, err error) error {
 func (e Emails) SendAccountSetPassword(toEmail, firstName, token string) error {
 	log := e.logger.Named("SendAccountSetPassword").With("to_email", toEmail)
 
-	html, err := e.hermes.GenerateHTML(setPasswordTemplate(firstName, token))
+	html, err := e.hermes.GenerateHTML(setPasswordTemplate(firstName, token, e.generatePasswordResetLink(token)))
 	if err != nil {
 		return returnHTMLGenerationError(log, err)
 	}
@@ -56,7 +56,7 @@ func (e Emails) SendLoginSuccessNotification(toEmail, firstName string) error {
 func (e Emails) SendPasswordResetToken(toEmail, firstName, token string) error {
 	log := e.logger.Named("SendPasswordResetToken").With("to_email", toEmail)
 
-	html, err := e.hermes.GenerateHTML(resetPasswordCodeTemplate(firstName, token))
+	html, err := e.hermes.GenerateHTML(resetPasswordCodeTemplate(firstName, token, e.generatePasswordResetLink(token)))
 	if err != nil {
 		return returnHTMLGenerationError(log, err)
 	}

@@ -12,6 +12,7 @@ import (
 )
 
 const (
+	// Do not change these values, the webapp relies on these as well.
 	keyID     = "capsa-server-jwk"
 	algorithm = jose.RS256
 )
@@ -69,7 +70,7 @@ func New(c *entities.Config, pk *rsa.PrivateKey) (*Token, error) {
 
 // GetPublicKey takes the public part of the private key and marshals this to JSON for the .well-known/jwks.json endpoint.
 func (t *Token) GetPublicKey() ([]byte, error) {
-	return t.jwk.MarshalJSON()
+	return t.jwk.Public().MarshalJSON()
 }
 
 func generateWellKnownEndpoint(c *entities.Config) string {

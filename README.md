@@ -45,6 +45,10 @@ Secrets should _never_ be pushed to the Git repository. These files should alway
 
 When writing tests using logs, make sure that these logs are allowed to be made public at some point, don't break NDAs or leak codenames and have no identifiable data in them. It is best to only use internal Companion Group project logs for this, with some search-replace logic to make the logs generic.
 
+## Changing API types
+
+Whenever changing the API req/res types on either the server or the client, please make sure these match.
+
 ## Release instructions
 
 _TODO: write_
