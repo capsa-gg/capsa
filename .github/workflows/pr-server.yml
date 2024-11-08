@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "server/**"
+      - ".github/workflows/pr-server.yml"
 
 permissions:
   pull-requests: write
