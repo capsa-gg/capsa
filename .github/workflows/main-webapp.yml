@@ -14,7 +14,7 @@ env:
   DOCKER_CONTAINER_NAME: capsa-webapp
 
 jobs:
-  validation:
+  validate-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
