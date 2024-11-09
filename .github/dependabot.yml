@@ -35,13 +35,13 @@ updates:
       prefix: 'deps(server)'
 
 
-  # Update npm dependencies in /webapp
+  # Update npm dependencies in /web
   - package-ecosystem: "npm"
-    directory: "/webapp"
+    directory: "/web"
     schedule:
       interval: "daily"
     target-branch: "main"
     reviewers:
       - "lucianonooijen"
     commit-message:
-      prefix: 'deps(webapp)'
+      prefix: 'deps(web)'

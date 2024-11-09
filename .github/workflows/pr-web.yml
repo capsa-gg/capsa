@@ -1,10 +1,10 @@
-name: Webapp PR
+name: Web PR
 
 on:
   pull_request:
     paths:
-      - "webapp/**"
-      - ".github/workflows/pr-webapp.yml"
+      - "web/**"
+      - ".github/workflows/pr-web.yml"
 
 permissions:
   pull-requests: write
@@ -12,7 +12,7 @@ permissions:
 
 defaults:
   run:
-    working-directory: ./webapp
+    working-directory: ./web
 
 jobs:
   validation:

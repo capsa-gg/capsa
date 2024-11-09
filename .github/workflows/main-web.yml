@@ -1,4 +1,4 @@
-name: Webapp
+name: Web
 
 on:
   push:
@@ -7,11 +7,11 @@ on:
 
 defaults:
   run:
-    working-directory: ./webapp
+    working-directory: ./web
 
 env:
   DOCKER_REGISTRY: registry.digitalocean.com/lucianonooijen
-  DOCKER_CONTAINER_NAME: capsa-webapp
+  DOCKER_CONTAINER_NAME: capsa-web
 
 jobs:
   validate-deploy:
