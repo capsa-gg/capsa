@@ -2,6 +2,8 @@ name: SemanticRelease
 
 permissions:
   contents: write
+  issues: write
+  pull-requests: write
 
 env:
   DOCKER_REGISTRY: registry.digitalocean.com/lucianonooijen
@@ -44,5 +46,4 @@ jobs:
       - name: Semantic Release
         run: npm run semantic-release
         env:
-          GH_TOKEN: ${{ secrets.GH_AUTH_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -10,7 +10,7 @@ export default {
             {
                 preset: "conventionalcommits",
                 releaseRules: [
-                    { breaking: true, release: "path" }, // after 1.0: major
+                    { breaking: true, release: "patch" }, // after 1.0: major
                     { revert: true, release: "patch" },
                     { type: "feat", release: "patch" }, // after 1.0: minor
                     { type: "fix", release: "patch" },

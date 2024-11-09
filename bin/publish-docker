@@ -30,8 +30,8 @@ echo "Docker version will be $dockerImageVersion"
 # Generate image tags
 serverTag="${DOCKER_REGISTRY}/${DOCKER_CONTAINER_NAME_SERVER}:${dockerImageVersion}"
 echo "Server tag: $serverTag"
-serverTag="${DOCKER_REGISTRY}/${DOCKER_CONTAINER_NAME_WEBAPP}:${dockerImageVersion}"
-echo "Webapp tag: $serverTag"
+webappTag="${DOCKER_REGISTRY}/${DOCKER_CONTAINER_NAME_WEBAPP}:${dockerImageVersion}"
+echo "Webapp tag: $webappTag"
 
 # Log into registry
 doctl registry login --expiry-seconds 3600
@@ -46,5 +46,5 @@ cd ..
 # Web app
 cd server
 docker build -t "$webappTag" .
-docker push "webappTag"
+docker push "$webappTag"
 cd ..
