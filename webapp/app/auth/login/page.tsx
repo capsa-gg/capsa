@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { TextField, Button, Link, Box } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -96,4 +96,10 @@ const LoginPage: React.FC = () => {
     );
 };
 
-export default LoginPage;
+const SuspenseLoginPage = () => (
+    <Suspense>
+        <LoginPage />
+    </Suspense>
+);
+
+export default SuspenseLoginPage;

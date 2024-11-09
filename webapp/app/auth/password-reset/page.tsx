@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { TextField, Button, Link, Box, Typography } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -96,4 +96,10 @@ const PasswordReset: React.FC = () => {
     );
 };
 
-export default PasswordReset;
+const SuspensePasswordReset = () => (
+    <Suspense>
+        <PasswordReset />
+    </Suspense>
+);
+
+export default SuspensePasswordReset;
