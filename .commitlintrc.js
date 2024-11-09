@@ -23,7 +23,7 @@ export default {
         'scope-enum': [
             2,
             'always',
-            ['protocol', 'server', 'webapp', 'deployment', 'tools']
+            ['protocol', 'server', 'web', 'webapp' /* NOTE: prefer web over webapp */, 'deployment', 'tools']
         ],
         'body-max-line-length': [2, 'always', 200]
     },

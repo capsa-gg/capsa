@@ -1,17 +1,18 @@
-name: Webapp
+name: Web PR
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    paths:
+      - "web/**"
+      - ".github/workflows/pr-web.yml"
+
+permissions:
+  pull-requests: write
+  contents: read
 
 defaults:
   run:
-    working-directory: ./webapp
-
-env:
-  DOCKER_REGISTRY: registry.digitalocean.com/lucianonooijen
-  DOCKER_CONTAINER_NAME: capsa-webapp
+    working-directory: ./web
 
 jobs:
   validation:
@@ -48,15 +49,3 @@ jobs:
         run: npm run build
       - name: Lint Next
         run: npm run lint
-
-      # Deployment
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-      - name: Build container image
-        run: docker build -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_CONTAINER_NAME }}:latest .
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 1200
-      - name: Push image to DigitalOcean Container Registry
-        run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_CONTAINER_NAME }}:latest

@@ -1,7 +1,7 @@
 # Capsa
 
 [![Server](https://github.com/lucianonooijen/capsa/actions/workflows/main-server.yml/badge.svg)](https://github.com/lucianonooijen/capsa/actions/workflows/main-server.yml)
-[![Webapp](https://github.com/lucianonooijen/capsa/actions/workflows/main-webapp.yml/badge.svg)](https://github.com/lucianonooijen/capsa/actions/workflows/main-webapp.yml)
+[![Web](https://github.com/lucianonooijen/capsa/actions/workflows/main-web.yml/badge.svg)](https://github.com/lucianonooijen/capsa/actions/workflows/main-webapp.yml)
 
 ## Getting started
 
@@ -9,7 +9,7 @@ _TODO: write_
 
 ## Development setup
 
-For setting up the development environments, please check the folders `server` and `webapp` for their respective development setup instructions and requirements.
+For setting up the development environments, please check the folders `server` and `web` for their respective development setup instructions and requirements.
 
 It is advisable to install auto formatters and .editorconfig support in your editor/IDE.
 
