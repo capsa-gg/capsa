@@ -15,8 +15,8 @@ import (
 )
 
 const addLogChunk = `-- name: AddLogChunk :exec
-INSERT INTO logs_chunks(log, blob_path, chunk_start, chunk_end, category_counts, severity_counts)
-VALUES ($1, $2, $3, $4, $5, $6)
+INSERT INTO logs_chunks(log, blob_path, chunk_start, chunk_end, line_count, category_counts, severity_counts)
+VALUES ($1, $2, $3, $4, $5, $6, $7)
 `
 
 type AddLogChunkParams struct {
@@ -24,6 +24,7 @@ type AddLogChunkParams struct {
 	BlobPath       string          `json:"blobPath"`
 	ChunkStart     sql.NullTime    `json:"chunkStart"`
 	ChunkEnd       sql.NullTime    `json:"chunkEnd"`
+	LineCount      int32           `json:"lineCount"`
 	CategoryCounts json.RawMessage `json:"categoryCounts"`
 	SeverityCounts json.RawMessage `json:"severityCounts"`
 }
@@ -35,6 +36,7 @@ func (q *Queries) AddLogChunk(ctx context.Context, arg AddLogChunkParams) error 
 		arg.BlobPath,
 		arg.ChunkStart,
 		arg.ChunkEnd,
+		arg.LineCount,
 		arg.CategoryCounts,
 		arg.SeverityCounts,
 	)

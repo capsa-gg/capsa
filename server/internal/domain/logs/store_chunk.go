@@ -45,6 +45,7 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 		BlobPath: fileName,
 
 		// TODO: add processing
+		LineCount:      0,
 		ChunkStart:     sql.NullTime{},
 		ChunkEnd:       sql.NullTime{},
 		CategoryCounts: []byte("{}"),
