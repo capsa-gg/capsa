@@ -37,7 +37,8 @@
         "react-dom": "19.0.0-rc-02c0e824-20241028",
         "react-hook-form": "^7.53.2",
         "swr": "^2.2.5",
-        "yup": "^1.4.0"
+        "yup": "^1.4.0",
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "@types/js-cookie": "^3.0.6",
