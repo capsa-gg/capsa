@@ -51,4 +51,8 @@ Whenever changing the API req/res types on either the server or the client, plea
 
 ## Release instructions
 
-_TODO: write_
+To create a new release, go to the [Semantic Release actions workflow](https://github.com/lucianonooijen/capsa/actions/workflows/release.yml). On the top right, press `Run workflow`, confirm running the workflow and kick off semantic release. Do not change the branch, as this workflow will only work correctly on `main`.
+
+Until we are ready to move to v0.1, all of the releases will be on patch versions.
+
+After moving to v0.1, all breaking changes and features will increment the minor version, until the project is complete enough to be marked as v1.0.0, from where we will follow the regular semantic release patterns.
