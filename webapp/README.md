@@ -18,6 +18,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 The development server will have hot reloading set
 
+## API types
+
+Typescript does not validate Typescript types during runtime. To mitigate this, we use type validation using Zod when possible.
+
+For converting JSON types to the types in the webapp, you can use [JSON to Zod](https://transform.tools/json-to-zod) to generate Zod definitions, then use `z.infer<typeof YourZodSchema>` to generate a Typescript type.
+
 ## Authentication
 
 ## Deployment

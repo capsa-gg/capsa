@@ -5,9 +5,9 @@ import { SideNavItemProps } from "@/layouts/MainLayout/SideNav/SideNav.types";
 
 // TODO: Include showing active item
 // TODO: Styling
-export const SideNavItem: React.FC<SideNavItemProps> = ({ title, href }) => (
+export const SideNavItem: React.FC<SideNavItemProps> = ({ title, href, selected, disabled }) => (
     <ListItem>
-        <ListItemButton component={Link} href={href}>
+        <ListItemButton component={Link} href={href} disabled={disabled} selected={selected}>
             {/*TODO: Add ListItemIcon here*/}
             <ListItemText primary={title} />
         </ListItemButton>

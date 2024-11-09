@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "server/**"
+      - ".github/workflows/pr-server.yml"
 
 permissions:
   pull-requests: write
@@ -24,7 +25,8 @@ jobs:
           go-version: '1.23'
 
       # Caching
-      - id: go-cache-paths
+      - name: Set up caching
+        id: go-cache-paths
         run: |
           echo "::set-output name=go-build::$(go env GOCACHE)"
           echo "::set-output name=go-mod::$(go env GOMODCACHE)"
