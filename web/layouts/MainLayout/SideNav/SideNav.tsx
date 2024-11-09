@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
+import { usePathname } from "next/navigation";
 import { Box, Drawer, List, Tooltip, Typography } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import { sideNavItemsData, sideNavWidthPx } from "@/layouts/MainLayout/SideNav/SideNav.data";
 import { SideNavItem } from "@/layouts/MainLayout/SideNav/SideNav.components";
-import { grey } from "@mui/material/colors";
-import { usePathname } from "next/navigation";
+import version from "@/version";
 import useUserInfo from "@/hooks/useUserInfo/useUserInfo";
 
 // TODO: Add Capsa project title
@@ -41,7 +42,7 @@ const SideNav = () => {
                 </List>
                 <Tooltip title={`Server API: ${process.env.NEXT_PUBLIC_SERVER_URL}`} placement="top">
                     <Typography color={grey[400]} variant="caption" align="center" marginBottom={2}>
-                        Capsa version 0.0.1
+                        Capsa v{version}
                     </Typography>
                 </Tooltip>
             </Box>

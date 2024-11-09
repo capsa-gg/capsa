@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# Exit on error
+set -e
+
+# Get new version
+dockerImageVersion="$1"
+firstLetter=$(printf %.1s "$1")
+
+if [[ "$firstLetter" = "v" ]]; then
+    echo "Removing v-prefix from version"
+    dockerImageVersion="${dockerImageVersion:1}"
+fi
+
+
+if [[ -z "$dockerImageVersion" ]]; then
+  echo "new version argument missing"
+  exit 1
+fi
+
+
+# Validate environment variables
+if [[ -z "$DOCKER_REGISTRY" ]]; then echo "DOCKER_REGISTRY required"; exit 1; fi
+if [[ -z "$DOCKER_CONTAINER_NAME_SERVER" ]]; then echo "DOCKER_CONTAINER_NAME_SERVER required"; exit 1; fi
+if [[ -z "$DOCKER_CONTAINER_NAME_WEBAPP" ]]; then echo "DOCKER_CONTAINER_NAME_WEBAPP required"; exit 1; fi
+
+
+echo "Docker version will be $dockerImageVersion"
+
+# Generate image tags
+serverTag="${DOCKER_REGISTRY}/${DOCKER_CONTAINER_NAME_SERVER}:${dockerImageVersion}"
+echo "Server tag: $serverTag"
+serverTag="${DOCKER_REGISTRY}/${DOCKER_CONTAINER_NAME_WEBAPP}:${dockerImageVersion}"
+echo "Webapp tag: $serverTag"
+
+# Log into registry
+doctl registry login --expiry-seconds 3600
+echo "Logged into Docker registry"
+
+# Server
+cd server
+docker build -t "$serverTag" .
+docker push "$serverTag"
+cd ..
+
+# Web app
+cd server
+docker build -t "$webappTag" .
+docker push "webappTag"
+cd ..

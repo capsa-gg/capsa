@@ -11,6 +11,7 @@ interface ErrorContextType {
 
 const ErrorContext = createContext<ErrorContextType | undefined>(undefined);
 
+// TODO: This should support info/success as well
 export const ErrorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [errors, setErrors] = useState<ApplicationError[]>([]);
 

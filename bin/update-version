@@ -1,0 +1,56 @@
+#!/usr/bin/env node
+
+import * as replace from "replace-in-file";
+
+const from = process.argv[2]?.replace("v", "");
+const to = process.argv[3]?.replace("v", "");
+
+if (!from) {
+    console.error("from not defined");
+    process.exit(1);
+}
+if (!to) {
+    console.error("to not defined");
+    process.exit(1);
+}
+
+console.log(`replacing version from ${from} to ${to}`);
+
+/*
+ * JS package.json step
+ */
+
+const resPackageJson = replace.replaceInFileSync({
+    files: ["./package.json", "./web/package.json"],
+    from: new RegExp(`"version": "${from}",`, "g"),
+    to: `"version": "${to}",`,
+});
+
+console.log("done replacing package.json files:");
+console.table(resPackageJson);
+
+/*
+ * Web version step
+ */
+
+const resWeb = replace.replaceInFileSync({
+    files: ["./web/version.ts"],
+    from: new RegExp(`version = "${from}"`, "g"),
+    to: `version = "${to}"`,
+});
+
+console.log("done replacing web version.ts file:");
+console.table(resWeb);
+
+/*
+ * Golang step
+ */
+
+const resGo = replace.replaceInFileSync({
+    files: ["./server/constants/version.go"],
+    from: new RegExp(`Version = "${from}"`, "g"),
+    to: `Version = "${to}"`,
+});
+
+console.log("done replacing Go files:");
+console.table(resGo);

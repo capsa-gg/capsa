@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Exit on error
+set -e
+
+# Update version - will exit if args are incorrect
+ ./bin/update-version "$1" "$2"
+
+# Run npm install to update package-lock.json
+npm install
+cd web
+npm install
+cd ..
+
+# Make sure dist directory exists
+mkdir -p dist
+
+# Build server for all environments, zip files
+cd server
+#make build-all
+cd ..
+
+# Define directories
+BUILD_DIR="./server/builds"
+DIST_DIR="./dist"
+
+# Zip built files, put in dist directory
+for file in "$BUILD_DIR"/*; do
+    # Only process regular files (not directories)
+    if [[ -f "$file" ]]; then
+        # Get the filename without the path
+        filename=$(basename "$file")
+
+        # Create a zip file with the same name
+        zip "$DIST_DIR/$filename.zip" "$file"
+        echo "zipped $filename"
+    fi
+done
+
