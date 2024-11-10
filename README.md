@@ -20,7 +20,7 @@ It is advisable to install auto formatters and .editorconfig support in your edi
 Commit messages should follow the 'conventional commit' structure `<type>(<scope>): description`, for example:
 
 ```
-feat(server): implement transactional emails`.
+feat(server): implement transactional emails
 ```
 
 Merge commits are an exception for this, you don't have to modify these to fit the format.
