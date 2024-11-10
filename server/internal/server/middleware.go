@@ -15,7 +15,9 @@ func registerMiddleware(router *gin.Engine, logger *zap.Logger) {
 	router.Use(gin.Recovery())
 	router.Use(middleware.GinLogger(logger))
 	router.Use(middleware.ServerVersionMiddleware())
+	router.Use(middleware.SecurityHeadersMiddleware())
 
+	// TODO: Configure properly
 	config := cors.DefaultConfig()
 	config.AllowAllOrigins = true
 	config.AllowHeaders = []string{

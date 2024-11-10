@@ -17,19 +17,25 @@ It is advisable to install auto formatters and .editorconfig support in your edi
 
 ### Commit messages
 
-Commit messages should follow the structure `<type>(<scope>): description`, for example:
+Commit messages should follow the 'conventional commit' structure `<type>(<scope>): description`, for example:
 
 ```
-feat(server): implement transactional emails`.
+feat(server): implement transactional emails
 ```
 
-Merge commits are an exception for this, you don't have to modify these.
+Merge commits are an exception for this, you don't have to modify these to fit the format.
 
-The commit messages are also checked by the CI. To see the available types and scopes, please see `.commitlintrc.js` in the repo root.
+The commit messages are also checked by the CI. To see the available types and scopes, please see `.commitlintrc.js` in the repo root, this file contains documentation about the correct usage. It is also recommended to install a code editor/IDE plugin for conventional commits.
 
 The commit messages will be used to generate a changelog for each release.
 
 ### Code generation
+
+This project tries to use code generation where possible.
+
+Generated code means less time maintaining it and is often less error-prone than hand-rolled code.
+
+For Typescript, code generation is not as prevalent as with Go. Therefore it relies more on helper functions that hide the complexity but offer a nice and simple API for users.
 
 ### Strict linting
 
@@ -51,7 +57,9 @@ Whenever changing the API req/res types on either the server or the client, plea
 
 ## Release instructions
 
-To create a new release, go to the [Semantic Release actions workflow](https://github.com/lucianonooijen/capsa/actions/workflows/release.yml). On the top right, press `Run workflow`, confirm running the workflow and kick off semantic release. Do not change the branch, as this workflow will only work correctly on `main`.
+To create a new release, go to the [Semantic Release actions workflow](https://github.com/lucianonooijen/capsa/actions/workflows/release.yml). On the top right, press `Run workflow`, confirm running the workflow and kick off semantic release. Make sure the web and server CIs on main have passed before kicking off a release. Do not change the branch, as this workflow will only work correctly on `main`.
+
+The release commit will not run the default main branch CI workflows. Due to the `:latest` tag being pushed for the Docker images, they will be deployed.
 
 Until we are ready to move to v0.1, all of the releases will be on patch versions.
 

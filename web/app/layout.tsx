@@ -10,6 +10,7 @@ import { SWRProvider } from "@/app/swr-provider";
 import { ErrorProvider } from "@/context/ErrorContext";
 import ErrorSnackbar from "@/containers/ErrorSnackbar/ErrorSnackbar";
 import "./globals.css";
+import { AppContextProvider } from "@/context/AppContext/AppContext";
 
 export const metadata: Metadata = {
     title: "Capsa Webapp Homepage",
@@ -21,20 +22,22 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
         <body>
             <AppRouterCacheProvider>
                 <ThemeProvider theme={theme}>
-                    <ErrorProvider>
-                        <SWRProvider>
-                            <CssBaseline />
-                            <div className="screen-too-small">
-                                <ScreenTooSmall />
-                            </div>
-                            <div className="main-contents">
-                                <Typography>
-                                    <ErrorSnackbar />
-                                </Typography>
-                                <MainLayout>{children}</MainLayout>
-                            </div>
-                        </SWRProvider>
-                    </ErrorProvider>
+                    <AppContextProvider>
+                        <ErrorProvider>
+                            <SWRProvider>
+                                <CssBaseline />
+                                <div className="screen-too-small">
+                                    <ScreenTooSmall />
+                                </div>
+                                <div className="main-contents">
+                                    <Typography>
+                                        <ErrorSnackbar />
+                                    </Typography>
+                                    <MainLayout>{children}</MainLayout>
+                                </div>
+                            </SWRProvider>
+                        </ErrorProvider>
+                    </AppContextProvider>
                 </ThemeProvider>
             </AppRouterCacheProvider>
         </body>

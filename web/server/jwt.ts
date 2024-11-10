@@ -17,7 +17,7 @@ export default class JwtValidator {
     private static async getJwk(): Promise<JwkJwt> {
         if (this._jwk) return this._jwk;
 
-        const jwkEndpoint = `${process.env.NEXT_PUBLIC_SERVER_URL}/${jwkUri}`;
+        const jwkEndpoint = `${process.env.SERVER_URL}/${jwkUri}`;
         console.log("jwkEndpoint", jwkEndpoint);
 
         // Load and process jwk, find the key we need

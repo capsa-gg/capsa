@@ -20,9 +20,6 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# TODO: Do this properly!
-ENV NEXT_PUBLIC_SERVER_URL=https://api.dev.capsa.lucianonooijen.com
-
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npm run build;

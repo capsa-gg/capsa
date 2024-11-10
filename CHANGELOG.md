@@ -39,3 +39,7 @@
 * **server:** user login route ([8e0cd23](https://github.com/lucianonooijen/capsa/commit/8e0cd237b6ed3f8e54c87c3d343363e0eeb9cceb))
 * **webapp:** auth pages, middleware, api call hooks ([9c8eeaa](https://github.com/lucianonooijen/capsa/commit/9c8eeaa60c05de25f09ee04bbec1dde29e0d73cb))
 * **webapp:** auth pages, middleware, api call hooks ([9d6e942](https://github.com/lucianonooijen/capsa/commit/9d6e94252071cbdbffacdc07b47ce6a51eb6431a))
+
+## 0.0.1 (2024-11-10)
+
+Project skeleton setup
