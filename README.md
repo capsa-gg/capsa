@@ -17,15 +17,15 @@ It is advisable to install auto formatters and .editorconfig support in your edi
 
 ### Commit messages
 
-Commit messages should follow the structure `<type>(<scope>): description`, for example:
+Commit messages should follow the 'conventional commit' structure `<type>(<scope>): description`, for example:
 
 ```
 feat(server): implement transactional emails`.
 ```
 
-Merge commits are an exception for this, you don't have to modify these.
+Merge commits are an exception for this, you don't have to modify these to fit the format.
 
-The commit messages are also checked by the CI. To see the available types and scopes, please see `.commitlintrc.js` in the repo root, this file contains documentation about the correct usage.
+The commit messages are also checked by the CI. To see the available types and scopes, please see `.commitlintrc.js` in the repo root, this file contains documentation about the correct usage. It is also recommended to install a code editor/IDE plugin for conventional commits.
 
 The commit messages will be used to generate a changelog for each release.
 
