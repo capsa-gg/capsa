@@ -6,7 +6,7 @@ import { AppContextData } from "@/context/AppContext/AppContext.types";
 
 export const AppContext = createContext<AppContextData>({ env: null });
 
-export const AppContextProvider = ({ children }: React.FC<{ children: React.ReactNode }>) => {
+export const AppContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [env, setEnv] = useState<Env | null>(null);
 
     useEffect(() => {

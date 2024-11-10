@@ -6,7 +6,7 @@ import { getJwtFromLocalStorage } from "@/data/jwt/localStorage";
 import { getEnv } from "@/data/env";
 
 class BaseUrl {
-    private static _baseUrl;
+    private static _baseUrl?: string;
 
     public static async getBaseUrl(): Promise<string> {
         if (this._baseUrl) return this._baseUrl;
