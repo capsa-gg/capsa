@@ -3,6 +3,10 @@
 # Exit on error
 set -e
 
+# Define directories
+BUILD_DIR="./server/builds"
+DIST_DIR="./release"
+
 # Update version - will exit if args are incorrect
  ./bin/update-version "$1" "$2"
 
@@ -13,16 +17,12 @@ npm install
 cd ..
 
 # Make sure dist directory exists
-mkdir -p dist
+mkdir -p "$DIST_DIR"
 
 # Build server for all environments, zip files
 cd server
-#make build-all
+make build-all
 cd ..
-
-# Define directories
-BUILD_DIR="./server/builds"
-DIST_DIR="./dist"
 
 # Zip built files, put in dist directory
 for file in "$BUILD_DIR"/*; do

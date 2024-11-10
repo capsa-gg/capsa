@@ -66,8 +66,7 @@ export default {
             {
                 assets: [
                     {
-                        path: "dist/*.zip",
-                        label: "Capsa ${nextRelease.version}",
+                        path: "release/**",
                     },
                 ],
             },
