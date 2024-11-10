@@ -56,5 +56,5 @@ jobs:
         run: |
           curl -X POST \
             -H 'Content-type: application/json' \
-            --data '{"text":"*New Capsa release just dropped on Github*.\n\nSee https://github.com/lucianonooijen/capsa/releases for details' \
+            --data '{"text":"*New Capsa release just dropped on Github*.\n\nSee https://github.com/lucianonooijen/capsa/releases for details"}' \
             ${{ secrets.SLACK_WEBHOOK }}
