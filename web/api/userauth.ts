@@ -18,7 +18,7 @@ export class UserAuth {
     // TODO: make a generic helper for this
     public static async PasswordResetStart({ email }: { email: string }): Promise<ApiResponse<null>> {
         const endpoint = "/user/auth/password-reset";
-        const reqUrl = getRequestUrl(endpoint);
+        const reqUrl = await getRequestUrl(endpoint);
         const url = new URL(reqUrl);
         url.searchParams.append("email", email);
 

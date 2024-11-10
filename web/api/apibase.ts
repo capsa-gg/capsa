@@ -3,10 +3,26 @@
 import z, { ZodSchema } from "zod";
 import ApiError, { ErrorResponseSchema } from "@/types/api/error";
 import { getJwtFromLocalStorage } from "@/data/jwt/localStorage";
+import { getEnv } from "@/data/env";
 
-const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+class BaseUrl {
+    private static _baseUrl;
 
-export const getRequestUrl = (path: string) => {
+    public static async getBaseUrl(): Promise<string> {
+        if (this._baseUrl) return this._baseUrl;
+
+        const env = await getEnv();
+        if (!env || !env.serverUrl) {
+            throw new Error("cannot get server url");
+        }
+
+        this._baseUrl = env.serverUrl;
+        return env.serverUrl;
+    }
+}
+
+export const getRequestUrl = async (path: string) => {
+    const baseUrl = await BaseUrl.getBaseUrl();
     return `${baseUrl}/v1${path}`;
 };
 
@@ -34,7 +50,7 @@ const callWithResponse = async <TReq, TResSchema extends ZodSchema>(
     body?: TReq,
     jwt?: string,
 ): Promise<ApiResponse<z.infer<TResSchema>>> => {
-    const reqUrl = getRequestUrl(path);
+    const reqUrl = await getRequestUrl(path);
 
     const res = await fetch(reqUrl, {
         method,
@@ -74,7 +90,7 @@ const callWithoutResponse = async <TReq>(
     body?: TReq,
     jwt?: string,
 ): Promise<ApiResponse<null>> => {
-    const reqUrl = getRequestUrl(path);
+    const reqUrl = await getRequestUrl(path);
 
     const res = await fetch(reqUrl, {
         method,

@@ -8,10 +8,12 @@ import { sideNavItemsData, sideNavWidthPx } from "@/layouts/MainLayout/SideNav/S
 import { SideNavItem } from "@/layouts/MainLayout/SideNav/SideNav.components";
 import version from "@/version";
 import useUserInfo from "@/hooks/useUserInfo/useUserInfo";
+import { useAppContext } from "@/context/AppContext/AppContext";
 
 // TODO: Add Capsa project title
 // TODO: Add styling
 const SideNav = () => {
+    const appContext = useAppContext();
     const { isLoggedIn } = useUserInfo();
     const pathname = usePathname();
 
@@ -40,7 +42,11 @@ const SideNav = () => {
                 <List sx={{ width: sideNavWidthPx }}>
                     <SideNavListItems />
                 </List>
-                <Tooltip title={`Server API: ${process.env.NEXT_PUBLIC_SERVER_URL}`} placement="top">
+                <Tooltip
+                    title={`Server API: ${appContext.env?.serverUrl ?? "Loading endpoint..."}`}
+                    placement="top"
+                    suppressHydrationWarning
+                >
                     <Typography color={grey[400]} variant="caption" align="center" marginBottom={2}>
                         Capsa v{version}
                     </Typography>

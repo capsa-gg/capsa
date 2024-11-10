@@ -29,3 +29,7 @@ For converting JSON types to the types in the webapp, you can use [JSON to Zod](
 ## Deployment
 
 ## Development guidelines
+
+## Miscellaneous notes
+
+* As `NEXT_PUBLIC_` variables get inlined during the build process, these should not be used for dynamic content. Use the `data/env.ts` file instead for this to have the clients access certain environment variables from the server. Be cautious with this however, everything in here will be available for clients!
