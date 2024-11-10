@@ -25,7 +25,7 @@ feat(server): implement transactional emails`.
 
 Merge commits are an exception for this, you don't have to modify these.
 
-The commit messages are also checked by the CI. To see the available types and scopes, please see `.commitlintrc.js` in the repo root.
+The commit messages are also checked by the CI. To see the available types and scopes, please see `.commitlintrc.js` in the repo root, this file contains documentation about the correct usage.
 
 The commit messages will be used to generate a changelog for each release.
 
