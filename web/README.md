@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Requirements
 
-* NodeJS 22
+-   NodeJS 22
 
 ## Getting Started
 
@@ -38,7 +38,7 @@ Deployment can best be done with Docker. There is a Dockerfile which will produc
 
 For development on the web app, please only make use of the app router. Keep logic server-side when possible, except for API requests, try to set `"use client|server";` where it can only be run on one of them, to make it explicit for readers of the code. The application should not become a SPA, so URLs and URL parameters should update accordingly to make specific views sharable. With the app router, it is possible to separate the page contents from the layout, please try to do so. Using the app router layouts is great for similar pages as well.
 
-State management should be done at the local level when possible. For shared states, please use `Context`s  with a custom `useContextName` hook to access these, for complex logic, a custom hook instance provided by a context is a good idea. The providers should be kept at as low level as possible, try to avoid putting them all in the root layout.
+State management should be done at the local level when possible. For shared states, please use `Context`s with a custom `useContextName` hook to access these, for complex logic, a custom hook instance provided by a context is a good idea. The providers should be kept at as low level as possible, try to avoid putting them all in the root layout.
 
 For input should be validated and show meaningful errors. An example of this can be found in the auth pages.
 

@@ -1,5 +1,5 @@
 .screen-too-small {
-    display: none
+    display: none;
 }
 
 @media only screen and (max-width: 1024px) {
@@ -7,6 +7,6 @@
         display: block;
     }
     .main-contents {
-        display: none
+        display: none;
     }
 }
