@@ -17,9 +17,9 @@ import (
 
 // AuthClientMiddleware is middleware to validate that a client is correctly authenticated.
 func AuthClientMiddleware(s *interactor.Services) gin.HandlerFunc { //nolint:dupl // Not similar enough for a layer of abstraction
-	log := s.Config.RootLogger.Named("AuthClientMiddleware").Sugar()
-
 	return func(c *gin.Context) {
+		log := s.Config.RootLogger.Named("AuthClientMiddleware").Sugar()
+
 		// Get the token from the header
 		tok := extractTokenFromHeader(c)
 		if tok == "" {
