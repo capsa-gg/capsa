@@ -1,6 +1,6 @@
 {
   "name": "capsa",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Infrastructure for Project Capsa, an Unreal Engine log solution",
   "author": "Luciano Nooijen <luciano@lucianonooijen.com>",
   "license": "UNLICENCED",

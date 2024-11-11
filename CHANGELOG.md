@@ -1,3 +1,21 @@
+## [0.0.3](https://github.com/lucianonooijen/capsa/compare/v0.0.2...v0.0.3) (2024-11-11)
+
+
+### Bug Fixes
+
+* better hot reloading ([adfad39](https://github.com/lucianonooijen/capsa/commit/adfad39960d42fb39cefda7c056a77ddd30731a3))
+* build correct Docker image on release ([3c39aff](https://github.com/lucianonooijen/capsa/commit/3c39aff67072e31e11fb3e5ed31003084b9a4574))
+* log insertion improvements ([5db65c0](https://github.com/lucianonooijen/capsa/commit/5db65c0d79d1f2a5b77a1defe2d69e25d96afd5c))
+
+
+### Features
+
+* **server:** add security headers middleware ([a7eaaff](https://github.com/lucianonooijen/capsa/commit/a7eaaff25d8b52d023557e2e1656a5be89ac9108))
+* **web:** add security headers in Next config ([08823e5](https://github.com/lucianonooijen/capsa/commit/08823e5b223046578da111af39c0ca1db8f9405f))
+* **webapp:** dynamic loading of server url instead of inlining NEXT_PUBLIC_ variables into html ([60a75dd](https://github.com/lucianonooijen/capsa/commit/60a75dde7b9446a09920be3181619b7cfd5d8e7a))
+* **web:** display environment info on homepage ([2746d1f](https://github.com/lucianonooijen/capsa/commit/2746d1f7fd7e2911003ed7e55044a422ec0133c4))
+* **web:** log overview and single log pages ([52eb468](https://github.com/lucianonooijen/capsa/commit/52eb46802edbe26bcbd38f1f6bae0f7896405b89))
+
 ## [0.0.2](https://github.com/lucianonooijen/capsa/compare/v0.0.1...v0.0.2) (2024-11-10)
 
 
