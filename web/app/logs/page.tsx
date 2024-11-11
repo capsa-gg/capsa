@@ -16,13 +16,13 @@ const columns: GridColDef<LogOverviewItem>[] = [
     { field: "lineCount", headerName: "Lines", flex: 1 },
     {
         field: "tsFirstLine",
-        headerName: "Platform",
+        headerName: "First timestamp",
         flex: 3,
         valueFormatter: value => moment(value).format("MMMM Do YYYY, h:mm:ss a"),
     },
     {
         field: "tsLastLine",
-        headerName: "Platform",
+        headerName: "Last timestamp",
         flex: 3,
         valueFormatter: value => moment(value).format("MMMM Do YYYY, h:mm:ss a"),
     },
