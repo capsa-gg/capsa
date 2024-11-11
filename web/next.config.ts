@@ -1,18 +1,5 @@
 import type { NextConfig } from "next";
 
-const cspHeader = `
-    default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline';
-    style-src 'self' 'unsafe-inline';
-    img-src 'self' blob: data:;
-    font-src 'self';
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'none';
-    upgrade-insecure-requests;
-`;
-
 const nextConfig: NextConfig = {
     output: "standalone",
     productionBrowserSourceMaps: true,
@@ -25,10 +12,6 @@ const nextConfig: NextConfig = {
                     {
                         key: "Strict-Transport-Security",
                         value: `max-age=${60 * 60 * 24 * 365 /* 1y */}; includeSubDomains; preload`,
-                    },
-                    {
-                        key: "Content-Security-Policy",
-                        value: cspHeader.replace(/\n/g, ""),
                     },
                     {
                         key: "Permissions-Policy",

@@ -8,12 +8,9 @@ export const setJwtCookie = (data: UserJwtData) => {
     Cookies.set(jwtStorageKey, data.token, {
         expires: new Date(data.tokenExpiry),
         secure: true,
-        sameSite: "strict",
+        sameSite: "Strict",
+        httpOnly: false,
     });
-};
-
-export const getJwtCookie = (): string | undefined => {
-    return Cookies.get(jwtStorageKey);
 };
 
 export const removeJwtCookie = () => {

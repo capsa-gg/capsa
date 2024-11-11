@@ -1,7 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
-import { ThemeProvider, Typography } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "@/styles/theme";
 import ScreenTooSmall from "@/layouts/ScreenTooSmall/ScreenTooSmall";
@@ -17,6 +17,8 @@ export const metadata: Metadata = {
     description: "Capsa WebApp access",
 };
 
+// TODO: Error boundary
+
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
     <html lang="en">
         <body>
@@ -30,9 +32,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
                                     <ScreenTooSmall />
                                 </div>
                                 <div className="main-contents">
-                                    <Typography>
-                                        <ErrorSnackbar />
-                                    </Typography>
+                                    <ErrorSnackbar />
                                     <MainLayout>{children}</MainLayout>
                                 </div>
                             </SWRProvider>

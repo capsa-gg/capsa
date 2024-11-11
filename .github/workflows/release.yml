@@ -18,6 +18,11 @@ on:
         description: "Confirm release of new version with Semantic Release"
         required: true
         default: false
+      cipass:
+        type: boolean
+        description: "The CI pipeline has no errors on main"
+        required: true
+        default: false
 
 
 jobs:
