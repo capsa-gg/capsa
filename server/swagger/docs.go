@@ -1064,10 +1064,10 @@ const docTemplate = `{
         "entities.TitleEnvironment": {
             "type": "object",
             "properties": {
-                "environment_key": {
+                "environmentKey": {
                     "type": "string"
                 },
-                "environment_name": {
+                "environmentName": {
                     "type": "string"
                 },
                 "title": {

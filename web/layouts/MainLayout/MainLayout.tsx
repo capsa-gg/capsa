@@ -8,7 +8,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => (
         <SideNav />
         <Box component="main" sx={{ marginLeft: `240px` }}>
             <TopNav />
-            {children}
+            <Box mt={4}>{children}</Box>
         </Box>
     </>
 );

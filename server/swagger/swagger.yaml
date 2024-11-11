@@ -132,9 +132,9 @@ definitions:
     type: object
   entities.TitleEnvironment:
     properties:
-      environment_key:
+      environmentKey:
         type: string
-      environment_name:
+      environmentName:
         type: string
       title:
         type: string
