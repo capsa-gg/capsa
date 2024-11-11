@@ -8,7 +8,7 @@ export const sideNavItemsData: Omit<SideNavItemProps, "selected" | "disabled">[]
         href: "/",
     },
     {
-        title: "Example",
-        href: "/example",
+        title: "Logs",
+        href: "/logs",
     },
 ];

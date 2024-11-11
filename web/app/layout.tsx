@@ -17,6 +17,8 @@ export const metadata: Metadata = {
     description: "Capsa WebApp access",
 };
 
+// TODO: Error boundary
+
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
     <html lang="en">
         <body>

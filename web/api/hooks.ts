@@ -12,6 +12,8 @@ import { ApplicationError } from "@/types/api/error";
 import { UserAuth } from "@/api/userauth";
 import { Environments } from "@/api/environments";
 import { ListAllEnvironmentsResponse } from "@/types/api/environments";
+import { LogOverviewResponse } from "@/types/api/logs";
+import { Logs } from "@/api/logs";
 
 type ApiCallFunc<Req, Res> = (req: Req) => Promise<ApiResponse<Res>>;
 
@@ -59,3 +61,6 @@ export const useGetAllEnvironments = apiCallToSwrPlain<ListAllEnvironmentsRespon
     "listallenvironments",
     Environments.ListAllEnvironments,
 );
+
+// Logs
+export const useGetAllLogs = apiCallToSwrPlain<LogOverviewResponse>("getalllogs", Logs.ListAllLogs);
