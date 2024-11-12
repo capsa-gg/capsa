@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/lucianonooijen/capsa/server/internal/domain/user"
-	"github.com/lucianonooijen/capsa/server/internal/server/bodies"
+	"github.com/capsa-gg/capsa/server/internal/domain/user"
+	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
 
 // UserPasswordRequest allows users to request a password reset

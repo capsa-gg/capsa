@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
+	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/infrastructure/token"
 )
 
 func generateRsaKeyset(t *testing.T) *rsa.PrivateKey {

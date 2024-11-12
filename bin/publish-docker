@@ -48,7 +48,7 @@ docker push "$serverLatest"
 cd ..
 
 # Web app
-cd server
+cd web
 docker build -t "$webappTag" -t "${webappImage}:latest" .
 docker push "$webappTag"
 docker push "$webappLatest"

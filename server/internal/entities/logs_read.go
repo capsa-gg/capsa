@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/lucianonooijen/capsa/server/constants"
+	"github.com/capsa-gg/capsa/server/constants"
 )
 
 // TitleEnvironment contains the data about an environment in a given title.

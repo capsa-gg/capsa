@@ -7,12 +7,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/lucianonooijen/capsa/server/constants"
-	"github.com/lucianonooijen/capsa/server/internal/domain/logs"
-	"github.com/lucianonooijen/capsa/server/internal/domain/user"
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
-	"github.com/lucianonooijen/capsa/server/internal/interactor"
-	"github.com/lucianonooijen/capsa/server/internal/server/bodies"
+	"github.com/capsa-gg/capsa/server/constants"
+	"github.com/capsa-gg/capsa/server/internal/domain/logs"
+	"github.com/capsa-gg/capsa/server/internal/domain/user"
+	"github.com/capsa-gg/capsa/server/internal/infrastructure/token"
+	"github.com/capsa-gg/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
 
 // AuthClientMiddleware is middleware to validate that a client is correctly authenticated.

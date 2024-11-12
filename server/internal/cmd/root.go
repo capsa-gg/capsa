@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 var configFile string

@@ -7,7 +7,7 @@ import (
 	"crypto/sha256"
 	"testing"
 
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
+	"github.com/capsa-gg/capsa/server/internal/infrastructure/token"
 )
 
 // TestGenerateRsaKeySet tests the GenerateRsaKeySet function.

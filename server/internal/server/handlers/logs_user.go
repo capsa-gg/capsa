@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/lucianonooijen/capsa/server/internal/domain/logs"
+	"github.com/capsa-gg/capsa/server/internal/domain/logs"
 )
 
 // LogsList allows users to fetch available logs from the database

@@ -12,7 +12,7 @@ const docTemplate = `{
         "contact": {
             "name": "Luciano Nooijen",
             "url": "https://lucianonooijen.com",
-            "email": "capsa@lucianonooijen.com"
+            "email": "no-reply@capsa.gg"
         },
         "version": "{{.Version}}"
     },

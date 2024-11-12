@@ -3,9 +3,9 @@ package admin
 import (
 	"context"
 
-	"github.com/lucianonooijen/capsa/server/internal/data/database"
-	"github.com/lucianonooijen/capsa/server/internal/entities"
-	"github.com/lucianonooijen/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/internal/data/database"
+	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
 // AddNewEnvironment adds a new environment to the database for a given title.

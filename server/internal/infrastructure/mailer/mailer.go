@@ -3,7 +3,7 @@ package mailer
 import (
 	"go.uber.org/zap"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 // Mailer is the generic package used for sending transactional emails.

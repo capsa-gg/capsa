@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/entities"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"

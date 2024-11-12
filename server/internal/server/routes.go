@@ -3,9 +3,9 @@ package server
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/lucianonooijen/capsa/server/internal/interactor"
-	"github.com/lucianonooijen/capsa/server/internal/server/handlers"
-	"github.com/lucianonooijen/capsa/server/internal/server/middleware"
+	"github.com/capsa-gg/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/internal/server/handlers"
+	"github.com/capsa-gg/capsa/server/internal/server/middleware"
 )
 
 // NOTE: the routes defined here should only have a single handler attached to them.

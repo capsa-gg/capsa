@@ -6,8 +6,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/lucianonooijen/capsa/server/internal/interactor"
-	"github.com/lucianonooijen/capsa/server/internal/server/handlers"
+	"github.com/capsa-gg/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/internal/server/handlers"
 
 	"github.com/gin-gonic/gin"
 )

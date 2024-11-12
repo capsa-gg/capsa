@@ -9,8 +9,8 @@ import (
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
-	"github.com/lucianonooijen/capsa/server/swagger"
+	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/swagger"
 )
 
 // @title Capsa Server
@@ -18,7 +18,7 @@ import (
 // @description Storage server for Project Capsa, a ground-breaking Unreal Engine logging solution
 
 // @contact.name Luciano Nooijen
-// @contact.url https://lucianonooijen.com
+// @contact.url https://capsa.gg
 // @contact.email capsa@lucianonooijen.com
 
 // NOTE: there is securitydefinitions.bearerauth, but this does not allow setting the bearer value, this is better.

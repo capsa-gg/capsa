@@ -10,7 +10,7 @@ defaults:
     working-directory: ./server
 
 env:
-  DOCKER_REGISTRY: registry.digitalocean.com/lucianonooijen
+  DOCKER_REGISTRY: registry.digitalocean.com/capsa
   DOCKER_CONTAINER_NAME: capsa-server
 
 jobs:

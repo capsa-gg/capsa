@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
+	"github.com/capsa-gg/capsa/server/internal/infrastructure/token"
 )
 
 var (

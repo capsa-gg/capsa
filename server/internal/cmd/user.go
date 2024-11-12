@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/lucianonooijen/capsa/server/internal/domain/user"
+	"github.com/capsa-gg/capsa/server/internal/domain/user"
 )
 
 var (

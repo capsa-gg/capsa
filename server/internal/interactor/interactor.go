@@ -5,12 +5,12 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/lucianonooijen/capsa/server/internal/data/database"
-	"github.com/lucianonooijen/capsa/server/internal/data/emails"
-	"github.com/lucianonooijen/capsa/server/internal/data/logchunks"
-	"github.com/lucianonooijen/capsa/server/internal/entities"
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/passhash"
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
+	"github.com/capsa-gg/capsa/server/internal/data/database"
+	"github.com/capsa-gg/capsa/server/internal/data/emails"
+	"github.com/capsa-gg/capsa/server/internal/data/logchunks"
+	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/infrastructure/passhash"
+	"github.com/capsa-gg/capsa/server/internal/infrastructure/token"
 )
 
 // Services contains all the shared services in the application that can be passed to .

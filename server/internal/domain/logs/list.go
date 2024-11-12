@@ -3,10 +3,10 @@ package logs
 import (
 	"context"
 
-	"github.com/lucianonooijen/capsa/server/constants"
-	"github.com/lucianonooijen/capsa/server/internal/entities"
-	"github.com/lucianonooijen/capsa/server/internal/interactor"
-	"github.com/lucianonooijen/capsa/server/internal/util"
+	"github.com/capsa-gg/capsa/server/constants"
+	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/internal/util"
 )
 
 // GetAllLogsOverview fetches the high-level overview of all available logs.
