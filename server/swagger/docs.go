@@ -11,8 +11,8 @@ const docTemplate = `{
         "title": "{{.Title}}",
         "contact": {
             "name": "Luciano Nooijen",
-            "url": "https://lucianonooijen.com",
-            "email": "no-reply@capsa.gg"
+            "url": "https://capsa.gg",
+            "email": "capsa@lucianonooijen.com"
         },
         "version": "{{.Version}}"
     },
