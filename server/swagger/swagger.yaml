@@ -12,9 +12,9 @@ definitions:
         maxLength: 32
         type: string
     required:
-      - key
-      - platform
-      - type
+    - key
+    - platform
+    - type
     type: object
   bodies.ClientLogCreationResponse:
     properties:
@@ -46,7 +46,7 @@ definitions:
   bodies.LogMetadataSaveRequest:
     properties:
       additional_metadata:
-        additionalProperties: { }
+        additionalProperties: {}
         type: object
       log_links:
         additionalProperties:
@@ -74,8 +74,8 @@ definitions:
         minLength: 12
         type: string
     required:
-      - email
-      - password
+    - email
+    - password
     type: object
   bodies.UserPasswordResetCompleteRequest:
     properties:
@@ -86,13 +86,13 @@ definitions:
       resetToken:
         type: string
     required:
-      - password
-      - resetToken
+    - password
+    - resetToken
     type: object
   entities.LogAdditionalMetadata:
     properties:
       metadata:
-        additionalProperties: { }
+        additionalProperties: {}
         type: object
       savedOn:
         type: string
@@ -157,9 +157,9 @@ definitions:
 host: example.com
 info:
   contact:
-    email: no-reply@capsa.gg
+    email: capsa@lucianonooijen.com
     name: Luciano Nooijen
-    url: https://lucianonooijen.com
+    url: https://capsa.gg
   description: Storage server for Project Capsa, a ground-breaking Unreal Engine logging
     solution
   title: Capsa Server
@@ -168,18 +168,18 @@ paths:
   /client/auth:
     post:
       consumes:
-        - application/json
+      - application/json
       description: Allows clients to create a log session and receive a token to send
         logs with
       parameters:
-        - description: ClientLogCreationRequest
-          in: body
-          name: creation_request
-          required: true
-          schema:
-            $ref: '#/definitions/bodies.ClientLogCreationRequest'
+      - description: ClientLogCreationRequest
+        in: body
+        name: creation_request
+        required: true
+        schema:
+          $ref: '#/definitions/bodies.ClientLogCreationRequest'
       produces:
-        - application/json
+      - application/json
       responses:
         "201":
           description: Created
@@ -239,21 +239,21 @@ paths:
             $ref: '#/definitions/bodies.ErrorResponse'
       summary: Client authentication handler
       tags:
-        - Client
+      - Client
   /client/log/chunk:
     post:
       consumes:
-        - text/plain
+      - text/plain
       description: Allows clients to upload log chunks for their log sessions. To
         test this endpoint, please run the upload locally to add the correct request
         body.
       parameters:
-        - description: Plain text log
-          in: body
-          name: log
-          required: true
-          schema:
-            type: string
+      - description: Plain text log
+        in: body
+        name: log
+        required: true
+        schema:
+          type: string
       responses:
         "201":
           description: Created
@@ -300,23 +300,23 @@ paths:
           schema:
             $ref: '#/definitions/bodies.ErrorResponse'
       security:
-        - JwtClient: [ ]
+      - JwtClient: []
       summary: Log chunk storage
       tags:
-        - ClientAuthenticated
+      - ClientAuthenticated
   /client/log/metadata:
     post:
       consumes:
-        - application/json
+      - application/json
       description: Allows clients to store linked logs and additional metadata for
         their log session
       parameters:
-        - description: LogMetadataSaveRequest
-          in: body
-          name: metadata
-          required: true
-          schema:
-            $ref: '#/definitions/bodies.LogMetadataSaveRequest'
+      - description: LogMetadataSaveRequest
+        in: body
+        name: metadata
+        required: true
+        schema:
+          $ref: '#/definitions/bodies.LogMetadataSaveRequest'
       responses:
         "201":
           description: Created
@@ -349,16 +349,16 @@ paths:
           schema:
             $ref: '#/definitions/bodies.ErrorResponse'
       security:
-        - JwtClient: [ ]
+      - JwtClient: []
       summary: Log metadata storage
       tags:
-        - ClientAuthenticated
+      - ClientAuthenticated
   /status:
     get:
       description: To be used with for status pings to check readiness and liveliness
         of the server
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -378,22 +378,22 @@ paths:
             $ref: '#/definitions/bodies.StatusResponse'
       summary: Status handler
       tags:
-        - Common
+      - Common
   /user/auth/login:
     post:
       consumes:
-        - application/json
+      - application/json
       description: Allows clients to create a log session and receive a token to send
         logs with
       parameters:
-        - description: UserLoginRequest
-          in: body
-          name: login_request
-          required: true
-          schema:
-            $ref: '#/definitions/bodies.UserLoginRequest'
+      - description: UserLoginRequest
+        in: body
+        name: login_request
+        required: true
+        schema:
+          $ref: '#/definitions/bodies.UserLoginRequest'
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -453,19 +453,19 @@ paths:
             $ref: '#/definitions/bodies.ErrorResponse'
       summary: User login handler
       tags:
-        - UserAuthentication
+      - UserAuthentication
   /user/auth/password-reset:
     get:
       description: Allows clients to create a log session and receive a token to send
         logs with
       parameters:
-        - description: UserEmail
-          in: query
-          name: email
-          required: true
-          type: string
+      - description: UserEmail
+        in: query
+        name: email
+        required: true
+        type: string
       produces:
-        - application/json
+      - application/json
       responses:
         "201":
           description: Created
@@ -499,24 +499,24 @@ paths:
             $ref: '#/definitions/bodies.ErrorResponse'
       summary: User password reset request
       tags:
-        - UserAuthentication
+      - UserAuthentication
     post:
       description: Allows clients to create a log session and receive a token to send
         logs with
       parameters:
-        - description: UserEmail
-          in: query
-          name: email
-          required: true
-          type: string
-        - description: UserPasswordCompleteRequest
-          in: body
-          name: password_reset_data
-          required: true
-          schema:
-            $ref: '#/definitions/bodies.UserPasswordResetCompleteRequest'
+      - description: UserEmail
+        in: query
+        name: email
+        required: true
+        type: string
+      - description: UserPasswordCompleteRequest
+        in: body
+        name: password_reset_data
+        required: true
+        schema:
+          $ref: '#/definitions/bodies.UserPasswordResetCompleteRequest'
       produces:
-        - application/json
+      - application/json
       responses:
         "201":
           description: Created
@@ -550,12 +550,12 @@ paths:
             $ref: '#/definitions/bodies.ErrorResponse'
       summary: User password reset set password
       tags:
-        - UserAuthentication
+      - UserAuthentication
   /user/environments:
     get:
       description: Allows users to fetch all available environments from the database
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -592,15 +592,15 @@ paths:
           schema:
             $ref: '#/definitions/bodies.ErrorResponse'
       security:
-        - JwtUser: [ ]
+      - JwtUser: []
       summary: Environment listing
       tags:
-        - UserEnvironments
+      - UserEnvironments
   /user/logs:
     get:
       description: Allows users to fetch available logs from the database
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -637,16 +637,16 @@ paths:
           schema:
             $ref: '#/definitions/bodies.ErrorResponse'
       security:
-        - JwtUser: [ ]
+      - JwtUser: []
       summary: Log listing
       tags:
-        - UserLogs
+      - UserLogs
   /user/logs/{logid}/log:
     get:
       description: Allows users to stream all uploaded chunks for a given log id
       produces:
-        - text/plain
-        - application/json
+      - text/plain
+      - application/json
       responses:
         "200":
           description: Log chunk stream
@@ -684,15 +684,15 @@ paths:
           schema:
             $ref: '#/definitions/bodies.ErrorResponse'
       security:
-        - JwtUser: [ ]
+      - JwtUser: []
       summary: Log chunk storage
       tags:
-        - UserLogs
+      - UserLogs
   /user/logs/{logid}/metadata:
     get:
       description: Allows users to fetch metadata for a log
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -727,13 +727,13 @@ paths:
           schema:
             $ref: '#/definitions/bodies.ErrorResponse'
       security:
-        - JwtUser: [ ]
+      - JwtUser: []
       summary: Log metadata
       tags:
-        - UserLogs
+      - UserLogs
 schemes:
-  - http
-  - https
+- http
+- https
 securityDefinitions:
   JwtClient:
     description: Header value should be "Bearer ClientJwtString"

@@ -1,1114 +1,1114 @@
 {
-  "schemes": [
-    "http",
-    "https"
-  ],
-  "swagger": "2.0",
-  "info": {
-    "description": "Storage server for Project Capsa, a ground-breaking Unreal Engine logging solution",
-    "title": "Capsa Server",
-    "contact": {
-      "name": "Luciano Nooijen",
-      "url": "https://lucianonooijen.com",
-      "email": "no-reply@capsa.gg"
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "Storage server for Project Capsa, a ground-breaking Unreal Engine logging solution",
+        "title": "Capsa Server",
+        "contact": {
+            "name": "Luciano Nooijen",
+            "url": "https://capsa.gg",
+            "email": "capsa@lucianonooijen.com"
+        },
+        "version": "1"
     },
-    "version": "1"
-  },
-  "host": "example.com",
-  "basePath": "/v1",
-  "paths": {
-    "/client/auth": {
-      "post": {
-        "description": "Allows clients to create a log session and receive a token to send logs with",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "Client"
-        ],
-        "summary": "Client authentication handler",
-        "parameters": [
-          {
-            "description": "ClientLogCreationRequest",
-            "name": "creation_request",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/bodies.ClientLogCreationRequest"
+    "host": "example.com",
+    "basePath": "/v1",
+    "paths": {
+        "/client/auth": {
+            "post": {
+                "description": "Allows clients to create a log session and receive a token to send logs with",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Client"
+                ],
+                "summary": "Client authentication handler",
+                "parameters": [
+                    {
+                        "description": "ClientLogCreationRequest",
+                        "name": "creation_request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ClientLogCreationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ClientLogCreationResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
             }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created",
-            "schema": {
-              "$ref": "#/definitions/bodies.ClientLogCreationResponse"
+        },
+        "/client/log/chunk": {
+            "post": {
+                "security": [
+                    {
+                        "JwtClient": []
+                    }
+                ],
+                "description": "Allows clients to upload log chunks for their log sessions. To test this endpoint, please run the upload locally to add the correct request body.",
+                "consumes": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "ClientAuthenticated"
+                ],
+                "summary": "Log chunk storage",
+                "parameters": [
+                    {
+                        "description": "Plain text log",
+                        "name": "log",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "304": {
+                        "description": "Not Modified",
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/client/log/metadata": {
+            "post": {
+                "security": [
+                    {
+                        "JwtClient": []
+                    }
+                ],
+                "description": "Allows clients to store linked logs and additional metadata for their log session",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ClientAuthenticated"
+                ],
+                "summary": "Log metadata storage",
+                "parameters": [
+                    {
+                        "description": "LogMetadataSaveRequest",
+                        "name": "metadata",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bodies.LogMetadataSaveRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/status": {
+            "get": {
+                "description": "To be used with for status pings to check readiness and liveliness of the server",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Status handler",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.StatusResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.StatusResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/auth/login": {
+            "post": {
+                "description": "Allows clients to create a log session and receive a token to send logs with",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserAuthentication"
+                ],
+                "summary": "User login handler",
+                "parameters": [
+                    {
+                        "description": "UserLoginRequest",
+                        "name": "login_request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bodies.UserLoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.UserLoginResult"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/auth/password-reset": {
+            "get": {
+                "description": "Allows clients to create a log session and receive a token to send logs with",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserAuthentication"
+                ],
+                "summary": "User password reset request",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "UserEmail",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
             },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
+            "post": {
+                "description": "Allows clients to create a log session and receive a token to send logs with",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserAuthentication"
+                ],
+                "summary": "User password reset set password",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "UserEmail",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "description": "UserPasswordCompleteRequest",
+                        "name": "password_reset_data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bodies.UserPasswordResetCompleteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
+        },
+        "/user/environments": {
+            "get": {
+                "security": [
+                    {
+                        "JwtUser": []
+                    }
+                ],
+                "description": "Allows users to fetch all available environments from the database",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserEnvironments"
+                ],
+                "summary": "Environment listing",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.TitleEnvironment"
+                            }
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
             }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
+        },
+        "/user/logs": {
+            "get": {
+                "security": [
+                    {
+                        "JwtUser": []
+                    }
+                ],
+                "description": "Allows users to fetch available logs from the database",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserLogs"
+                ],
+                "summary": "Log listing",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entities.LogOverview"
+                            }
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
+        },
+        "/user/logs/{logid}/log": {
+            "get": {
+                "security": [
+                    {
+                        "JwtUser": []
+                    }
+                ],
+                "description": "Allows users to stream all uploaded chunks for a given log id",
+                "produces": [
+                    "text/plain",
+                    "application/json"
+                ],
+                "tags": [
+                    "UserLogs"
+                ],
+                "summary": "Log chunk storage",
+                "responses": {
+                    "200": {
+                        "description": "Log chunk stream",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Error": {
+                                "type": "string",
+                                "description": "Server error information"
+                            },
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
             }
-          },
-          "404": {
-            "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
+        },
+        "/user/logs/{logid}/metadata": {
+            "get": {
+                "security": [
+                    {
+                        "JwtUser": []
+                    }
+                ],
+                "description": "Allows users to fetch metadata for a log",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserLogs"
+                ],
+                "summary": "Log metadata",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.LogMetadata"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
             }
-          },
-          "409": {
-            "description": "Conflict",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          }
         }
-      }
     },
-    "/client/log/chunk": {
-      "post": {
-        "security": [
-          {
-            "JwtClient": []
-          }
-        ],
-        "description": "Allows clients to upload log chunks for their log sessions. To test this endpoint, please run the upload locally to add the correct request body.",
-        "consumes": [
-          "text/plain"
-        ],
-        "tags": [
-          "ClientAuthenticated"
-        ],
-        "summary": "Log chunk storage",
-        "parameters": [
-          {
-            "description": "Plain text log",
-            "name": "log",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "string"
+    "definitions": {
+        "bodies.ClientLogCreationRequest": {
+            "type": "object",
+            "required": [
+                "key",
+                "platform",
+                "type"
+            ],
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "platform": {
+                    "type": "string",
+                    "maxLength": 64
+                },
+                "type": {
+                    "description": "Needs manual validation for enum",
+                    "type": "string",
+                    "maxLength": 32
+                }
             }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created",
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
+        },
+        "bodies.ClientLogCreationResponse": {
+            "type": "object",
+            "properties": {
+                "expiry": {
+                    "type": "string"
+                },
+                "link_web": {
+                    "type": "string"
+                },
+                "log_id": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
             }
-          },
-          "304": {
-            "description": "Not Modified",
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
+        },
+        "bodies.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "description": "Details contains details about the error.\nThis field is mostly for development, but is used in production for adding request body validation errors.",
+                    "type": "string"
+                },
+                "error": {
+                    "description": "Error contains the error string.",
+                    "type": "string"
+                },
+                "raw_error": {
+                    "description": "RawError contains the raw error.\nThis field is only sent in development mode.",
+                    "type": "string"
+                }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
+        },
+        "bodies.LogMetadataSaveRequest": {
+            "type": "object",
+            "properties": {
+                "additional_metadata": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "log_links": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
             }
-          },
-          "404": {
-            "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
+        },
+        "bodies.StatusResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "message": {
+                    "type": "string",
+                    "example": "ok"
+                },
+                "version": {
+                    "type": "string",
+                    "example": "0.0.1"
+                }
             }
-          },
-          "415": {
-            "description": "Unsupported Media Type",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
+        },
+        "bodies.UserLoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 64,
+                    "minLength": 12
+                }
             }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
+        },
+        "bodies.UserPasswordResetCompleteRequest": {
+            "type": "object",
+            "required": [
+                "password",
+                "resetToken"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "maxLength": 64,
+                    "minLength": 12
+                },
+                "resetToken": {
+                    "type": "string"
+                }
             }
-          }
+        },
+        "entities.LogAdditionalMetadata": {
+            "type": "object",
+            "properties": {
+                "metadata": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "savedOn": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.LogLink": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "linkedLog": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.LogMetadata": {
+            "type": "object",
+            "properties": {
+                "additionalMetadata": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entities.LogAdditionalMetadata"
+                    }
+                },
+                "linkedLogs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entities.LogLink"
+                    }
+                }
+            }
+        },
+        "entities.LogOverview": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "lineCount": {
+                    "type": "integer"
+                },
+                "logType": {
+                    "type": "string"
+                },
+                "platform": {
+                    "type": "string"
+                },
+                "tsFirstLine": {
+                    "type": "string"
+                },
+                "tsLastLine": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.TitleEnvironment": {
+            "type": "object",
+            "properties": {
+                "environmentKey": {
+                    "type": "string"
+                },
+                "environmentName": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "entities.UserLoginResult": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                },
+                "tokenExpiry": {
+                    "type": "string"
+                },
+                "userUUID": {
+                    "type": "string"
+                }
+            }
         }
-      }
     },
-    "/client/log/metadata": {
-      "post": {
-        "security": [
-          {
-            "JwtClient": []
-          }
-        ],
-        "description": "Allows clients to store linked logs and additional metadata for their log session",
-        "consumes": [
-          "application/json"
-        ],
-        "tags": [
-          "ClientAuthenticated"
-        ],
-        "summary": "Log metadata storage",
-        "parameters": [
-          {
-            "description": "LogMetadataSaveRequest",
-            "name": "metadata",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/bodies.LogMetadataSaveRequest"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created",
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          }
+    "securityDefinitions": {
+        "JwtClient": {
+            "description": "Header value should be \"Bearer ClientJwtString\"",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        },
+        "JwtUser": {
+            "description": "Header value should be \"Bearer UserJwtString\"",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
-      }
-    },
-    "/status": {
-      "get": {
-        "description": "To be used with for status pings to check readiness and liveliness of the server",
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "Common"
-        ],
-        "summary": "Status handler",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/bodies.StatusResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/bodies.StatusResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user/auth/login": {
-      "post": {
-        "description": "Allows clients to create a log session and receive a token to send logs with",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "UserAuthentication"
-        ],
-        "summary": "User login handler",
-        "parameters": [
-          {
-            "description": "UserLoginRequest",
-            "name": "login_request",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/bodies.UserLoginRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/entities.UserLoginResult"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user/auth/password-reset": {
-      "get": {
-        "description": "Allows clients to create a log session and receive a token to send logs with",
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "UserAuthentication"
-        ],
-        "summary": "User password reset request",
-        "parameters": [
-          {
-            "type": "string",
-            "description": "UserEmail",
-            "name": "email",
-            "in": "query",
-            "required": true
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created",
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Allows clients to create a log session and receive a token to send logs with",
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "UserAuthentication"
-        ],
-        "summary": "User password reset set password",
-        "parameters": [
-          {
-            "type": "string",
-            "description": "UserEmail",
-            "name": "email",
-            "in": "query",
-            "required": true
-          },
-          {
-            "description": "UserPasswordCompleteRequest",
-            "name": "password_reset_data",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/bodies.UserPasswordResetCompleteRequest"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created",
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user/environments": {
-      "get": {
-        "security": [
-          {
-            "JwtUser": []
-          }
-        ],
-        "description": "Allows users to fetch all available environments from the database",
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "UserEnvironments"
-        ],
-        "summary": "Environment listing",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/entities.TitleEnvironment"
-              }
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user/logs": {
-      "get": {
-        "security": [
-          {
-            "JwtUser": []
-          }
-        ],
-        "description": "Allows users to fetch available logs from the database",
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "UserLogs"
-        ],
-        "summary": "Log listing",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/entities.LogOverview"
-              }
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user/logs/{logid}/log": {
-      "get": {
-        "security": [
-          {
-            "JwtUser": []
-          }
-        ],
-        "description": "Allows users to stream all uploaded chunks for a given log id",
-        "produces": [
-          "text/plain",
-          "application/json"
-        ],
-        "tags": [
-          "UserLogs"
-        ],
-        "summary": "Log chunk storage",
-        "responses": {
-          "200": {
-            "description": "Log chunk stream",
-            "schema": {
-              "type": "string"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Error": {
-                "type": "string",
-                "description": "Server error information"
-              },
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user/logs/{logid}/metadata": {
-      "get": {
-        "security": [
-          {
-            "JwtUser": []
-          }
-        ],
-        "description": "Allows users to fetch metadata for a log",
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "UserLogs"
-        ],
-        "summary": "Log metadata",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/entities.LogMetadata"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/bodies.ErrorResponse"
-            },
-            "headers": {
-              "X-Capsa-Server-Version": {
-                "type": "string",
-                "description": "Current Capsa Server version"
-              }
-            }
-          }
-        }
-      }
     }
-  },
-  "definitions": {
-    "bodies.ClientLogCreationRequest": {
-      "type": "object",
-      "required": [
-        "key",
-        "platform",
-        "type"
-      ],
-      "properties": {
-        "key": {
-          "type": "string"
-        },
-        "platform": {
-          "type": "string",
-          "maxLength": 64
-        },
-        "type": {
-          "description": "Needs manual validation for enum",
-          "type": "string",
-          "maxLength": 32
-        }
-      }
-    },
-    "bodies.ClientLogCreationResponse": {
-      "type": "object",
-      "properties": {
-        "expiry": {
-          "type": "string"
-        },
-        "link_web": {
-          "type": "string"
-        },
-        "log_id": {
-          "type": "string"
-        },
-        "token": {
-          "type": "string"
-        }
-      }
-    },
-    "bodies.ErrorResponse": {
-      "type": "object",
-      "properties": {
-        "details": {
-          "description": "Details contains details about the error.\nThis field is mostly for development, but is used in production for adding request body validation errors.",
-          "type": "string"
-        },
-        "error": {
-          "description": "Error contains the error string.",
-          "type": "string"
-        },
-        "raw_error": {
-          "description": "RawError contains the raw error.\nThis field is only sent in development mode.",
-          "type": "string"
-        }
-      }
-    },
-    "bodies.LogMetadataSaveRequest": {
-      "type": "object",
-      "properties": {
-        "additional_metadata": {
-          "type": "object",
-          "additionalProperties": {}
-        },
-        "log_links": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "bodies.StatusResponse": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "example": 200
-        },
-        "message": {
-          "type": "string",
-          "example": "ok"
-        },
-        "version": {
-          "type": "string",
-          "example": "0.0.1"
-        }
-      }
-    },
-    "bodies.UserLoginRequest": {
-      "type": "object",
-      "required": [
-        "email",
-        "password"
-      ],
-      "properties": {
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string",
-          "maxLength": 64,
-          "minLength": 12
-        }
-      }
-    },
-    "bodies.UserPasswordResetCompleteRequest": {
-      "type": "object",
-      "required": [
-        "password",
-        "resetToken"
-      ],
-      "properties": {
-        "password": {
-          "type": "string",
-          "maxLength": 64,
-          "minLength": 12
-        },
-        "resetToken": {
-          "type": "string"
-        }
-      }
-    },
-    "entities.LogAdditionalMetadata": {
-      "type": "object",
-      "properties": {
-        "metadata": {
-          "type": "object",
-          "additionalProperties": {}
-        },
-        "savedOn": {
-          "type": "string"
-        }
-      }
-    },
-    "entities.LogLink": {
-      "type": "object",
-      "properties": {
-        "description": {
-          "type": "string"
-        },
-        "linkedLog": {
-          "type": "string"
-        }
-      }
-    },
-    "entities.LogMetadata": {
-      "type": "object",
-      "properties": {
-        "additionalMetadata": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/entities.LogAdditionalMetadata"
-          }
-        },
-        "linkedLogs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/entities.LogLink"
-          }
-        }
-      }
-    },
-    "entities.LogOverview": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "lineCount": {
-          "type": "integer"
-        },
-        "logType": {
-          "type": "string"
-        },
-        "platform": {
-          "type": "string"
-        },
-        "tsFirstLine": {
-          "type": "string"
-        },
-        "tsLastLine": {
-          "type": "string"
-        }
-      }
-    },
-    "entities.TitleEnvironment": {
-      "type": "object",
-      "properties": {
-        "environmentKey": {
-          "type": "string"
-        },
-        "environmentName": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        }
-      }
-    },
-    "entities.UserLoginResult": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string"
-        },
-        "firstName": {
-          "type": "string"
-        },
-        "lastName": {
-          "type": "string"
-        },
-        "token": {
-          "type": "string"
-        },
-        "tokenExpiry": {
-          "type": "string"
-        },
-        "userUUID": {
-          "type": "string"
-        }
-      }
-    }
-  },
-  "securityDefinitions": {
-    "JwtClient": {
-      "description": "Header value should be \"Bearer ClientJwtString\"",
-      "type": "apiKey",
-      "name": "Authorization",
-      "in": "header"
-    },
-    "JwtUser": {
-      "description": "Header value should be \"Bearer UserJwtString\"",
-      "type": "apiKey",
-      "name": "Authorization",
-      "in": "header"
-    }
-  }
 }
