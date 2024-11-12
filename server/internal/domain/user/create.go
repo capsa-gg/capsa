@@ -5,12 +5,12 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/entities"
 
 	"github.com/google/uuid"
 
-	"github.com/lucianonooijen/capsa/server/internal/data/database"
-	"github.com/lucianonooijen/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/internal/data/database"
+	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
 // AddNewUser adds a new user and initializes the flow to set their password.

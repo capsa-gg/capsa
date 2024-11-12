@@ -8,7 +8,7 @@ import (
 	"github.com/go-jose/go-jose/v4"
 	"go.uber.org/zap"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 const (

@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/entities"
 
 	"github.com/google/uuid"
 
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
-	"github.com/lucianonooijen/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/internal/infrastructure/token"
+	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
 // ValidateUserJwt validates if the token passed in is valid for a user.

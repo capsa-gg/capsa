@@ -30,7 +30,7 @@ linters-settings:
       - HACK
       - UNSAFE
   goimports:
-    local-prefixes: github.com/lucianonooijen/capsa/server
+    local-prefixes: github.com/capsa-gg/capsa/server
   depguard:
     rules:
       prevent_unmaintained_packages:

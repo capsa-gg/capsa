@@ -4,13 +4,13 @@ import (
 	"context"
 	"time"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/entities"
 
 	"github.com/google/uuid"
 
-	"github.com/lucianonooijen/capsa/server/constants"
-	"github.com/lucianonooijen/capsa/server/internal/data/database"
-	"github.com/lucianonooijen/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/constants"
+	"github.com/capsa-gg/capsa/server/internal/data/database"
+	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
 // CreateNewLogSession registers a new log session, returning the data about the created log.

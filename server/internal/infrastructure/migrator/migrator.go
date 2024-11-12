@@ -13,7 +13,7 @@ import (
 	// Needs side effects from lib/pg.
 	_ "github.com/lib/pq"
 
-	"github.com/lucianonooijen/capsa/server/migrations"
+	"github.com/capsa-gg/capsa/server/migrations"
 )
 
 // Direction indicates the migration direction.

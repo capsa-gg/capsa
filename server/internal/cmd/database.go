@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/migrator"
+	"github.com/capsa-gg/capsa/server/internal/infrastructure/migrator"
 )
 
 var (

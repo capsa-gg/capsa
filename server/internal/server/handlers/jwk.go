@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/lucianonooijen/capsa/server/internal/server/bodies"
+	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
 
 // Jwks does not have Swagger documentation available as it does not live under the /v1 endpoints.

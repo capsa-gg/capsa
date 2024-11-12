@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/lucianonooijen/capsa/server/internal/domain/admin"
+	"github.com/capsa-gg/capsa/server/internal/domain/admin"
 )
 
 // EnvironmentsList allows users to fetch all available environments from the database

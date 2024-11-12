@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/config"
-	"github.com/lucianonooijen/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/infrastructure/config"
+	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
 func initConfig() {

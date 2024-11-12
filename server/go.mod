@@ -1,4 +1,4 @@
-module github.com/lucianonooijen/capsa/server
+module github.com/capsa-gg/capsa/server
 
 go 1.23.2
 

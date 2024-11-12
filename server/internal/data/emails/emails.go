@@ -7,7 +7,7 @@ import (
 	"github.com/matcornic/hermes/v2"
 	"go.uber.org/zap"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 // Emails is used to send transactional emails using an entities.Mailer instance.
@@ -25,7 +25,7 @@ func New(c *entities.Config, mailer entities.EmailSender) *Emails {
 	hermesInstance := hermes.Hermes{
 		Product: hermes.Product{
 			Name: "Capsa Server",
-			Link: "https://capsa.lucianonooijen.com",
+			Link: "https://capsa.gg", // TODO: set correct link
 			//Logo:        fmt.Sprintf("%s/logo.png", staticFileURLBase), // TODO: Serve static files
 			Copyright:   fmt.Sprintf("Copyright © %d Capsa. All rights reserved.", time.Now().Year()),
 			TroubleText: "If the button '{ACTION}' does not work, copy and paste the URL below.",

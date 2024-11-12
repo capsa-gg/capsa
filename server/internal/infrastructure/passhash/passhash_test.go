@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/passhash"
+	"github.com/capsa-gg/capsa/server/internal/infrastructure/passhash"
 )
 
 func TestPasswordHasher_PlainTextToHash(t *testing.T) {
