@@ -5,8 +5,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
-	"github.com/lucianonooijen/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
 // Login validates a user's password and returns the login result if everything is valid.

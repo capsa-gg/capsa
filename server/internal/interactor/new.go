@@ -8,14 +8,14 @@ import (
 
 	"github.com/go-playground/validator/v10"
 
-	"github.com/lucianonooijen/capsa/server/internal/data/database"
-	"github.com/lucianonooijen/capsa/server/internal/data/emails"
-	"github.com/lucianonooijen/capsa/server/internal/data/logchunks"
-	"github.com/lucianonooijen/capsa/server/internal/entities"
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/blobstorage"
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/mailer"
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/passhash"
-	"github.com/lucianonooijen/capsa/server/internal/infrastructure/token"
+	"github.com/capsa-gg/capsa/server/internal/data/database"
+	"github.com/capsa-gg/capsa/server/internal/data/emails"
+	"github.com/capsa-gg/capsa/server/internal/data/logchunks"
+	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/infrastructure/blobstorage"
+	"github.com/capsa-gg/capsa/server/internal/infrastructure/mailer"
+	"github.com/capsa-gg/capsa/server/internal/infrastructure/passhash"
+	"github.com/capsa-gg/capsa/server/internal/infrastructure/token"
 )
 
 // NewServices initializes and validates a new instance of Services.

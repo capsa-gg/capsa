@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
-	"github.com/lucianonooijen/capsa/server/internal/server/middleware"
+	"github.com/capsa-gg/capsa/server/internal/server/middleware"
 )
 
 func registerMiddleware(router *gin.Engine, logger *zap.Logger) {
@@ -41,7 +41,7 @@ func registerMiddleware(router *gin.Engine, logger *zap.Logger) {
 func setGinRouteLogger(logger *zap.SugaredLogger) {
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
 		handlerReplacer := strings.NewReplacer(
-			"github.com/lucianonooijen/capsa/server/internal/server/handlers.", "",
+			"github.com/capsa-gg/capsa/server/internal/server/handlers.", "",
 			"github.com/gin-gonic/", "")
 		handlerShort := handlerReplacer.Replace(handlerName)
 

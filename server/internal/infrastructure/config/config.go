@@ -9,8 +9,8 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/spf13/viper"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
-	loggerCreator "github.com/lucianonooijen/capsa/server/internal/infrastructure/logger"
+	"github.com/capsa-gg/capsa/server/internal/entities"
+	loggerCreator "github.com/capsa-gg/capsa/server/internal/infrastructure/logger"
 )
 
 // LoadConfig reads in config file and ENV variables if set, creates the root Zap logger.

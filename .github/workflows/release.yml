@@ -6,7 +6,7 @@ permissions:
   pull-requests: write
 
 env:
-  DOCKER_REGISTRY: registry.digitalocean.com/lucianonooijen
+  DOCKER_REGISTRY: registry.digitalocean.com/capsa
   DOCKER_CONTAINER_NAME_SERVER: capsa-server
   DOCKER_CONTAINER_NAME_WEBAPP: capsa-web
 
@@ -61,5 +61,5 @@ jobs:
         run: |
           curl -X POST \
             -H 'Content-type: application/json' \
-            --data '{"text":"*New Capsa release just dropped on Github*.\n\nSee https://github.com/lucianonooijen/capsa/releases for details"}' \
+            --data '{"text":"*New Capsa release just dropped on Github*.\n\nSee https://github.com/capsa-gg/capsa/releases for details"}' \
             ${{ secrets.SLACK_WEBHOOK }}

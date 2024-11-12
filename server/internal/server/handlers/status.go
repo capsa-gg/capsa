@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/lucianonooijen/capsa/server/constants"
-	"github.com/lucianonooijen/capsa/server/internal/server/bodies"
+	"github.com/capsa-gg/capsa/server/constants"
+	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
 
 // Status returns a 200 status code if everything is fine

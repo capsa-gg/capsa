@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/lucianonooijen/capsa/server/internal/cmd"
+	"github.com/capsa-gg/capsa/server/internal/cmd"
 )
 
 func main() {

@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 func TestGenerateWellKnownEndpoint_Dev(t *testing.T) {
@@ -24,12 +24,12 @@ func TestGenerateWellKnownEndpoint_Dev(t *testing.T) {
 func TestGenerateWellKnownEndpoint_Prod(t *testing.T) {
 	c := &entities.Config{
 		IsDevMode:      false,
-		ServerHostname: "capsa.lucianonooijen.com",
+		ServerHostname: "capsa.gg",
 		ServerPort:     8080,
 	}
 
 	got := generateWellKnownEndpoint(c)
-	expected := "https://capsa.lucianonooijen.com/.well-known/jwks.json"
+	expected := "https://capsa.gg/.well-known/jwks.json"
 
 	assert.Equal(t, expected, got)
 }

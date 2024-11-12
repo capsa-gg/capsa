@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/lucianonooijen/capsa/server/internal/domain/logs"
-	"github.com/lucianonooijen/capsa/server/internal/server/bodies"
+	"github.com/capsa-gg/capsa/server/internal/domain/logs"
+	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
 
 // LogMetadataSave allows clients to store linked logs and additional metadata for the log session

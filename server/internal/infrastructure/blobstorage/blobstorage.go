@@ -12,7 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 	"go.uber.org/zap"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 // BlobStorage is the blob storage utility to save and retrieve files in an abstracted way.

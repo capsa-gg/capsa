@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/lucianonooijen/capsa/server/internal/domain/logs"
-	"github.com/lucianonooijen/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domain/logs"
+	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 // StreamLogChunks allows users to stream all uploaded chunks for a given log id

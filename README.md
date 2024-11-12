@@ -1,7 +1,7 @@
 # Capsa
 
-[![Server](https://github.com/lucianonooijen/capsa/actions/workflows/main-server.yml/badge.svg)](https://github.com/lucianonooijen/capsa/actions/workflows/main-server.yml)
-[![Web](https://github.com/lucianonooijen/capsa/actions/workflows/main-web.yml/badge.svg)](https://github.com/lucianonooijen/capsa/actions/workflows/main-webapp.yml)
+[![Server](https://github.com/capsa-gg/capsa/actions/workflows/main-server.yml/badge.svg)](https://github.com/capsa-gg/capsa/actions/workflows/main-server.yml)
+[![Web](https://github.com/capsa-gg/capsa/actions/workflows/main-web.yml/badge.svg)](https://github.com/capsa-gg/capsa/actions/workflows/main-webapp.yml)
 
 ## Getting started
 
@@ -57,7 +57,7 @@ Whenever changing the API req/res types on either the server or the client, plea
 
 ## Release instructions
 
-To create a new release, go to the [Semantic Release actions workflow](https://github.com/lucianonooijen/capsa/actions/workflows/release.yml). On the top right, press `Run workflow`, confirm running the workflow and kick off semantic release. Make sure the web and server CIs on main have passed before kicking off a release. Do not change the branch, as this workflow will only work correctly on `main`.
+To create a new release, go to the [Semantic Release actions workflow](https://github.com/capsa-gg/capsa/actions/workflows/release.yml). On the top right, press `Run workflow`, confirm running the workflow and kick off semantic release. Make sure the web and server CIs on main have passed before kicking off a release. Do not change the branch, as this workflow will only work correctly on `main`.
 
 The release commit will not run the default main branch CI workflows. Due to the `:latest` tag being pushed for the Docker images, they will be deployed.
 

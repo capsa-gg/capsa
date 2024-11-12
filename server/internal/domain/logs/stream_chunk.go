@@ -3,8 +3,8 @@ package logs
 import (
 	"context"
 
-	"github.com/lucianonooijen/capsa/server/internal/entities"
-	"github.com/lucianonooijen/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
 // ChunkStreamer is the type used to stream chunks.

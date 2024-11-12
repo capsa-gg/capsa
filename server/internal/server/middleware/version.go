@@ -3,7 +3,7 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/lucianonooijen/capsa/server/constants"
+	"github.com/capsa-gg/capsa/server/constants"
 )
 
 // VersionHeaderName is the header used to share the Capsa Server version in each HTTP request.
