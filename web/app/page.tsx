@@ -6,6 +6,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useGetAllEnvironments } from "@/api/hooks";
 import Spinner from "@/components/Spinner";
 import { EnvironmentResponseItem } from "@/types/api/environments";
+import { Metadata } from "next";
 
 const columns: GridColDef<EnvironmentResponseItem>[] = [
     { field: "title", headerName: "Title", flex: 1 },

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { Box, Drawer, List, Tooltip, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { sideNavItemsData, sideNavWidthPx } from "@/layouts/MainLayout/SideNav/SideNav.data";
@@ -40,8 +41,24 @@ const SideNav = () => {
                 }}
             >
                 <List sx={{ width: sideNavWidthPx }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            marginTop: "6px",
+                            marginBottom: "24px",
+                        }}
+                    >
+                        <Image
+                            src={require("../../../public/logo-without-by.png")}
+                            alt="Capsa Logo"
+                            width={100}
+                            height={40}
+                        />
+                    </Box>
                     <SideNavListItems />
                 </List>
+                {/* TODO: Add about/help page link */}
                 <Tooltip
                     title={`Server API: ${appContext.env?.serverUrl ?? "Loading endpoint..."}`}
                     placement="top"

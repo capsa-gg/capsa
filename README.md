@@ -48,7 +48,9 @@ Make sure to run the linting locally before pushing commits to prevent the CI fr
 ### Secrets
 
 Secrets should _never_ be pushed to the Git repository. These files should always be gitignored.
-
+![logo-without-by.png](..%2Fbranding-capsa%2Flogo-without-by.png)
+![icon.png](..%2Fbranding-capsa%2Ficon.png)
+![logo-with-by.png](..%2Fbranding-capsa%2Flogo-with-by.png)
 When writing tests using logs, make sure that these logs are allowed to be made public at some point, don't break NDAs or leak codenames and have no identifiable data in them. It is best to only use internal Companion Group project logs for this, with some search-replace logic to make the logs generic.
 
 ## Changing API types
