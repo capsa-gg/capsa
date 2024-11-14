@@ -23,7 +23,7 @@ var userAddCmd = &cobra.Command{
 	Short: "Adds a new user to the database",
 	Run: func(_ *cobra.Command, _ []string) {
 		s := getAndValidateServicesInteractor()
-		log := s.Config.RootLogger.Named("user").Named("add").Sugar()
+		log := getCmdLogger(s.Config, "user").Named("add")
 
 		if userAddEmail == "" {
 			log.Fatalf("email argument is required")

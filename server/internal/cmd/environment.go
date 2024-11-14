@@ -22,7 +22,7 @@ var envAddCmd = &cobra.Command{
 	Short: "Adds a new environment to a title",
 	Run: func(_ *cobra.Command, _ []string) {
 		s := getAndValidateServicesInteractor()
-		log := s.Config.RootLogger.Named("env").Named("add").Sugar()
+		log := getCmdLogger(s.Config, "env").Named("add")
 
 		if environmentAddName == "" {
 			log.Fatalf("name argument is required")
@@ -46,7 +46,7 @@ var envListCmd = &cobra.Command{
 	Short: "List all titles and environments with the associated keys",
 	Run: func(_ *cobra.Command, _ []string) {
 		s := getAndValidateServicesInteractor()
-		log := s.Config.RootLogger.Named("env").Named("list").Sugar()
+		log := getCmdLogger(s.Config, "env").Named("list")
 
 		res, err := admin.ListAllTitlesAndEnvironments(s)
 		if err != nil {

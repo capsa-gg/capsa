@@ -3,6 +3,8 @@ package cmd
 import (
 	"log"
 
+	"go.uber.org/zap"
+
 	"github.com/spf13/cobra"
 
 	"github.com/capsa-gg/capsa/server/internal/entities"
@@ -27,7 +29,7 @@ func Execute() {
 
 	if err != nil {
 		if configuration != nil && configuration.RootLogger != nil {
-			configuration.RootLogger.Named("cmd.Execute").Sugar().Fatalf("error executing command: %s", err)
+			getCmdLogger(configuration, "Execute").Fatalf("error executing command: %s", err)
 		} else {
 			log.Panicf("error executing command: %s", err)
 		}
@@ -42,4 +44,8 @@ func Execute() {
 //nolint:gochecknoinits // Cobra needs usage of init functions
 func init() {
 	cobra.OnInitialize(initConfig)
+}
+
+func getCmdLogger(c *entities.Config, cmd string) *zap.SugaredLogger {
+	return c.RootLogger.Named("Cmd").Named(cmd).Sugar()
 }

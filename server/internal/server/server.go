@@ -27,7 +27,7 @@ func (s GinServer) Start() error {
 // Use Server.Start() to run the server.
 func New(services *interactor.Services) (*GinServer, error) {
 	c := services.Config
-	log := c.RootLogger.Named("http_init").Sugar()
+	log := c.RootLogger.Named("HttpInit").Sugar()
 
 	debug := c.IsDevMode
 	port := c.ServerPort
@@ -54,7 +54,7 @@ func New(services *interactor.Services) (*GinServer, error) {
 		return nil, fmt.Errorf("error initializing handlers: %w", err)
 	}
 
-	setGinRouteLogger(log.Named("routes")) // Print the Gin routes using our own logger
+	setGinRouteLogger(log.Named("HttpRoutes")) // Print the Gin routes using our own logger
 
 	log.Debug("Registering routes")
 

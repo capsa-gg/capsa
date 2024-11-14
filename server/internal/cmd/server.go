@@ -16,7 +16,7 @@ var serverStartCmd = &cobra.Command{
 	Short: "Starts the server",
 	Run: func(_ *cobra.Command, _ []string) {
 		s := getAndValidateServicesInteractor()
-		log := s.Config.RootLogger.Named("server").Sugar()
+		log := getCmdLogger(s.Config, "server")
 
 		log.Info("initializing server instance")
 

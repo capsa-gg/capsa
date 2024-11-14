@@ -17,9 +17,9 @@ import (
 
 // AuthClientMiddleware is middleware to validate that a client is correctly authenticated.
 func AuthClientMiddleware(s *interactor.Services) gin.HandlerFunc { //nolint:dupl // Not similar enough for a layer of abstraction
-	return func(c *gin.Context) {
-		log := s.Config.RootLogger.Named("AuthClientMiddleware").Sugar()
+	log := s.Config.RootLogger.Named("AuthClientMiddleware").Sugar()
 
+	return func(c *gin.Context) {
 		// Get the token from the header
 		tok := extractTokenFromHeader(c)
 		if tok == "" {
@@ -39,7 +39,7 @@ func AuthClientMiddleware(s *interactor.Services) gin.HandlerFunc { //nolint:dup
 		}
 
 		log = log.With("jwt_subject", claims.Subject)
-		log.Info("user jwt claims added to request context")
+		log.Info("client jwt claims added to request context")
 
 		c.Set(constants.GinContextKeyValidatedClient, claims)
 
@@ -49,9 +49,9 @@ func AuthClientMiddleware(s *interactor.Services) gin.HandlerFunc { //nolint:dup
 
 // AuthUserMiddleware is middleware to validate that a user is correctly authenticated.
 func AuthUserMiddleware(s *interactor.Services) gin.HandlerFunc { //nolint:dupl // Not similar enough for a layer of abstraction
-	log := s.Config.RootLogger.Named("AuthUserMiddleware").Sugar()
-
 	return func(c *gin.Context) {
+		log := s.Config.RootLogger.Named("AuthUserMiddleware").Sugar()
+
 		// Get the token from the header
 		tok := extractTokenFromHeader(c)
 		if tok == "" {
