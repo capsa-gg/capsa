@@ -59,7 +59,9 @@ ci: ## Runs the CI tasks
 	golint ./...
 	goimports -e -d -local github.com/capsa-gg/capsa/server .
 	@echo "Running tests with coverage"
-	go test -coverprofile=coverage.txt -covermode count -v 2>&1 ./... | go-junit-report -set-exit-code > junit.xml
+	go test -coverprofile=coverage_raw.txt -covermode count -v 2>&1 ./... | go-junit-report -set-exit-code > junit.xml
+	@echo "Removing packages from coverage report that don't require testing"
+	./bin/clean-coverage.sh coverage_raw.txt
 	gocover-cobertura < coverage.txt > cobertura.xml
 
 .PHONY: sql
