@@ -61,7 +61,7 @@ ci: ## Runs the CI tasks
 	@echo "Running tests with coverage"
 	go test -coverprofile=coverage_raw.txt -covermode count -v 2>&1 ./... | go-junit-report -set-exit-code > junit.xml
 	@echo "Removing packages from coverage report that don't require testing"
-	./bin/clean-coverage.sh coverage_raw.txt
+	./bin/clean-coverage coverage_raw.txt
 	gocover-cobertura < coverage.txt > cobertura.xml
 
 .PHONY: sql
