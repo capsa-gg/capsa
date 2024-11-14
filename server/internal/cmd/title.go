@@ -20,7 +20,7 @@ var titleAddCmd = &cobra.Command{
 	Short: "Adds a new title to the database",
 	Run: func(_ *cobra.Command, _ []string) {
 		s := getAndValidateServicesInteractor()
-		log := s.Config.RootLogger.Named("title").Named("add").Sugar()
+		log := getCmdLogger(s.Config, "title").Named("add")
 
 		if titleAddName == "" {
 			log.Fatalf("name argument is required")

@@ -39,5 +39,5 @@ type Services struct {
 
 // GetDomainLogger generated a *zap.SugaredLogger instance for the domain and function.
 func (s Services) GetDomainLogger(domain, function string) *zap.SugaredLogger {
-	return s.Config.RootLogger.Named("domain").Named(domain).Named(function).Sugar()
+	return s.Config.RootLogger.Named("Domain").Named(domain).Named(function).Sugar()
 }

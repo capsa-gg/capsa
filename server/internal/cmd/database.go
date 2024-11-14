@@ -23,7 +23,7 @@ var dbMigrateCmd = &cobra.Command{
 	Short: "Runs server migrations",
 	Run: func(_ *cobra.Command, _ []string) {
 		c := getAndValidateConfig()
-		log := c.RootLogger.Named("database").Named("migrations").Sugar()
+		log := getCmdLogger(c, "Database").Named("migrations")
 
 		db, err := sql.Open("postgres", c.DatabaseConnectionString())
 		if err != nil {

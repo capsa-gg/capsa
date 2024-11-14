@@ -18,9 +18,8 @@ func initConfig() {
 		os.Exit(1)
 	}
 
-	logger := cfg.RootLogger
 	if err != nil {
-		logger.Named("initConfig").Sugar().Fatalf("error loading config: %s", err)
+		getCmdLogger(cfg, "initConfig").Fatalf("error loading config: %s", err)
 	}
 
 	configuration = cfg

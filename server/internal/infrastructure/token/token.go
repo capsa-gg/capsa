@@ -56,7 +56,7 @@ func New(c *entities.Config, pk *rsa.PrivateKey) (*Token, error) {
 		return nil, fmt.Errorf("error creating jwt signer: %w", err)
 	}
 
-	log := c.RootLogger.Named("token").Sugar()
+	log := c.RootLogger.Named("Token").Sugar()
 	jwkInstance := Token{
 		privateKey:  pk,
 		log:         log,

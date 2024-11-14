@@ -24,7 +24,7 @@ type Handlers struct {
 func New(services *interactor.Services) (*Handlers, error) {
 	handlers := Handlers{
 		services: services,
-		logger:   services.Config.RootLogger.Named("http_handlers").Sugar(),
+		logger:   services.Config.RootLogger.Named("HttpHandlers").Sugar(),
 	}
 
 	validate := validator.New()

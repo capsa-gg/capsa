@@ -18,7 +18,7 @@ const (
 // TODO: We probably want error tracking to either Sentry .
 func GinLogger(rootLogger *zap.Logger) gin.HandlerFunc { // nolint:funlen // can't be shorter without increasing cognitive load
 	timeFormat := "02/Jan/2006:15:04:05 -0700"
-	httpLog := rootLogger.Named("http_req_logger")
+	httpLog := rootLogger.Named("HttpLogger")
 
 	return func(c *gin.Context) {
 		method := c.Request.Method

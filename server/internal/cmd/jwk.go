@@ -25,7 +25,7 @@ var jwkGenCmd = &cobra.Command{
 	Short:   "Generates a public/private keyset",
 	Run: func(_ *cobra.Command, _ []string) {
 		c := getAndValidateConfig()
-		log := c.RootLogger.Named("jwk").Named("genkeys").Sugar()
+		log := getCmdLogger(c, "jwk").Named("genkeys")
 
 		log.Info("generating jwk keySet")
 
