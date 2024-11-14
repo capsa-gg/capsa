@@ -151,3 +151,7 @@ return nil, fmt.Errorf("error fetching user from database: %w", err)
 ```
 
 The `%w` here is very important, this will add context, while keeping the error type the same (for `errors.Is` checks). Using `%s` in the `fmt.Errorf` call does _not_ work.
+
+### Unit tests
+
+Some packages are not taken into account for code coverage calculations, mostly packages that are shims for outside services or generated code. This list can be found in the `./bin/clean-coverage` script.

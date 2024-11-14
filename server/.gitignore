@@ -19,4 +19,5 @@ builds/
 # Coverage and testing output
 cobertura.xml
 coverage.txt
+coverage_raw.txt
 junit.xml
