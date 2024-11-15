@@ -36,8 +36,8 @@ test: ## Runs the unit tests
 	go test ./...
 
 .PHONY: bench
-bench: ## Runs benchmarking, with N=10
-	go test -bench=. -count=10 -benchmem ./...
+bench: ## Runs benchmarking, with N=10, printing to stdout and saving results to bench.txt
+	go test -bench=. -count=10 -benchmem ./... | tee bench.txt
 
 .PHONY: fmt
 fmt: ## Code style formatting and linting check for the project

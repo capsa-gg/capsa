@@ -21,3 +21,4 @@ cobertura.xml
 coverage.txt
 coverage_raw.txt
 junit.xml
+bench.txt

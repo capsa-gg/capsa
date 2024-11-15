@@ -29,6 +29,19 @@ jobs:
             **/go.mod
             **/go.sum
 
+      - name: Run benchmarks
+        run: make bench
+      - name: Store benchmark result
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: Go Benchmark
+          tool: 'go'
+          auto-push: false
+          output-file-path: ./server/bench.txt
+          comment-on-alert: true
+          summary-always: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
       # Run CI scripts
       - name: Display Go version
         run: go version
