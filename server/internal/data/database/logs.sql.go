@@ -283,3 +283,22 @@ func (q *Queries) ListAllAvailableLogs(ctx context.Context) ([]ListAllAvailableL
 	}
 	return items, nil
 }
+
+const updateLogTimestamps = `-- name: UpdateLogTimestamps :exec
+UPDATE logs
+SET log_start = COALESCE(NULLIF($2::timestamp, NULL), log_start),
+    log_end = COALESCE(GREATEST($3::timestamp, log_end), log_end)
+WHERE log_uuid = $1
+`
+
+type UpdateLogTimestampsParams struct {
+	LogUuid  uuid.UUID `json:"logUuid"`
+	LogStart time.Time `json:"logStart"`
+	LogEnd   time.Time `json:"logEnd"`
+}
+
+// Updates the timestamps for a log based on the chunk metadata
+func (q *Queries) UpdateLogTimestamps(ctx context.Context, arg UpdateLogTimestampsParams) error {
+	_, err := q.db.ExecContext(ctx, updateLogTimestamps, arg.LogUuid, arg.LogStart, arg.LogEnd)
+	return err
+}

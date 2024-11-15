@@ -56,6 +56,13 @@ ORDER BY links.created_on;
 INSERT INTO logs_chunks(log, blob_path, chunk_start, chunk_end, line_count, category_counts, severity_counts)
 VALUES ($1, $2, $3, $4, $5, $6, $7);
 
+-- name: UpdateLogTimestamps :exec
+-- Updates the timestamps for a log based on the chunk metadata
+UPDATE logs
+SET log_start = COALESCE(NULLIF(@log_start::timestamp, NULL), log_start),
+    log_end = COALESCE(GREATEST(@log_end::timestamp, log_end), log_end)
+WHERE log_uuid = $1;
+
 -- name: GetLogChunksForLog :many
 -- Gets the log chunk information for a given log
 SELECT created_on, blob_path
