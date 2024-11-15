@@ -20,20 +20,6 @@ VALUES ($1, $2, $3)
 ON CONFLICT (source, link)
 DO UPDATE SET description = $3;
 
--- name: ListAllAvailableLogs :many
--- Fetches all logs and aggregates the results.
--- TODO: json_object_agg the log chunk severities
-SELECT
-    l.log_uuid AS log_uuid,
-    l.platform AS platform,
-    l.log_type AS log_type,
-    SUM(lf.line_count) AS line_count,
-    MIN(lf.chunk_start) AS earliest,
-    MAX(lf.chunk_end) AS last
-FROM logs AS l
-JOIN logs_chunks lf ON l.id = lf.log
-GROUP BY l.id;
-
 -- name: GetMetadataForLog :many
 -- Fetches the stored additional metadata for the log
 SELECT saved_on, metadata
@@ -59,7 +45,12 @@ VALUES ($1, $2, $3, $4, $5, $6, $7);
 -- name: UpdateLogTimestamps :exec
 -- Updates the timestamps for a log based on the chunk metadata
 UPDATE logs
-SET log_start = COALESCE(NULLIF(@log_start::timestamp, NULL), log_start),
+SET log_start =
+    CASE
+        WHEN log_start IS NULL THEN @log_start::timestamp -- In case the timestamp is not set
+        WHEN log_start < '2024-01-01' THEN @log_start::timestamp -- In case the timestamp is an empty time.Time{}
+        ELSE log_start
+    END,
     log_end = COALESCE(GREATEST(@log_end::timestamp, log_end), log_end)
 WHERE log_uuid = $1;
 
