@@ -230,56 +230,26 @@ func (q *Queries) GetMetadataForLog(ctx context.Context, log int64) ([]GetMetada
 	return items, nil
 }
 
-const listAllAvailableLogs = `-- name: ListAllAvailableLogs :many
-SELECT
-    l.log_uuid AS log_uuid,
-    l.platform AS platform,
-    l.log_type AS log_type,
-    SUM(lf.line_count) AS line_count,
-    MIN(lf.chunk_start) AS earliest,
-    MAX(lf.chunk_end) AS last
-FROM logs AS l
-JOIN logs_chunks lf ON l.id = lf.log
-GROUP BY l.id
+const updateLogTimestamps = `-- name: UpdateLogTimestamps :exec
+UPDATE logs
+SET log_start =
+    CASE
+        WHEN log_start IS NULL THEN $2::timestamp -- In case the timestamp is not set
+        WHEN log_start < '2024-01-01' THEN $2::timestamp -- In case the timestamp is an empty time.Time{}
+        ELSE log_start
+    END,
+    log_end = COALESCE(GREATEST($3::timestamp, log_end), log_end)
+WHERE log_uuid = $1
 `
 
-type ListAllAvailableLogsRow struct {
-	LogUuid   uuid.UUID     `json:"logUuid"`
-	Platform  string        `json:"platform"`
-	LogType   LogClientType `json:"logType"`
-	LineCount int64         `json:"lineCount"`
-	Earliest  interface{}   `json:"earliest"`
-	Last      interface{}   `json:"last"`
+type UpdateLogTimestampsParams struct {
+	LogUuid  uuid.UUID `json:"logUuid"`
+	LogStart time.Time `json:"logStart"`
+	LogEnd   time.Time `json:"logEnd"`
 }
 
-// Fetches all logs and aggregates the results.
-// TODO: json_object_agg the log chunk severities
-func (q *Queries) ListAllAvailableLogs(ctx context.Context) ([]ListAllAvailableLogsRow, error) {
-	rows, err := q.db.QueryContext(ctx, listAllAvailableLogs)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []ListAllAvailableLogsRow
-	for rows.Next() {
-		var i ListAllAvailableLogsRow
-		if err := rows.Scan(
-			&i.LogUuid,
-			&i.Platform,
-			&i.LogType,
-			&i.LineCount,
-			&i.Earliest,
-			&i.Last,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
+// Updates the timestamps for a log based on the chunk metadata
+func (q *Queries) UpdateLogTimestamps(ctx context.Context, arg UpdateLogTimestampsParams) error {
+	_, err := q.db.ExecContext(ctx, updateLogTimestamps, arg.LogUuid, arg.LogStart, arg.LogEnd)
+	return err
 }

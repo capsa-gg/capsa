@@ -8,23 +8,42 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Spinner from "@/components/Spinner";
 import { useGetAllLogs } from "@/api/hooks";
 import { LogOverviewItem } from "@/types/api/logs";
+import ColoredSeverities from "@/components/ColoredSeverities";
 
 const columns: GridColDef<LogOverviewItem>[] = [
-    { field: "id", headerName: "ID", flex: 3, renderCell: row => <LogLink id={row.row.id} /> },
-    { field: "logType", headerName: "Type", flex: 1 },
-    { field: "platform", headerName: "Platform", flex: 1 },
-    { field: "lineCount", headerName: "Lines", flex: 1 },
+    { field: "id", headerName: "ID", maxWidth: 300, flex: 4, renderCell: row => <LogLink id={row.row.id} /> },
+    { field: "logType", headerName: "Type", maxWidth: 100, flex: 1 },
+    { field: "platform", headerName: "Platform", maxWidth: 100, flex: 1 },
+    { field: "lineCount", headerName: "Lines", maxWidth: 100, flex: 1 },
+    {
+        field: "severitiesCount",
+        headerName: "Severities",
+        flex: 3,
+        minWidth: 130,
+        maxWidth: 180,
+        sortable: false,
+        renderCell: row => <ColoredSeverities severities={row.row.severitiesCounts} />,
+    },
+    {
+        field: "categoriesCounts",
+        headerName: "Categories",
+        flex: 1,
+        maxWidth: 100,
+        valueFormatter: value => Object.keys(value).length,
+    },
     {
         field: "tsFirstLine",
         headerName: "First timestamp",
         flex: 3,
-        valueFormatter: value => moment(value).format("MMMM Do YYYY, h:mm:ss a"),
+        maxWidth: 200,
+        valueFormatter: value => moment(value).format("YYYY-MM-DD, h:mm:ss a"),
     },
     {
         field: "tsLastLine",
         headerName: "Last timestamp",
         flex: 3,
-        valueFormatter: value => moment(value).format("MMMM Do YYYY, h:mm:ss a"),
+        maxWidth: 200,
+        valueFormatter: value => moment(value).format("YYYY-MM-DD, h:mm:ss a"),
     },
 ];
 

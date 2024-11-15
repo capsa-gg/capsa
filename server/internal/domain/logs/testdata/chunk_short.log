@@ -1,0 +1,43 @@
+[2024.11.14-16.08.23.317][Log][LogStats]: UGameplayTagsManager::InitializeManager -  0.000 s
+[2024.11.14-16.08.23.425][Display][LogTextureExample]: Example loading DLL: example.dll
+[2024.11.14-16.08.23.445][Log][LogWorldMetrics]: [UWorldMetricsSubsystem::Initialize]
+[2024.11.14-16.08.23.448][Log][LogNetVersion]: Set ProjectVersion to 1.0.0.0. Version Checksum will be recalculated on next use.
+[2024.11.14-16.08.23.448][Log][LogInit]: Texture streaming: Enabled
+[2024.11.14-16.08.23.458][Display][LogAnalytics]: [UEExample.Release] APIServer = https://example.com. AppVersion = 1.2.3-55555+++UE5+Release-5.4
+[2024.11.14-16.08.23.468][Display][LogAudio]: Initializing Audio Device Manager...
+[2024.11.14-16.08.23.475][Display][LogAudio]: Loading Default Audio Settings Objects...
+[2024.11.14-16.08.23.484][Display][LogAudio]: AudioInfo: 'RADA' Registered
+[2024.11.14-16.08.23.484][Display][LogAudio]: Audio Device Manager Initialized
+[2024.11.14-16.08.23.484][Display][LogAudio]: Creating Audio Device:                 Id: 1, Scope: Shared, Realtime: True
+[2024.11.14-16.08.23.484][Display][LogAudioMixer]: Audio Mixer Platform Settings:
+[2024.11.14-16.08.23.484][Display][LogAudioMixer]: 	Sample Rate:						  48000
+[2024.11.14-16.08.23.484][Display][LogAudioMixer]: 	Callback Buffer Frame Size Requested: 1024
+[2024.11.14-16.08.23.485][Display][LogAudio]: AudioDevice MaxSources: 32
+[2024.11.14-16.08.23.491][Display][LogAudioMixer]: Initializing audio mixer using platform API: 'XAudio2'
+[2024.11.14-16.08.23.518][Display][LogAudioMixer]: Using Audio Hardware Device Headphones (Mpow Flame)
+[2024.11.14-16.08.23.518][Display][LogAudioMixer]: Initializing Sound Submixes...
+[2024.11.14-16.08.23.916][Display][LogInit]: Engine is initialized. Leaving FEngineLoop::Init()
+[2024.11.14-16.08.23.919][Log][SourceControl]: Revision control is disabled
+[2024.11.14-16.08.23.919][Log][LogUnrealEdMisc]: Loading editor; pre map load, took 6.132
+[2024.11.14-16.08.23.955][Log][Cmd]: MAP LOAD FILE="D:/Example/Example/ProjectExample/Content/Maps/ThirdPersonMap.umap" TEMPLATE=0 SHOWPROGRESS=1 FEATURELEVEL=4
+[2024.11.14-16.08.23.955][Log][LogWorld]: UWorld::CleanupWorld for Untitled, bSessionEnded=true, bCleanupResources=true
+[2024.11.14-16.08.23.955][Log][LogSlate]: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2024.11.14-16.08.23.955][Log][LogWorldMetrics]: [UWorldMetricsSubsystem::Deinitialize]
+[2024.11.14-16.08.23.955][Log][LogWorldMetrics]: [UWorldMetricsSubsystem::Clear]
+[2024.11.14-16.08.23.990][Log][LogWorldMetrics]: [UWorldMetricsSubsystem::Initialize]
+[2024.11.14-16.08.23.991][Log][LogWorldPartition]: ULevel::OnLevelLoaded(ThirdPersonMap)(bIsOwningWorldGameWorld=0, bIsOwningWorldPartitioned=1, InitializeForMainWorld=1, InitializeForEditor=1, InitializeForGame=0)
+[2024.11.14-16.08.24.030][Log][LogUObjectHash]: Compacting FUObjectHashTables data took   0.33ms
+[2024.11.14-16.08.24.030][Log][Cmd]: MAP CHECKDEP NOCLEARLOG
+[2024.11.14-16.08.24.030][Log][MapCheck]: Map check complete: 0 Error(s), 0 Warning(s), took 0.386ms to complete.
+[2024.11.14-16.08.24.072][Log][LogUnrealEdMisc]: Total Editor Startup Time, took 6.286
+[2024.11.14-16.08.24.233][Log][LogSlate]: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2024.11.14-16.08.24.240][Log][LogSlate]: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2024.11.14-16.08.24.537][Display][LogAssetRegistry]: Asset registry cache written as 24.8 MiB to D:/Example/Example/ProjectExample/Intermediate/CachedAssetRegistry_*.bin
+[2024.11.14-16.08.24.839][Log][LogSlate]: External Image Picker: DecompressImage failed
+[2024.11.14-16.08.25.396][Warning][LogStall]: Startup...
+[2024.11.14-16.08.25.399][Log][LogStall]: Startup complete.
+[2024.11.14-16.08.25.405][Log][LogLoad]: (Engine Initialization) Total time: 7.62 seconds
+[2024.11.14-16.08.25.493][Verbose][LogContentStreaming]: Texture pool size now 1000 MB
+[2024.11.14-16.08.25.493][VeryVerbose][LogCsvProfiler]: Metadata set : streamingpoolsizemb="1000"
+[2024.11.14-16.08.25.609][Log][LogCapsaCore]: Capsa ID: 00000000-0000-0000-0000-000000000000 | CapsaLogURL: https://example.dev/logs/00000000-0000-0000-0000-000000000000
+[2024.11.14-16.08.25.652][Display][LogLiveCoding]: LiveCodingConsole Arguments: ProjectExample Win64 Development

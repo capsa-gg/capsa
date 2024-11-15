@@ -23,6 +23,8 @@ type LogOverview struct {
 	LineCount          int64             `json:"lineCount"`
 	TimestampFirstLine *time.Time        `json:"tsFirstLine"`
 	TimestampLastLine  *time.Time        `json:"tsLastLine"`
+	CategoriesCounts   map[string]int    `json:"categoriesCounts"`
+	SeveritiesCounts   map[string]int    `json:"severitiesCounts"`
 }
 
 // LogMetadata contains the metadata for a stored log.
