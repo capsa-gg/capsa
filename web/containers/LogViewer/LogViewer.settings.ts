@@ -1,4 +1,5 @@
 import * as Monaco from "monaco-editor";
+import LogsColors from "@/styles/LogsColors";
 
 export const monacoOptions: Monaco.editor.IStandaloneEditorConstructionOptions = {
     readOnly: true,
@@ -12,7 +13,7 @@ export const initializeMonaco = (editor: Monaco.editor.IStandaloneCodeEditor, mo
     monaco.languages.setMonarchTokensProvider("capsalog", {
         tokenizer: {
             root: [
-                [/\[\d{4}\.\d{2}\.\d{2}-\d{2}\.\d{2}\.\d{2}:\d{3}]/, "timestamp"],
+                [/\[\d{4}\.\d{2}\.\d{2}-\d{2}\.\d{2}\.\d{2}.\d{3}]/, "timestamp"],
                 [/\[Fatal]/, "loglevel.fatal"],
                 [/\[Error]/, "loglevel.error"],
                 [/\[Warning]/, "loglevel.warning"],
@@ -36,15 +37,15 @@ export const initializeMonaco = (editor: Monaco.editor.IStandaloneCodeEditor, mo
             "editor.selectionBackground": "#878b9180",
         },
         rules: [
-            { token: "", foreground: "#cccccc" },
-            { token: "timestamp", foreground: "#666666" },
-            { token: "loglevel.fatal", foreground: "#AE81FF" },
-            { token: "loglevel.error", foreground: "#f92672" },
-            { token: "loglevel.warning", foreground: "#e2e22e" },
-            { token: "loglevel.info", foreground: "#23aa59" },
-            { token: "loglevel.verbose", foreground: "#A6E22E" },
-            { token: "loglevel.veryverbose", foreground: "#66D9EF" },
-            { token: "category", foreground: "#E6DB74", fontStyle: "italic" },
+            { token: "", foreground: LogsColors.Contents },
+            { token: "timestamp", foreground: LogsColors.Timestamp },
+            { token: "loglevel.fatal", foreground: LogsColors.Fatal },
+            { token: "loglevel.error", foreground: LogsColors.Error },
+            { token: "loglevel.warning", foreground: LogsColors.Warning },
+            { token: "loglevel.info", foreground: LogsColors.Info },
+            { token: "loglevel.verbose", foreground: LogsColors.Verbose },
+            { token: "loglevel.veryverbose", foreground: LogsColors.VeryVerbose },
+            { token: "category", foreground: LogsColors.Category, fontStyle: "italic" },
         ],
     });
     monaco.editor.setTheme("capsalogtheme");

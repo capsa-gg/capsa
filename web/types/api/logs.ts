@@ -2,11 +2,13 @@ import { z } from "zod";
 
 export const LogOverviewItemSchema = z.object({
     id: z.string(),
-    lineCount: z.number(),
-    logType: z.string(),
     platform: z.string(),
-    tsFirstLine: z.nullable(z.string()),
-    tsLastLine: z.nullable(z.string()),
+    logType: z.string(),
+    lineCount: z.number(),
+    tsFirstLine: z.string(),
+    tsLastLine: z.string(),
+    categoriesCounts: z.record(z.string(), z.number()),
+    severitiesCounts: z.record(z.string(), z.number()),
 });
 
 export type LogOverviewItem = z.infer<typeof LogOverviewItemSchema>;
