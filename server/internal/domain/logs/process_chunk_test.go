@@ -12,13 +12,22 @@ import (
 //go:embed testdata/chunk_short.log
 var shortChunk []byte
 
+//go:embed testdata/chunk_1k.log
+var oneThousandLineChunk []byte
+
+//go:embed testdata/chunk_10k.log
+var tenThousandsLineChunk []byte
+
+//go:embed testdata/chunk_100k.log
+var hundredThousandsLineChunk []byte
+
 // TODO(lucianonooijen): Add test cases for
 //   - having multi line log lines (so missing ts)
 //   - empty chunk
 //   - malformed chunk
 //   - benchmarking logs of various sizes
 
-func TestExtractMetadataFromChunk(t *testing.T) {
+func TestExtractMetadataFromChunk(t *testing.T) { //nolint:funlen // This is fine
 	tests := map[string]struct {
 		input            []byte
 		start            string
@@ -66,6 +75,33 @@ func TestExtractMetadataFromChunk(t *testing.T) {
 				"Verbose":     1,
 				"VeryVerbose": 1,
 			},
+		},
+		"Chunk_1k": {
+			input:            oneThousandLineChunk,
+			start:            "2024.11.15-22.00.00.000",
+			end:              "2024.11.15-22.00.41.958",
+			lineCount:        1_000,
+			unprocessedLines: []string{},
+			categories:       map[string]int{"LogCategoryExample": 1_000},
+			severities:       map[string]int{"Log": 1_000},
+		},
+		"Chunk_10k": {
+			input:            tenThousandsLineChunk,
+			start:            "2024.11.15-22.00.00.000",
+			end:              "2024.11.15-22.06.59.958",
+			lineCount:        10_000,
+			unprocessedLines: []string{},
+			categories:       map[string]int{"LogCategoryExample": 10_000},
+			severities:       map[string]int{"Log": 10_000},
+		},
+		"Chunk_100k": {
+			input:            hundredThousandsLineChunk,
+			start:            "2024.11.15-22.00.00.000",
+			end:              "2024.11.15-23.09.59.958",
+			lineCount:        100_000,
+			unprocessedLines: []string{},
+			categories:       map[string]int{"LogCategoryExample": 100_000},
+			severities:       map[string]int{"Log": 100_000},
 		},
 	}
 
