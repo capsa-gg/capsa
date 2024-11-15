@@ -2,6 +2,7 @@ package logs
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/capsa-gg/capsa/server/constants"
 	"github.com/capsa-gg/capsa/server/internal/entities"
@@ -51,6 +52,14 @@ func GetAllLogsOverview(s *interactor.Services) ([]entities.LogOverview, error) 
 			} else {
 				logsAvailable[i].TimestampLastLine = &lastTS
 			}
+		}
+
+		if err = json.Unmarshal(rows[i].CategoriesCount, &logsAvailable[i].CategoriesCounts); err != nil {
+			logLoop.Errorf("cannot convert CategoriesCount to map[string]int: %s", err)
+		}
+
+		if err = json.Unmarshal(rows[i].SeveritiesCount, &logsAvailable[i].SeveritiesCounts); err != nil {
+			logLoop.Errorf("cannot convert SeveritiesCounts to map[string]int: %s", err)
 		}
 	}
 

@@ -33,7 +33,7 @@ func (l logChunkLineMetadata) isComplete() bool {
 type logChunkMetadata struct {
 	Start           time.Time
 	End             time.Time
-	LineCount       int
+	LineCount       int32
 	CategoriesCount map[string]int // Used to get a string[] of categories
 	SeveritiesCount map[string]int
 }
@@ -63,7 +63,7 @@ func extractMetadataFromChunk(logger *zap.SugaredLogger, logChunk []byte) (logCh
 	}
 
 	lineContents := make([]byte, 0, 512)
-	lineCount := 0
+	lineCount := int32(0)
 
 	// Loop over the chunk in O(1), when we find a \n character, we handle the line
 	for i, c := range logChunk {

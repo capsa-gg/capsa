@@ -58,7 +58,7 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 	addLogChunkParams := database.AddLogChunkParams{
 		Log:            logInfo.ID,
 		BlobPath:       fileName,
-		LineCount:      int32(chunkMetadata.LineCount),
+		LineCount:      chunkMetadata.LineCount,
 		ChunkStart:     sql.NullTime{Valid: true, Time: chunkMetadata.Start},
 		ChunkEnd:       sql.NullTime{Valid: true, Time: chunkMetadata.End},
 		CategoryCounts: categoryCounts,
@@ -80,6 +80,8 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 	if err != nil {
 		return entities.NewDomainErrorFromDatabaseError(err)
 	}
+
+	log.With("chunk_ts_start", chunkMetadata.Start.String()).With("chunk_ts_end", chunkMetadata.End.String()).Debug("timestamps sent to database for processing")
 
 	return nil
 }
