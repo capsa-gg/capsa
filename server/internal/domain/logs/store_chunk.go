@@ -55,6 +55,7 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 	}
 
 	// Assemble database params
+	// TODO: Store the unprocessed line count in database
 	addLogChunkParams := database.AddLogChunkParams{
 		Log:            logInfo.ID,
 		BlobPath:       fileName,
