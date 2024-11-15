@@ -23,7 +23,7 @@ func TestExtractMetadataFromChunk(t *testing.T) {
 		input            []byte
 		start            string
 		end              string
-		lineCount        int
+		lineCount        int32
 		unprocessedLines []string
 		categories       map[string]int
 		severities       map[string]int
