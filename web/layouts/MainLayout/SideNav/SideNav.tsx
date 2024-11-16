@@ -8,14 +8,15 @@ import { grey } from "@mui/material/colors";
 import { sideNavItemsData, sideNavWidthPx } from "@/layouts/MainLayout/SideNav/SideNav.data";
 import { SideNavItem } from "@/layouts/MainLayout/SideNav/SideNav.components";
 import version from "@/version";
-import useUserInfo from "@/hooks/useUserInfo/useUserInfo";
 import { useAppContext } from "@/context/AppContext/AppContext";
+import useUser from "@/context/UserContext";
 
-// TODO: Add Capsa project title
 // TODO: Add styling
 const SideNav = () => {
     const appContext = useAppContext();
-    const { isLoggedIn } = useUserInfo();
+    const {
+        userInfo: { isLoggedIn },
+    } = useUser();
     const pathname = usePathname();
 
     const SideNavListItems = () =>

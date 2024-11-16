@@ -7,13 +7,15 @@ import { grey } from "@mui/material/colors";
 import { removeJwtCookie } from "@/data/jwt/cookiesClient";
 import { removeJwtFromLocalStorage } from "@/data/jwt/localStorage";
 import { useRouter } from "next/navigation";
-import useUserInfo from "@/hooks/useUserInfo/useUserInfo";
+import useUser from "@/context/UserContext";
 
 export const topNavSidePaddingPx = 20;
 
 const TopNav = () => {
     const router = useRouter();
-    const { isLoggedIn, user } = useUserInfo();
+    const {
+        userInfo: { isLoggedIn, user },
+    } = useUser();
     const signOut = () => {
         removeJwtCookie();
         removeJwtFromLocalStorage();
