@@ -36,8 +36,8 @@ func LoadConfig(configFile string) (*entities.Config, error) {
 	// Later on, using AddConfigPath and SetConfigName we can allow
 	// other methods of application configuration and utilize the
 	// full power of Viper for creating a true 12-factor application
-	v.SetConfigFile(configFile) // TODO: Support not having a config.yml file present
-	v.AutomaticEnv()            // read in environment variables that match
+	v.SetConfigFile(configFile)
+	v.AutomaticEnv() // read in environment variables that match
 	fmt.Println("Using config file:", v.ConfigFileUsed())
 
 	// If a config file is found, read it in.
