@@ -7,11 +7,11 @@ import (
 	"net/http"
 
 	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/pgx/v5" //nolint:gocritic // Needs import for using pgx.WithInstance
+	"github.com/golang-migrate/migrate/v4/database/pgx/v5" //nolint:gocritic,stylecheck // Needs import for using pgx.WithInstance
 	"github.com/golang-migrate/migrate/v4/source/httpfs"
 
 	// Needs side effect from pgx/v5.
-	_ "github.com/golang-migrate/migrate/v4/database/pgx/v5" //nolint:gocritic // Needs import for side effect
+	_ "github.com/golang-migrate/migrate/v4/database/pgx/v5" //nolint:gocritic,stylecheck // Needs import for side effect
 
 	"github.com/capsa-gg/capsa/server/migrations"
 )

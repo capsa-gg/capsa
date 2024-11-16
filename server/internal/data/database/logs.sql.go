@@ -11,6 +11,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
+
+	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 const addLogChunk = `-- name: AddLogChunk :exec
@@ -19,13 +21,13 @@ VALUES ($1, $2, $3, $4, $5, $6, $7)
 `
 
 type AddLogChunkParams struct {
-	Log            int64            `json:"log"`
-	BlobPath       string           `json:"blobPath"`
-	ChunkStart     pgtype.Timestamp `json:"chunkStart"`
-	ChunkEnd       pgtype.Timestamp `json:"chunkEnd"`
-	LineCount      int32            `json:"lineCount"`
-	CategoryCounts []byte           `json:"categoryCounts"`
-	SeverityCounts []byte           `json:"severityCounts"`
+	Log            int64                     `json:"log"`
+	BlobPath       string                    `json:"blobPath"`
+	ChunkStart     pgtype.Timestamp          `json:"chunkStart"`
+	ChunkEnd       pgtype.Timestamp          `json:"chunkEnd"`
+	LineCount      int32                     `json:"lineCount"`
+	CategoryCounts entities.LogChunkMetadata `json:"categoryCounts"`
+	SeverityCounts entities.LogChunkMetadata `json:"severityCounts"`
 }
 
 // Adds data for an uploaded log chunk

@@ -18,3 +18,11 @@ sql:
               type: "UUID"
           - db_type: "pg_catalog.timestamp"
             go_type: "time.Time"
+          - column: "logs_chunks.category_counts"
+            go_type:
+              import: "github.com/capsa-gg/capsa/server/internal/entities"
+              type: "LogChunkMetadata"
+          - column: "logs_chunks.severity_counts"
+            go_type:
+              import: "github.com/capsa-gg/capsa/server/internal/entities"
+              type: "LogChunkMetadata"

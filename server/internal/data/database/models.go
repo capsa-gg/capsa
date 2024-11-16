@@ -11,6 +11,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
+
+	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 type LogClientType string
@@ -75,15 +77,15 @@ type Log struct {
 }
 
 type LogsChunk struct {
-	Chunk          int32            `json:"chunk"`
-	Log            int64            `json:"log"`
-	CreatedOn      time.Time        `json:"createdOn"`
-	BlobPath       string           `json:"blobPath"`
-	ChunkStart     pgtype.Timestamp `json:"chunkStart"`
-	ChunkEnd       pgtype.Timestamp `json:"chunkEnd"`
-	LineCount      int32            `json:"lineCount"`
-	CategoryCounts []byte           `json:"categoryCounts"`
-	SeverityCounts []byte           `json:"severityCounts"`
+	Chunk          int32                     `json:"chunk"`
+	Log            int64                     `json:"log"`
+	CreatedOn      time.Time                 `json:"createdOn"`
+	BlobPath       string                    `json:"blobPath"`
+	ChunkStart     pgtype.Timestamp          `json:"chunkStart"`
+	ChunkEnd       pgtype.Timestamp          `json:"chunkEnd"`
+	LineCount      int32                     `json:"lineCount"`
+	CategoryCounts entities.LogChunkMetadata `json:"categoryCounts"`
+	SeverityCounts entities.LogChunkMetadata `json:"severityCounts"`
 }
 
 type LogsLink struct {

@@ -3,7 +3,7 @@ package cmd
 import (
 	"database/sql"
 
-	// Needs the side effects to use the driver
+	// Needs the side effects to use the driver.
 	_ "github.com/golang-migrate/migrate/v4/database/pgx/v5"
 
 	"github.com/spf13/cobra"

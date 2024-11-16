@@ -1041,6 +1041,12 @@ const docTemplate = `{
         "entities.LogOverview": {
             "type": "object",
             "properties": {
+                "categoriesCounts": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "integer"
+                    }
+                },
                 "id": {
                     "type": "string"
                 },
@@ -1052,6 +1058,12 @@ const docTemplate = `{
                 },
                 "platform": {
                     "type": "string"
+                },
+                "severitiesCounts": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "integer"
+                    }
                 },
                 "tsFirstLine": {
                     "type": "string"
