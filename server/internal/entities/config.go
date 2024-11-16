@@ -11,6 +11,7 @@ type Config struct {
 	// Application configuration
 	IsDevMode      bool   `mapstructure:"development"` // Not marked required as it would fail when `false` is given as value
 	ServerPort     int    `mapstructure:"api_port" validate:"required"`
+	ServerProtocol string `mapstructure:"api_protocol" validate:"oneof=http https"`
 	ServerHostname string `mapstructure:"api_hostname" validate:"required"`
 	WebappHostname string `mapstructure:"webapp_hostname" validate:"required"`
 

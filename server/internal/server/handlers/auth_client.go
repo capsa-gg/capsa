@@ -53,11 +53,14 @@ func (h Handlers) ClientAuth(c *gin.Context) {
 		return
 	}
 
+	// Note: we force https to be used
+	linkWeb := fmt.Sprintf("https://%s/logs/%s", h.services.Config.WebappHostname, sesInfo.UUID)
+
 	res := bodies.ClientLogCreationResponse{
 		Token:   sesInfo.ClientJWT,
 		LogID:   sesInfo.UUID,
 		Expiry:  sesInfo.TokenExpiry,
-		LinkWeb: "[UNIMPLEMENTED]", // TODO: implement
+		LinkWeb: linkWeb,
 	}
 
 	c.JSON(http.StatusCreated, res)

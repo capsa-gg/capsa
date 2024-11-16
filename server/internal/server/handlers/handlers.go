@@ -62,7 +62,7 @@ func extractJwtClaimsFromContext(c *gin.Context, log *zap.SugaredLogger, context
 	log = log.With("log_id", logIDStr)
 
 	logID, err := uuid.Parse(logIDStr)
-	if err != nil { // TODO: Helper func
+	if err != nil {
 		log.Named("extractJwtClaimsFromContext").Error("could not parse jwt subject to uuid")
 
 		c.JSON(http.StatusInternalServerError, bodies.ErrorResponse{Error: "error converting jwt subject to uuid"})

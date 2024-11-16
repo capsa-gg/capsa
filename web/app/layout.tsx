@@ -11,6 +11,7 @@ import { ErrorProvider } from "@/context/ErrorContext";
 import ErrorSnackbar from "@/containers/ErrorSnackbar/ErrorSnackbar";
 import "./globals.css";
 import { AppContextProvider } from "@/context/AppContext/AppContext";
+import { UserProvider } from "@/context/UserContext";
 
 export const metadata: Metadata = {
     title: "Capsa Webapp Homepage",
@@ -25,18 +26,20 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
             <AppRouterCacheProvider>
                 <ThemeProvider theme={theme}>
                     <AppContextProvider>
-                        <ErrorProvider>
-                            <SWRProvider>
-                                <CssBaseline />
-                                <div className="screen-too-small">
-                                    <ScreenTooSmall />
-                                </div>
-                                <div className="main-contents">
-                                    <ErrorSnackbar />
-                                    <MainLayout>{children}</MainLayout>
-                                </div>
-                            </SWRProvider>
-                        </ErrorProvider>
+                        <UserProvider>
+                            <ErrorProvider>
+                                <SWRProvider>
+                                    <CssBaseline />
+                                    <div className="screen-too-small">
+                                        <ScreenTooSmall />
+                                    </div>
+                                    <div className="main-contents">
+                                        <ErrorSnackbar />
+                                        <MainLayout>{children}</MainLayout>
+                                    </div>
+                                </SWRProvider>
+                            </ErrorProvider>
+                        </UserProvider>
                     </AppContextProvider>
                 </ThemeProvider>
             </AppRouterCacheProvider>

@@ -10,6 +10,7 @@ import { useUserLogin } from "@/api/hooks";
 import { removeJwtCookie, setJwtCookie } from "@/data/jwt/cookiesClient";
 import { removeJwtFromLocalStorage, setJwtInLocalStorage } from "@/data/jwt/localStorage";
 import { yupAuthValidation } from "@/types/api/validation";
+import useUser from "@/context/UserContext";
 
 interface FormInputLogin {
     email: string;
@@ -25,6 +26,8 @@ const LoginPage: React.FC = () => {
     const { trigger, isMutating, error, data } = useUserLogin();
     const router = useRouter();
     const searchParams = useSearchParams();
+    const user = useUser();
+    const redirectUrl = searchParams.get("redirect");
 
     const {
         register,
@@ -40,19 +43,24 @@ const LoginPage: React.FC = () => {
 
     // Remove jwt info if this page is reached
     useEffect(() => {
-        const redirected = searchParams.get("redirect");
-        if (redirected) {
+        if (redirectUrl) {
             removeJwtCookie();
             removeJwtFromLocalStorage();
         }
     }, []);
 
-    // When we have the response, set values, redirect to homepage
+    // When we have the response, set values, redirect
     useEffect(() => {
         if (!error && data) {
             setJwtCookie(data);
             setJwtInLocalStorage(data);
-            router.refresh();
+            user.reloadInfoFromLocalStorage(); // This will update the signed in status in nav
+
+            if (redirectUrl) {
+                router.replace(redirectUrl);
+            } else {
+                router.refresh();
+            }
         }
     }, [data]);
 

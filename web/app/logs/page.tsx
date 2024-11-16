@@ -73,7 +73,7 @@ const Home = () => {
         }
 
         return (
-            <Box sx={{ width: "100%" }}>
+            <Box sx={{ width: "100%", maxWidth: "1300px" }}>
                 <DataGrid rows={data} columns={columns} getRowId={row => row.id} disableRowSelectionOnClick />
             </Box>
         );
