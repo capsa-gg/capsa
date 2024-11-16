@@ -1,11 +1,10 @@
-package logs
+package logchunk
 
 import (
 	"context"
-	"database/sql"
-	"encoding/json"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 
 	"github.com/capsa-gg/capsa/server/internal/data/database"
 	"github.com/capsa-gg/capsa/server/internal/entities"
@@ -39,20 +38,13 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 		return entities.NewDomainError(entities.DomainErrorUnexpected, "cannot store chunk in storage", err)
 	}
 
-	chunkMetadata, unprocessedLinkes := extractMetadataFromChunk(log, logData)
-	if len(unprocessedLinkes) > 0 {
+	chunkMetadata, unprocessedLines := extractMetadataFromChunk(log, logData)
+	if len(unprocessedLines) > 0 {
 		log.With("len_unprocessed_lines").Warn("some lines are not processed")
 	}
 
-	categoryCounts, err := json.Marshal(chunkMetadata.CategoriesCount)
-	if err != nil {
-		log.With("error", err).Error("cannot convert categories count to json")
-	}
-
-	severitiesCount, err := json.Marshal(chunkMetadata.SeveritiesCount)
-	if err != nil {
-		log.With("error", err).Error("cannot convert severities count to json")
-	}
+	log = log.With("category_counts_len", len(chunkMetadata.CategoriesCount), "severities_counts_len", len(chunkMetadata.SeveritiesCount))
+	log.Debug("chunk metadata extracted")
 
 	// Assemble database params
 	// TODO: Store the unprocessed line count in database
@@ -60,10 +52,10 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 		Log:            logInfo.ID,
 		BlobPath:       fileName,
 		LineCount:      chunkMetadata.LineCount,
-		ChunkStart:     sql.NullTime{Valid: true, Time: chunkMetadata.Start},
-		ChunkEnd:       sql.NullTime{Valid: true, Time: chunkMetadata.End},
-		CategoryCounts: categoryCounts,
-		SeverityCounts: severitiesCount,
+		ChunkStart:     pgtype.Timestamp{Time: chunkMetadata.Start},
+		ChunkEnd:       pgtype.Timestamp{Time: chunkMetadata.End},
+		CategoryCounts: chunkMetadata.CategoriesCount,
+		SeverityCounts: chunkMetadata.SeveritiesCount,
 	}
 
 	// Store log chunk metadata in database

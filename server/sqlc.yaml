@@ -1,10 +1,28 @@
-version: "1"
-packages:
-  - name: "database"
-    path: "internal/data/database"
+version: "2"
+sql:
+  - engine: "postgresql"
     queries: "sql/"
     schema: "migrations/"
-    sql_package: "database/sql"
-    engine: "postgresql"
-    emit_json_tags: true
-    json_tags_case_style: "camel"
+    gen:
+      go:
+        package: "database"
+        out: "internal/data/database"
+        sql_package: "pgx/v5"
+        emit_json_tags: true
+        json_tags_case_style: "camel"
+        emit_pointers_for_null_types: true
+        overrides:
+          - db_type: "uuid"
+            go_type:
+              import: "github.com/google/uuid"
+              type: "UUID"
+          - db_type: "pg_catalog.timestamp"
+            go_type: "time.Time"
+          - column: "logs_chunks.category_counts"
+            go_type:
+              import: "github.com/capsa-gg/capsa/server/internal/entities"
+              type: "LogChunkMetadata"
+          - column: "logs_chunks.severity_counts"
+            go_type:
+              import: "github.com/capsa-gg/capsa/server/internal/entities"
+              type: "LogChunkMetadata"

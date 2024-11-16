@@ -3,6 +3,9 @@ package cmd
 import (
 	"database/sql"
 
+	// Needs the side effects to use the driver.
+	_ "github.com/golang-migrate/migrate/v4/database/pgx/v5"
+
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
@@ -25,7 +28,7 @@ var dbMigrateCmd = &cobra.Command{
 		c := getAndValidateConfig()
 		log := getCmdLogger(c, "Database").Named("migrations")
 
-		db, err := sql.Open("postgres", c.DatabaseConnectionString())
+		db, err := sql.Open("pgx", c.DatabaseConnectionString())
 		if err != nil {
 			log.Fatalf("error opening database connection: %s", err)
 		}

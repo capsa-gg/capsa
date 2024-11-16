@@ -9,7 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/capsa-gg/capsa/server/internal/domain/logs"
+	"github.com/capsa-gg/capsa/server/internal/domain/logchunk"
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
 
@@ -77,7 +77,7 @@ func (h Handlers) LogStoreChunk(c *gin.Context) {
 
 	log.Debug("attempting to store log chunk")
 
-	err = logs.StoreLogChunk(h.services, logID, chunk)
+	err = logchunk.StoreLogChunk(h.services, logID, chunk)
 
 	if err != nil {
 		h.sendErrorResponse(c, err)

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Find all non-ignored files in the repository
+files=$(git ls-files)
+
+# Loop through all files and search for TODOs
+for file in $files; do
+    grep -EHn "// TODO|/\* TODO" "$file"
+done
+

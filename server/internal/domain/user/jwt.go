@@ -53,7 +53,8 @@ func ValidateUserJwt(s *interactor.Services, tok string) (*token.JwtClaims, erro
 	log = log.With("user_id", user.ID)
 	log.Debug("user found in database")
 
-	userPassUUID := user.PasswordUuid.UUID.String()
+	userPassUUID := uuid.UUID(user.PasswordUuid.Bytes).String()
+
 	if claims.JwtID != userPassUUID {
 		log.Warnf("jwtid (%s) and password uuid (%s) do not match", claims.JwtID, userPassUUID)
 

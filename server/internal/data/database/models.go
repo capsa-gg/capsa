@@ -5,13 +5,14 @@
 package database
 
 import (
-	"database/sql"
 	"database/sql/driver"
-	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
+
+	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 type LogClientType string
@@ -65,26 +66,26 @@ type Environment struct {
 }
 
 type Log struct {
-	ID          int64         `json:"id"`
-	LogUuid     uuid.UUID     `json:"logUuid"`
-	Environment int32         `json:"environment"`
-	Platform    string        `json:"platform"`
-	LogType     LogClientType `json:"logType"`
-	CreatedOn   time.Time     `json:"createdOn"`
-	LogStart    sql.NullTime  `json:"logStart"`
-	LogEnd      sql.NullTime  `json:"logEnd"`
+	ID          int64            `json:"id"`
+	LogUuid     uuid.UUID        `json:"logUuid"`
+	Environment int32            `json:"environment"`
+	Platform    string           `json:"platform"`
+	LogType     LogClientType    `json:"logType"`
+	CreatedOn   time.Time        `json:"createdOn"`
+	LogStart    pgtype.Timestamp `json:"logStart"`
+	LogEnd      pgtype.Timestamp `json:"logEnd"`
 }
 
 type LogsChunk struct {
-	Chunk          int32           `json:"chunk"`
-	Log            int64           `json:"log"`
-	CreatedOn      time.Time       `json:"createdOn"`
-	BlobPath       string          `json:"blobPath"`
-	ChunkStart     sql.NullTime    `json:"chunkStart"`
-	ChunkEnd       sql.NullTime    `json:"chunkEnd"`
-	LineCount      int32           `json:"lineCount"`
-	CategoryCounts json.RawMessage `json:"categoryCounts"`
-	SeverityCounts json.RawMessage `json:"severityCounts"`
+	Chunk          int32                     `json:"chunk"`
+	Log            int64                     `json:"log"`
+	CreatedOn      time.Time                 `json:"createdOn"`
+	BlobPath       string                    `json:"blobPath"`
+	ChunkStart     pgtype.Timestamp          `json:"chunkStart"`
+	ChunkEnd       pgtype.Timestamp          `json:"chunkEnd"`
+	LineCount      int32                     `json:"lineCount"`
+	CategoryCounts entities.LogChunkMetadata `json:"categoryCounts"`
+	SeverityCounts entities.LogChunkMetadata `json:"severityCounts"`
 }
 
 type LogsLink struct {
@@ -95,9 +96,9 @@ type LogsLink struct {
 }
 
 type LogsMetadatum struct {
-	Log      int64           `json:"log"`
-	SavedOn  time.Time       `json:"savedOn"`
-	Metadata json.RawMessage `json:"metadata"`
+	Log      int64     `json:"log"`
+	SavedOn  time.Time `json:"savedOn"`
+	Metadata []byte    `json:"metadata"`
 }
 
 type Title struct {
@@ -107,14 +108,14 @@ type Title struct {
 }
 
 type User struct {
-	ID           int32          `json:"id"`
-	UserUuid     uuid.UUID      `json:"userUuid"`
-	PasswordHash sql.NullString `json:"passwordHash"`
-	PasswordUuid uuid.NullUUID  `json:"passwordUuid"`
-	Email        string         `json:"email"`
-	FirstName    string         `json:"firstName"`
-	LastName     string         `json:"lastName"`
-	CreatedAt    time.Time      `json:"createdAt"`
+	ID           int32       `json:"id"`
+	UserUuid     uuid.UUID   `json:"userUuid"`
+	PasswordHash *string     `json:"passwordHash"`
+	PasswordUuid pgtype.UUID `json:"passwordUuid"`
+	Email        string      `json:"email"`
+	FirstName    string      `json:"firstName"`
+	LastName     string      `json:"lastName"`
+	CreatedAt    time.Time   `json:"createdAt"`
 }
 
 type UsersPasswordReset struct {

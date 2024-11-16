@@ -20,7 +20,7 @@ type Config struct {
 	JwkPublicKeyPath    string `mapstructure:"jwk_public_key_path"`    // Not marked as required, this is checked elsewhere
 	JwkPublicKeyBase64  string `mapstructure:"jwk_public_key_base64"`  // Not marked as required, this is checked elsewhere
 
-	// DBConn configuration
+	// DBPool configuration
 	DatabaseHost string `mapstructure:"db_host" validate:"required"`
 	DatabasePort int    `mapstructure:"db_port" validate:"required"`
 	DatabaseName string `mapstructure:"db_name" validate:"required"`

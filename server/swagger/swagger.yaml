@@ -117,6 +117,10 @@ definitions:
     type: object
   entities.LogOverview:
     properties:
+      categoriesCounts:
+        additionalProperties:
+          type: integer
+        type: object
       id:
         type: string
       lineCount:
@@ -125,6 +129,10 @@ definitions:
         type: string
       platform:
         type: string
+      severitiesCounts:
+        additionalProperties:
+          type: integer
+        type: object
       tsFirstLine:
         type: string
       tsLastLine:

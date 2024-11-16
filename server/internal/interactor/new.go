@@ -1,12 +1,13 @@
 package interactor
 
 import (
+	"context"
 	"crypto/rsa"
-	"database/sql"
 	"fmt"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/capsa-gg/capsa/server/internal/data/database"
 	"github.com/capsa-gg/capsa/server/internal/data/emails"
@@ -20,14 +21,16 @@ import (
 
 // NewServices initializes and validates a new instance of Services.
 func NewServices(c *entities.Config) (*Services, error) { //nolint:gocyclo // This is expected in this init logic
+	ctx := context.Background()
+
 	// Database connection
-	dbConn, err := sql.Open("postgres", c.DatabaseConnectionString())
+	dbConn, err := pgxpool.New(ctx, c.DatabaseConnectionString())
 	if err != nil {
 		return nil, fmt.Errorf("error opening database connection: %w", err)
 	}
 
 	// Ping database
-	err = dbConn.Ping()
+	err = dbConn.Ping(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error pinging database: %w", err)
 	}
@@ -79,7 +82,7 @@ func NewServices(c *entities.Config) (*Services, error) { //nolint:gocyclo // Th
 
 	s := Services{
 		Config:    c,
-		DBConn:    dbConn,
+		DBPool:    dbConn,
 		Database:  db,
 		Token:     tokenInstance,
 		Passhash:  passHash,
