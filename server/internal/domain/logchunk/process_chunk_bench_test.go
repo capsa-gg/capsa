@@ -1,4 +1,4 @@
-package logs
+package logchunk
 
 import (
 	"testing"
@@ -26,7 +26,7 @@ func BenchmarkExtractMetadataFromChunk_100k(b *testing.B) {
 	}
 }
 
-// Uncomment to run 1m, see testdata/README.md for instructions on creating the testing chunk
+// Uncomment to run 1M lines as input, see testdata/README.md for instructions on creating the testing chunk
 
 /*
 //go:embed testdata/chunk_long.log
