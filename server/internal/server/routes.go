@@ -1,11 +1,17 @@
 package server
 
 import (
-	"github.com/gin-gonic/gin"
+	"io/fs"
+	"net/http"
 
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
+
+	"github.com/capsa-gg/capsa/server/constants"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 	"github.com/capsa-gg/capsa/server/internal/server/handlers"
 	"github.com/capsa-gg/capsa/server/internal/server/middleware"
+	"github.com/capsa-gg/capsa/server/static"
 )
 
 // NOTE: the routes defined here should only have a single handler attached to them.
@@ -14,6 +20,9 @@ import (
 
 //nolint:gocritic // We use blocks to show nested routes more cleanly
 func registerRoutes(r *gin.RouterGroup, h *handlers.Handlers, s *interactor.Services) {
+	// STATIC FILES
+	r.StaticFS(constants.APIStaticPath, mustFS(s))
+
 	// Status route for health checks
 	r.GET("/status", h.Status)
 
@@ -48,4 +57,19 @@ func registerRoutes(r *gin.RouterGroup, h *handlers.Handlers, s *interactor.Serv
 		// Environments
 		userRoutes.GET("/environments", h.EnvironmentsList)
 	}
+}
+
+func mustFS(s *interactor.Services) http.FileSystem {
+	sub, err := fs.Sub(static.FS, ".")
+
+	if err != nil {
+		s.Config.RootLogger.
+			Named("HTTP").
+			Named("registerRoutes").
+			Named("mustFS").
+			With(zap.Error(err)).
+			Fatal("error generating http filesystem")
+	}
+
+	return http.FS(sub)
 }

@@ -1,6 +1,7 @@
 # Application configuration
 development: true
 api_port: 5000
+api_protocol: http
 api_hostname: localhost
 webapp_hostname: localhost:3000
 
