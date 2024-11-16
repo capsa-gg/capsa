@@ -7,11 +7,10 @@ package database
 
 import (
 	"context"
-	"database/sql"
-	"encoding/json"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const addLogChunk = `-- name: AddLogChunk :exec
@@ -20,18 +19,18 @@ VALUES ($1, $2, $3, $4, $5, $6, $7)
 `
 
 type AddLogChunkParams struct {
-	Log            int64           `json:"log"`
-	BlobPath       string          `json:"blobPath"`
-	ChunkStart     sql.NullTime    `json:"chunkStart"`
-	ChunkEnd       sql.NullTime    `json:"chunkEnd"`
-	LineCount      int32           `json:"lineCount"`
-	CategoryCounts json.RawMessage `json:"categoryCounts"`
-	SeverityCounts json.RawMessage `json:"severityCounts"`
+	Log            int64            `json:"log"`
+	BlobPath       string           `json:"blobPath"`
+	ChunkStart     pgtype.Timestamp `json:"chunkStart"`
+	ChunkEnd       pgtype.Timestamp `json:"chunkEnd"`
+	LineCount      int32            `json:"lineCount"`
+	CategoryCounts []byte           `json:"categoryCounts"`
+	SeverityCounts []byte           `json:"severityCounts"`
 }
 
 // Adds data for an uploaded log chunk
 func (q *Queries) AddLogChunk(ctx context.Context, arg AddLogChunkParams) error {
-	_, err := q.db.ExecContext(ctx, addLogChunk,
+	_, err := q.db.Exec(ctx, addLogChunk,
 		arg.Log,
 		arg.BlobPath,
 		arg.ChunkStart,
@@ -58,7 +57,7 @@ type AddLogLinkParams struct {
 
 // Inserts a link between a source and another log session, with a description
 func (q *Queries) AddLogLink(ctx context.Context, arg AddLogLinkParams) error {
-	_, err := q.db.ExecContext(ctx, addLogLink, arg.Source, arg.Link, arg.Description)
+	_, err := q.db.Exec(ctx, addLogLink, arg.Source, arg.Link, arg.Description)
 	return err
 }
 
@@ -68,13 +67,13 @@ VALUES ($1, $2)
 `
 
 type AddLogMetadataParams struct {
-	Log      int64           `json:"log"`
-	Metadata json.RawMessage `json:"metadata"`
+	Log      int64  `json:"log"`
+	Metadata []byte `json:"metadata"`
 }
 
 // Inserts metadata for a given log
 func (q *Queries) AddLogMetadata(ctx context.Context, arg AddLogMetadataParams) error {
-	_, err := q.db.ExecContext(ctx, addLogMetadata, arg.Log, arg.Metadata)
+	_, err := q.db.Exec(ctx, addLogMetadata, arg.Log, arg.Metadata)
 	return err
 }
 
@@ -92,7 +91,7 @@ type AddNewLogSessionParams struct {
 
 // Inserts new log session into the database
 func (q *Queries) AddNewLogSession(ctx context.Context, arg AddNewLogSessionParams) (uuid.UUID, error) {
-	row := q.db.QueryRowContext(ctx, addNewLogSession, arg.Environment, arg.LogType, arg.Platform)
+	row := q.db.QueryRow(ctx, addNewLogSession, arg.Environment, arg.LogType, arg.Platform)
 	var log_uuid uuid.UUID
 	err := row.Scan(&log_uuid)
 	return log_uuid, err
@@ -115,7 +114,7 @@ type GetLinkedLogsForLogRow struct {
 
 // Fetches the linked logs for a log
 func (q *Queries) GetLinkedLogsForLog(ctx context.Context, source int64) ([]GetLinkedLogsForLogRow, error) {
-	rows, err := q.db.QueryContext(ctx, getLinkedLogsForLog, source)
+	rows, err := q.db.Query(ctx, getLinkedLogsForLog, source)
 	if err != nil {
 		return nil, err
 	}
@@ -127,9 +126,6 @@ func (q *Queries) GetLinkedLogsForLog(ctx context.Context, source int64) ([]GetL
 			return nil, err
 		}
 		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
@@ -143,7 +139,7 @@ WHERE log_uuid = $1
 `
 
 func (q *Queries) GetLogByUuid(ctx context.Context, logUuid uuid.UUID) (Log, error) {
-	row := q.db.QueryRowContext(ctx, getLogByUuid, logUuid)
+	row := q.db.QueryRow(ctx, getLogByUuid, logUuid)
 	var i Log
 	err := row.Scan(
 		&i.ID,
@@ -172,7 +168,7 @@ type GetLogChunksForLogRow struct {
 
 // Gets the log chunk information for a given log
 func (q *Queries) GetLogChunksForLog(ctx context.Context, log int64) ([]GetLogChunksForLogRow, error) {
-	rows, err := q.db.QueryContext(ctx, getLogChunksForLog, log)
+	rows, err := q.db.Query(ctx, getLogChunksForLog, log)
 	if err != nil {
 		return nil, err
 	}
@@ -184,9 +180,6 @@ func (q *Queries) GetLogChunksForLog(ctx context.Context, log int64) ([]GetLogCh
 			return nil, err
 		}
 		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
@@ -202,13 +195,13 @@ ORDER BY saved_on
 `
 
 type GetMetadataForLogRow struct {
-	SavedOn  time.Time       `json:"savedOn"`
-	Metadata json.RawMessage `json:"metadata"`
+	SavedOn  time.Time `json:"savedOn"`
+	Metadata []byte    `json:"metadata"`
 }
 
 // Fetches the stored additional metadata for the log
 func (q *Queries) GetMetadataForLog(ctx context.Context, log int64) ([]GetMetadataForLogRow, error) {
-	rows, err := q.db.QueryContext(ctx, getMetadataForLog, log)
+	rows, err := q.db.Query(ctx, getMetadataForLog, log)
 	if err != nil {
 		return nil, err
 	}
@@ -220,9 +213,6 @@ func (q *Queries) GetMetadataForLog(ctx context.Context, log int64) ([]GetMetada
 			return nil, err
 		}
 		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
@@ -250,6 +240,6 @@ type UpdateLogTimestampsParams struct {
 
 // Updates the timestamps for a log based on the chunk metadata
 func (q *Queries) UpdateLogTimestamps(ctx context.Context, arg UpdateLogTimestampsParams) error {
-	_, err := q.db.ExecContext(ctx, updateLogTimestamps, arg.LogUuid, arg.LogStart, arg.LogEnd)
+	_, err := q.db.Exec(ctx, updateLogTimestamps, arg.LogUuid, arg.LogStart, arg.LogEnd)
 	return err
 }

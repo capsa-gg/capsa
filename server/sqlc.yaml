@@ -1,12 +1,10 @@
-version: "2"
-sql:
-  - engine: "postgresql"
+version: "1"
+packages:
+  - name: "database"
+    path: "internal/data/database"
     queries: "sql/"
     schema: "migrations/"
-    gen:
-      go:
-        package: "database"
-        out: "internal/data/database"
-        sql_package: "database/sql" # NOTE: We are using database/sql and not pgx5, as pgx uses non-stdlib types
-        emit_json_tags: true
-        json_tags_case_style: "camel"
+    sql_package: "database/sql"
+    engine: "postgresql"
+    emit_json_tags: true
+    json_tags_case_style: "camel"

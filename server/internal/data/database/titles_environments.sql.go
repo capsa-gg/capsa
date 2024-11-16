@@ -23,7 +23,7 @@ type AddEnvironmentParams struct {
 
 // Inserts new environment for a title into database
 func (q *Queries) AddEnvironment(ctx context.Context, arg AddEnvironmentParams) error {
-	_, err := q.db.ExecContext(ctx, addEnvironment, arg.Title, arg.Name)
+	_, err := q.db.Exec(ctx, addEnvironment, arg.Title, arg.Name)
 	return err
 }
 
@@ -34,7 +34,7 @@ VALUES ($1)
 
 // Inserts new title into database
 func (q *Queries) AddTitle(ctx context.Context, name string) error {
-	_, err := q.db.ExecContext(ctx, addTitle, name)
+	_, err := q.db.Exec(ctx, addTitle, name)
 	return err
 }
 
@@ -44,7 +44,7 @@ WHERE id = $1
 `
 
 func (q *Queries) GetEnvironmentById(ctx context.Context, id int32) (Environment, error) {
-	row := q.db.QueryRowContext(ctx, getEnvironmentById, id)
+	row := q.db.QueryRow(ctx, getEnvironmentById, id)
 	var i Environment
 	err := row.Scan(
 		&i.ID,
@@ -62,7 +62,7 @@ WHERE key = $1
 `
 
 func (q *Queries) GetEnvironmentByKey(ctx context.Context, key uuid.UUID) (Environment, error) {
-	row := q.db.QueryRowContext(ctx, getEnvironmentByKey, key)
+	row := q.db.QueryRow(ctx, getEnvironmentByKey, key)
 	var i Environment
 	err := row.Scan(
 		&i.ID,
@@ -86,7 +86,7 @@ type GetEnvironmentByTitleNameParams struct {
 }
 
 func (q *Queries) GetEnvironmentByTitleName(ctx context.Context, arg GetEnvironmentByTitleNameParams) (Environment, error) {
-	row := q.db.QueryRowContext(ctx, getEnvironmentByTitleName, arg.Title, arg.Name)
+	row := q.db.QueryRow(ctx, getEnvironmentByTitleName, arg.Title, arg.Name)
 	var i Environment
 	err := row.Scan(
 		&i.ID,
@@ -104,7 +104,7 @@ WHERE title = $1
 `
 
 func (q *Queries) GetEnvironmentsForTitle(ctx context.Context, title int32) ([]Environment, error) {
-	rows, err := q.db.QueryContext(ctx, getEnvironmentsForTitle, title)
+	rows, err := q.db.Query(ctx, getEnvironmentsForTitle, title)
 	if err != nil {
 		return nil, err
 	}
@@ -123,9 +123,6 @@ func (q *Queries) GetEnvironmentsForTitle(ctx context.Context, title int32) ([]E
 		}
 		items = append(items, i)
 	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
@@ -138,7 +135,7 @@ WHERE id = $1
 `
 
 func (q *Queries) GetTitleById(ctx context.Context, id int32) (Title, error) {
-	row := q.db.QueryRowContext(ctx, getTitleById, id)
+	row := q.db.QueryRow(ctx, getTitleById, id)
 	var i Title
 	err := row.Scan(&i.ID, &i.Name, &i.CreatedOn)
 	return i, err
@@ -150,7 +147,7 @@ WHERE name = $1
 `
 
 func (q *Queries) GetTitleByName(ctx context.Context, name string) (Title, error) {
-	row := q.db.QueryRowContext(ctx, getTitleByName, name)
+	row := q.db.QueryRow(ctx, getTitleByName, name)
 	var i Title
 	err := row.Scan(&i.ID, &i.Name, &i.CreatedOn)
 	return i, err
@@ -172,7 +169,7 @@ type ListAllEnvironmentsAndTitlesRow struct {
 }
 
 func (q *Queries) ListAllEnvironmentsAndTitles(ctx context.Context) ([]ListAllEnvironmentsAndTitlesRow, error) {
-	rows, err := q.db.QueryContext(ctx, listAllEnvironmentsAndTitles)
+	rows, err := q.db.Query(ctx, listAllEnvironmentsAndTitles)
 	if err != nil {
 		return nil, err
 	}
@@ -184,9 +181,6 @@ func (q *Queries) ListAllEnvironmentsAndTitles(ctx context.Context) ([]ListAllEn
 			return nil, err
 		}
 		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err

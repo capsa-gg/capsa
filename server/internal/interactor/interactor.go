@@ -1,8 +1,7 @@
 package interactor
 
 import (
-	"database/sql"
-
+	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
 
 	"github.com/capsa-gg/capsa/server/internal/data/database"
@@ -18,8 +17,8 @@ type Services struct {
 	// Config is the application configuration.
 	Config *entities.Config `validate:"required"`
 
-	// DBConn is the database connection instance.
-	DBConn *sql.DB `validate:"required"`
+	// DBPool is the database connection instance using pgx.
+	DBPool *pgxpool.Pool `validate:"required"`
 
 	// Database is the instance of the SQLc generated database queries.
 	Database *database.Queries `validate:"required"`

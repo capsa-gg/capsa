@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 
 	"github.com/capsa-gg/capsa/server/internal/entities"
@@ -87,7 +86,7 @@ func AddNewUserWithPassword(s *interactor.Services, email, firstName, lastName, 
 		Email:        email,
 		FirstName:    firstName,
 		LastName:     lastName,
-		PasswordHash: sql.NullString{String: passHash, Valid: true},
+		PasswordHash: &passHash,
 	})
 
 	if err != nil {

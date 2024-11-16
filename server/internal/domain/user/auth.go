@@ -5,6 +5,8 @@ import (
 	"errors"
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
@@ -27,7 +29,7 @@ func Login(s *interactor.Services, email, password string) (*entities.UserLoginR
 	log = log.With("user_uuid", user.UserUuid)
 	log.Debug("user found")
 
-	if !user.PasswordHash.Valid || !user.PasswordUuid.Valid {
+	if user.PasswordHash == nil || !user.PasswordUuid.Valid {
 		log.Warnf("user password hash (%#v) or password uuid (%#v) not found", user.PasswordHash, user.PasswordUuid)
 
 		return nil, entities.NewDomainError(entities.DomainErrorNotFound, "user password not set", errors.New("password hash or uuid not valid"))
@@ -39,7 +41,7 @@ func Login(s *interactor.Services, email, password string) (*entities.UserLoginR
 	log.Debug("user password is set")
 
 	// Validate password
-	err = s.Passhash.ComparePassToHash(password, user.PasswordHash.String)
+	err = s.Passhash.ComparePassToHash(password, *user.PasswordHash)
 	if err != nil {
 		log.Warnf("error validating user password hash: %s", err)
 
@@ -49,7 +51,7 @@ func Login(s *interactor.Services, email, password string) (*entities.UserLoginR
 	log.Debug("user password validation succeeded")
 
 	// Generate JWT
-	jwt, err := s.Token.GenerateUserJwt(user.UserUuid.String(), user.PasswordUuid.UUID.String(), name)
+	jwt, err := s.Token.GenerateUserJwt(user.UserUuid.String(), uuid.UUID(user.PasswordUuid.Bytes).String(), name)
 	if err != nil {
 		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot generate jwt for log session", err)
 	}

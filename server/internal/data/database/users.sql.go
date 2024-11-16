@@ -7,7 +7,6 @@ package database
 
 import (
 	"context"
-	"database/sql"
 
 	"github.com/google/uuid"
 )
@@ -25,7 +24,7 @@ type AddUserParams struct {
 
 // Inserts new user into database without a password hash
 func (q *Queries) AddUser(ctx context.Context, arg AddUserParams) error {
-	_, err := q.db.ExecContext(ctx, addUser, arg.Email, arg.FirstName, arg.LastName)
+	_, err := q.db.Exec(ctx, addUser, arg.Email, arg.FirstName, arg.LastName)
 	return err
 }
 
@@ -36,15 +35,15 @@ RETURNING user_uuid
 `
 
 type AddUserWithPassHashParams struct {
-	Email        string         `json:"email"`
-	FirstName    string         `json:"firstName"`
-	LastName     string         `json:"lastName"`
-	PasswordHash sql.NullString `json:"passwordHash"`
+	Email        string  `json:"email"`
+	FirstName    string  `json:"firstName"`
+	LastName     string  `json:"lastName"`
+	PasswordHash *string `json:"passwordHash"`
 }
 
 // Inserts new user into database with a password hash
 func (q *Queries) AddUserWithPassHash(ctx context.Context, arg AddUserWithPassHashParams) (uuid.UUID, error) {
-	row := q.db.QueryRowContext(ctx, addUserWithPassHash,
+	row := q.db.QueryRow(ctx, addUserWithPassHash,
 		arg.Email,
 		arg.FirstName,
 		arg.LastName,
@@ -61,7 +60,7 @@ WHERE email = $1
 `
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {
-	row := q.db.QueryRowContext(ctx, getUserByEmail, email)
+	row := q.db.QueryRow(ctx, getUserByEmail, email)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -82,7 +81,7 @@ WHERE id = $1
 `
 
 func (q *Queries) GetUserByID(ctx context.Context, id int32) (User, error) {
-	row := q.db.QueryRowContext(ctx, getUserByID, id)
+	row := q.db.QueryRow(ctx, getUserByID, id)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -103,7 +102,7 @@ WHERE user_uuid = $1
 `
 
 func (q *Queries) GetUserByUuid(ctx context.Context, userUuid uuid.UUID) (User, error) {
-	row := q.db.QueryRowContext(ctx, getUserByUuid, userUuid)
+	row := q.db.QueryRow(ctx, getUserByUuid, userUuid)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -125,13 +124,13 @@ WHERE id = $2
 `
 
 type UpdateUserPasswordParams struct {
-	PasswordHash sql.NullString `json:"passwordHash"`
-	ID           int32          `json:"id"`
+	PasswordHash *string `json:"passwordHash"`
+	ID           int32   `json:"id"`
 }
 
 // Update password_hash for user based on id.
 // Also resets the password_uuid to invalidate existing JWTs
 func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) error {
-	_, err := q.db.ExecContext(ctx, updateUserPassword, arg.PasswordHash, arg.ID)
+	_, err := q.db.Exec(ctx, updateUserPassword, arg.PasswordHash, arg.ID)
 	return err
 }

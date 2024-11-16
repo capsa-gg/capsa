@@ -7,7 +7,6 @@ package database
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/google/uuid"
 )
@@ -60,20 +59,20 @@ ORDER BY earliest DESC
 `
 
 type ListAllAvailableLogsRow struct {
-	LogUuid         uuid.UUID       `json:"logUuid"`
-	Platform        string          `json:"platform"`
-	LogType         LogClientType   `json:"logType"`
-	LineCount       int64           `json:"lineCount"`
-	ChunkCount      int64           `json:"chunkCount"`
-	Earliest        interface{}     `json:"earliest"`
-	Last            interface{}     `json:"last"`
-	CategoriesCount json.RawMessage `json:"categoriesCount"`
-	SeveritiesCount json.RawMessage `json:"severitiesCount"`
+	LogUuid         uuid.UUID     `json:"logUuid"`
+	Platform        string        `json:"platform"`
+	LogType         LogClientType `json:"logType"`
+	LineCount       int64         `json:"lineCount"`
+	ChunkCount      int64         `json:"chunkCount"`
+	Earliest        interface{}   `json:"earliest"`
+	Last            interface{}   `json:"last"`
+	CategoriesCount []byte        `json:"categoriesCount"`
+	SeveritiesCount []byte        `json:"severitiesCount"`
 }
 
 // Fetches all log chunks and aggregates an overview.
 func (q *Queries) ListAllAvailableLogs(ctx context.Context) ([]ListAllAvailableLogsRow, error) {
-	rows, err := q.db.QueryContext(ctx, listAllAvailableLogs)
+	rows, err := q.db.Query(ctx, listAllAvailableLogs)
 	if err != nil {
 		return nil, err
 	}
@@ -95,9 +94,6 @@ func (q *Queries) ListAllAvailableLogs(ctx context.Context) ([]ListAllAvailableL
 			return nil, err
 		}
 		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err

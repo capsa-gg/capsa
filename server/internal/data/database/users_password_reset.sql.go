@@ -18,7 +18,7 @@ WHERE user_id = $1
 
 // Marks a password_forgot entry used based on user_id
 func (q *Queries) DeletePasswordResetForUser(ctx context.Context, userID int32) error {
-	_, err := q.db.ExecContext(ctx, deletePasswordResetForUser, userID)
+	_, err := q.db.Exec(ctx, deletePasswordResetForUser, userID)
 	return err
 }
 
@@ -28,7 +28,7 @@ WHERE reset_token = $1
 `
 
 func (q *Queries) GetPasswordResetByResetToken(ctx context.Context, resetToken uuid.UUID) (UsersPasswordReset, error) {
-	row := q.db.QueryRowContext(ctx, getPasswordResetByResetToken, resetToken)
+	row := q.db.QueryRow(ctx, getPasswordResetByResetToken, resetToken)
 	var i UsersPasswordReset
 	err := row.Scan(&i.UserID, &i.ResetToken, &i.ValidUntil)
 	return i, err
@@ -40,7 +40,7 @@ WHERE user_id = $1
 `
 
 func (q *Queries) GetPasswordResetByUserId(ctx context.Context, userID int32) (UsersPasswordReset, error) {
-	row := q.db.QueryRowContext(ctx, getPasswordResetByUserId, userID)
+	row := q.db.QueryRow(ctx, getPasswordResetByUserId, userID)
 	var i UsersPasswordReset
 	err := row.Scan(&i.UserID, &i.ResetToken, &i.ValidUntil)
 	return i, err
@@ -59,6 +59,6 @@ DO UPDATE SET
 // In case there is a password reset (database unique conflict)
 // the existing entry will be reset with new values
 func (q *Queries) InitializeUserPasswordReset(ctx context.Context, userID int32) error {
-	_, err := q.db.ExecContext(ctx, initializeUserPasswordReset, userID)
+	_, err := q.db.Exec(ctx, initializeUserPasswordReset, userID)
 	return err
 }

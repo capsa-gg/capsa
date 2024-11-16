@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"database/sql"
 
 	"github.com/google/uuid"
 
@@ -101,7 +100,7 @@ func PasswordResetComplete(s *interactor.Services, resetToken uuid.UUID, newPass
 
 	// Store new password hash, set new password_uuid
 	err = s.Database.UpdateUserPassword(ctx, database.UpdateUserPasswordParams{
-		PasswordHash: sql.NullString{String: passHash, Valid: true},
+		PasswordHash: &passHash,
 		ID:           user.ID,
 	})
 

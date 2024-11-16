@@ -1,11 +1,11 @@
 package entities
 
 import (
-	"database/sql"
 	"errors"
 	"fmt"
 
-	"github.com/lib/pq"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 // DomainErrorType is used to differentiate between different types of domain errors.
@@ -53,7 +53,7 @@ func NewDomainError(errorType DomainErrorType, message string, err error) Domain
 // NewDomainErrorFromDatabaseError accepts a database error and returns a domain error.
 func NewDomainErrorFromDatabaseError(err error) DomainError {
 	// Not found in database => 404
-	if errors.Is(err, sql.ErrNoRows) {
+	if errors.Is(err, pgx.ErrNoRows) {
 		detail := fmt.Sprintf("Database not found error: %s", err)
 
 		return DomainError{
@@ -64,17 +64,18 @@ func NewDomainErrorFromDatabaseError(err error) DomainError {
 		}
 	}
 
-	var pqErr *pq.Error
+	var pqErr *pgconn.PgError
 	ok := errors.As(err, &pqErr)
 
 	if !ok {
 		return NewDomainError(DomainErrorUnexpected, "unexpected error", err)
 	}
 
-	formatDetails := fmt.Errorf("%s (code %s, name %s)", pqErr.Detail, pqErr.Code, pqErr.Code.Name())
+	formatDetails := fmt.Errorf("%s (code %s, message %s)", pqErr.Detail, pqErr.Code, pqErr.Message)
 
-	switch pqErr.Code.Name() {
-	case "unique_violation":
+	// Note: for finding error codes, see: https://www.postgresql.org/docs/11/errcodes-appendix.html or https://github.com/lib/pq/blob/master/error.go#L78
+	switch pqErr.Code {
+	case "23505": // unique_violation
 		detail := fmt.Sprintf("Data unique violation: %s", pqErr.Detail)
 
 		return DomainError{
@@ -83,7 +84,7 @@ func NewDomainErrorFromDatabaseError(err error) DomainError {
 			Details:  detail,
 			RawError: err,
 		}
-	case "invalid_text_representation":
+	case "22P02": // invalid_text_representation
 		detail := fmt.Sprintf("invalid input for enum type: %s (%s)", pqErr.Message, formatDetails)
 
 		return DomainError{
@@ -92,8 +93,8 @@ func NewDomainErrorFromDatabaseError(err error) DomainError {
 			Details:  detail,
 			RawError: err,
 		}
-	case "foreign_key_violation":
-		detail := fmt.Sprintf("Foreign key database error: fkey = %s, message = %s", pqErr.Constraint, pqErr.Message)
+	case "23503": // foreign_key_violation
+		detail := fmt.Sprintf("Foreign key database error: fkey = %s, message = %s", pqErr.ConstraintName, pqErr.Message)
 
 		return DomainError{
 			Type:     DomainErrorInvalidArgument,
@@ -101,8 +102,8 @@ func NewDomainErrorFromDatabaseError(err error) DomainError {
 			Details:  detail,
 			RawError: err,
 		}
-	case "check_violation":
-		detail := fmt.Sprintf("Input does not satisfy database data check: check_name = %s, message = %s", pqErr.Constraint, pqErr.Message)
+	case "23514": // check_violation
+		detail := fmt.Sprintf("Input does not satisfy database data check: check_name = %s, message = %s", pqErr.ConstraintName, pqErr.Message)
 
 		return DomainError{
 			Type:     DomainErrorInvalidArgument,

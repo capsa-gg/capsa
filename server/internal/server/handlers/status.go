@@ -20,7 +20,7 @@ import (
 // @Header		all		{string} 	X-Capsa-Server-Version		"Current Capsa Server version"
 // @Router 		/status [get]
 func (h Handlers) Status(c *gin.Context) {
-	err := h.services.DBConn.Ping()
+	err := h.services.DBPool.Ping(c)
 
 	if err != nil {
 		statusBody := bodies.StatusResponse{

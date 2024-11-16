@@ -2,10 +2,10 @@ package logs
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 
 	"github.com/capsa-gg/capsa/server/internal/data/database"
 	"github.com/capsa-gg/capsa/server/internal/entities"
@@ -60,8 +60,8 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 		Log:            logInfo.ID,
 		BlobPath:       fileName,
 		LineCount:      chunkMetadata.LineCount,
-		ChunkStart:     sql.NullTime{Valid: true, Time: chunkMetadata.Start},
-		ChunkEnd:       sql.NullTime{Valid: true, Time: chunkMetadata.End},
+		ChunkStart:     pgtype.Timestamp{Time: chunkMetadata.Start},
+		ChunkEnd:       pgtype.Timestamp{Time: chunkMetadata.End},
 		CategoryCounts: categoryCounts,
 		SeverityCounts: severitiesCount,
 	}
