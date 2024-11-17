@@ -1,0 +1,6 @@
+apiVersion: v2
+name: capsa
+description: A Helm chart for deploying the Capsa API server and web panel
+type: application
+version: 0.0.3
+appVersion: "0.0.3"
