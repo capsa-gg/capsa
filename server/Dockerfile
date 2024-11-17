@@ -1,5 +1,9 @@
 FROM golang:1.23.2-alpine AS builder
 
+LABEL org.opencontainers.image.source="https://github.com/capsa-gg/capsa"
+LABEL org.opencontainers.image.description="Capsa Server"
+LABEL org.opencontainers.image.licenses="AGPL-3.0"
+
 RUN apk update && \
     apk add --no-cache gcc git ca-certificates tzdata && \
     update-ca-certificates
