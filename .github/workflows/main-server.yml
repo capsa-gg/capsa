@@ -8,13 +8,14 @@ on:
 permissions:
   contents: read
   checks: write
+  packages: write
 
 defaults:
   run:
     working-directory: ./server
 
 env:
-  DOCKER_REGISTRY: registry.digitalocean.com/capsa
+  DOCKER_REGISTRY: ghcr.io/capsa-gg
   DOCKER_CONTAINER_NAME: capsa-server
 
 jobs:

@@ -5,12 +5,15 @@ on:
     branches:
       - main
 
+permissions:
+  packages: write
+
 defaults:
   run:
     working-directory: ./web
 
 env:
-  DOCKER_REGISTRY: registry.digitalocean.com/capsa
+  DOCKER_REGISTRY: ghcr.io/capsa-gg
   DOCKER_CONTAINER_NAME: capsa-web
 
 jobs:
