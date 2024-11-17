@@ -4,11 +4,14 @@ on:
   push:
     branches:
       - main
+      - luciano # FIXME: remove
 
 permissions:
   contents: read
   checks: write
   packages: write
+  attestations: write
+  id-token: write
 
 defaults:
   run:
@@ -33,14 +36,41 @@ jobs:
             **/go.sum
 
       # Run CI scripts
-      - name: Display Go version
-        run: go version
-      - name: Bootstrap
-        run: make bootstrap
-      - name: Run build on all platforms
-        run: make build-all
-      - name: Run ci script
-        run: make ci
+      #      - name: Display Go version
+      #        run: go version
+      #      - name: Bootstrap
+      #        run: make bootstrap
+      #      - name: Run build on all platforms
+      #        run: make build-all
+      #      - name: Run ci script
+      #        run: make ci
+
+      # Push Docker image to registry
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_CONTAINER_NAME }}
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          context: server
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_CONTAINER_NAME}}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
 
       # Deployment
       - name: Install doctl
@@ -55,9 +85,9 @@ jobs:
         run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_CONTAINER_NAME }}:latest
 
       # Slackbot message
-      - name: Send message via Slack webhook
-        run: |
-          curl -X POST \
-            -H 'Content-type: application/json' \
-            --data '{"text":"The main branch on GitHub has just received a new commit. The new version will be deployed in a few seconds.\n\n*Commit Message:*\n${{ github.event.head_commit.message }}"}' \
-            ${{ secrets.SLACK_WEBHOOK }}
+#      - name: Send message via Slack webhook
+#        run: |
+#          curl -X POST \
+#            -H 'Content-type: application/json' \
+#            --data '{"text":"The main branch on GitHub has just received a new commit. The new version will be deployed in a few seconds.\n\n*Commit Message:*\n${{ github.event.head_commit.message }}"}' \
+#            ${{ secrets.SLACK_WEBHOOK }}
