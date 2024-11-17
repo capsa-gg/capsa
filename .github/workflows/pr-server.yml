@@ -2,9 +2,9 @@ name: Server PR
 
 on:
   pull_request:
-    paths: # FIXME: re-enable
-      - "_server/**"
-      - "_.github/workflows/pr-server.yml"
+    paths:
+      - "server/**"
+      - ".github/workflows/pr-server.yml"
 
 permissions:
   pull-requests: write

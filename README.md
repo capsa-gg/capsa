@@ -1,6 +1,6 @@
 # Capsa
 
-![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Server](https://github.com/capsa-gg/capsa/actions/workflows/main-server.yml/badge.svg)](https://github.com/capsa-gg/capsa/actions/workflows/main-server.yml)
 [![Web](https://github.com/capsa-gg/capsa/actions/workflows/main-web.yml/badge.svg)](https://github.com/capsa-gg/capsa/actions/workflows/main-webapp.yml)
 

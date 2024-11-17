@@ -1,0 +1,74 @@
+name: TaggedRelease
+
+permissions:
+  contents: read
+  checks: write
+  packages: write
+  attestations: write
+  id-token: write
+
+on:
+  push:
+    # Pattern matched against refs/tags
+    tags:
+      - '**'
+
+env:
+  GHCR_REGISTRY: ghcr.io/capsa-gg
+  DIGITALOCEAN_REGISTRY: registry.digitalocean.com/capsa
+  IMAGE_SERVER: capsa-server
+  IMAGE_WEBAPP: capsa-web
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      # Push Docker image to registry
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GHCR_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Server
+      - name: Extract metadata (labels) for Docker (Server)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_SERVER }}
+      - name: Build and push Docker image (Server)
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: server
+          push: true
+          tags: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_SERVER}}:latest,${{ env.DIGITALOCEAN_REGISTRY }}/${{ env.IMAGE_SERVER }}:latest
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Generate artifact attestation (Server)
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_SERVER}}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
+
+      # Web
+      - name: Extract metadata (labels) for Docker (Web)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_WEBAPP }}
+      - name: Build and push Docker image (Web)
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: web
+          push: true
+          tags: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_WEBAPP}}:latest,${{ env.DIGITALOCEAN_REGISTRY }}/${{ env.IMAGE_WEBAPP }}:latest
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Generate artifact attestation (Web)
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_WEBAPP}}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true

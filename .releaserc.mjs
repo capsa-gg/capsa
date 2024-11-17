@@ -36,9 +36,7 @@ export default {
         [
             "@semantic-release/exec",
             {
-                prepareCmd:
-                    "./bin/prepare-release ${lastRelease.version} ${nextRelease.version}",
-                publishCmd: "./bin/publish-docker ${nextRelease.version}"
+                prepareCmd: "./bin/prepare-release ${lastRelease.version} ${nextRelease.version}"
             },
         ],
 
@@ -47,7 +45,7 @@ export default {
             "@semantic-release/git",
             {
                 message:
-                    "release: ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",
+                    "release: ${nextRelease.version}\n\n${nextRelease.notes}",
                 assets: [
                     "CHANGELOG.md",
                     "package.json",
