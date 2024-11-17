@@ -1,8 +1,10 @@
+# syntax=docker.io/docker/dockerfile:1
 FROM golang:1.23.2-alpine AS builder
 
 LABEL org.opencontainers.image.source="https://github.com/capsa-gg/capsa"
 LABEL org.opencontainers.image.description="Capsa Server"
 LABEL org.opencontainers.image.licenses="AGPL-3.0"
+LABEL org.opencontainers.image.vendor="Companion Group Ltd"
 
 RUN apk update && \
     apk add --no-cache gcc git ca-certificates tzdata && \
