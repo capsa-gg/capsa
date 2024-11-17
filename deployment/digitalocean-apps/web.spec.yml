@@ -1,0 +1,49 @@
+name: dev-capsa-web
+region: ams
+alerts:
+  - rule: DEPLOYMENT_FAILED
+domains:
+  - domain: web.demo.capsa.gg
+    type: PRIMARY
+    zone: capsa.gg
+features:
+  - buildpack-stack=ubuntu-22
+ingress:
+  rules:
+    - component:
+        name: admin
+      match:
+        path:
+          prefix: /
+services:
+  - name: admin
+    http_port: 3000
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    image:
+      deploy_on_push:
+        enabled: true
+      registry_type: DOCR # TODO: Move to other registry
+      repository: web
+      tag: latest
+    health_check:
+      http_path: /auth/login
+    alerts:
+      - operator: GREATER_THAN
+        rule: CPU_UTILIZATION
+        value: 75
+        window: FIVE_MINUTES
+      - operator: GREATER_THAN
+        rule: MEM_UTILIZATION
+        value: 75
+        window: FIVE_MINUTES
+      - operator: GREATER_THAN
+        rule: RESTART_COUNT
+        value: 2
+        window: FIVE_MINUTES
+    envs:
+      - key: SERVER_URL
+        scope: RUN_AND_BUILD_TIME
+        value: <REPLACEME>
+
+
