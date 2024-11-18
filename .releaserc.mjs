@@ -54,9 +54,9 @@ export default {
                     "web/package-lock.json",
                     "web/version.ts",
                     "server/constants/version.go",
-                    "/deployment/helm/capsa/Chart.yaml",
-                    "/deployment/helm/capsa/charts/capsa-server/Chart.yaml",
-                    "/deployment/helm/capsa/charts/capsa-web/Chart.yaml"
+                    "deployment/helm/capsa/Chart.yaml",
+                    "deployment/helm/capsa/charts/capsa-server/Chart.yaml",
+                    "deployment/helm/capsa/charts/capsa-web/Chart.yaml"
                 ],
             },
         ],
