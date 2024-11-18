@@ -25,7 +25,7 @@ func StreamLogChunks(s *interactor.Services, logID int64, streamChunk ChunkStrea
 	}
 
 	// Loop over log, and stream chunks
-	for i, c := range chunks {
+	for i, c := range chunks { //nolint:gocritic // 144 bytes, for now this is fine
 		logLoop := log.With("i_chunk", i, "blob_path", c.BlobPath, "created_on", c.CreatedOn)
 
 		chunkText, err := s.LogChunks.GetChunk(c.BlobPath)

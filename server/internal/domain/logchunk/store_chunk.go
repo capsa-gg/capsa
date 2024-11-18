@@ -39,15 +39,24 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 	}
 
 	chunkMetadata, unprocessedLines := extractMetadataFromChunk(log, logData)
+
+	totalLines := chunkMetadata.LineCount + int32(len(unprocessedLines)) //nolint:gosec // We will not have more than 2.1B unprocessed lines (G115: integer overflow conversion int -> int32)
+
+	log = log.
+		With("len_unprocessed_lines", len(unprocessedLines)).
+		With("len_total_lines", totalLines).
+		With("ts_first_line", chunkMetadata.Start).
+		With("ts_last_line", chunkMetadata.End).
+		With("category_counts_len", len(chunkMetadata.CategoriesCount)).
+		With("severities_counts_len", len(chunkMetadata.SeveritiesCount))
+
 	if len(unprocessedLines) > 0 {
-		log.With("len_unprocessed_lines").Warn("some lines are not processed")
+		log.Warn("some lines not processed") // Logged out in extractMetadataFromChunk
+	} else {
+		log.Debug("metadata extracted with all lines processed")
 	}
 
-	log = log.With("category_counts_len", len(chunkMetadata.CategoriesCount), "severities_counts_len", len(chunkMetadata.SeveritiesCount))
-	log.Debug("chunk metadata extracted")
-
 	// Assemble database params
-	// TODO: Store the unprocessed line count in database
 	addLogChunkParams := database.AddLogChunkParams{
 		Log:            logInfo.ID,
 		BlobPath:       fileName,
@@ -64,7 +73,7 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 		return entities.NewDomainErrorFromDatabaseError(err)
 	}
 
-	log.With("chunk_ts_start", chunkMetadata.Start.String()).With("chunk_ts_end", chunkMetadata.End.String()).Debug("timestamps sent to database for processing")
+	log.Info("log chunk processed")
 
 	return nil
 }

@@ -8,8 +8,9 @@ package database
 import (
 	"context"
 
-	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/jackc/pgx/v5/pgtype"
+
+	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 const addLogChunk = `-- name: AddLogChunk :exec
