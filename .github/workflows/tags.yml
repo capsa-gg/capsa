@@ -8,8 +8,18 @@ permissions:
   id-token: write
 
 on:
-  release:
-    types: [ published ]
+  workflow_dispatch:
+    inputs:
+      confirm:
+        type: boolean
+        description: "Confirm release of tagged Docker images"
+        required: true
+        default: false
+      cipass:
+        type: boolean
+        description: "The Semantic Release has completed successfully"
+        required: true
+        default: false
 
 env:
   GHCR_REGISTRY: ghcr.io/capsa-gg
