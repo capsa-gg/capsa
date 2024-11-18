@@ -1,0 +1,37 @@
+image:
+  repository: ghcr.io/capsa-gg/capsa-web
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+digitalocean_loadbalancer:
+  enabled: false
+  loadbalancerId: loadbalancerid
+
+ingress:
+  enabled: false
+  certManager: true
+  hostname: web.demo.capsa.gg
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 500m
+    memory: 256Mi
+
+livenessProbe:
+  httpGet:
+    path: /auth/login
+    port: http
+readinessProbe:
+  httpGet:
+    path: /auth/login
+    port: http
+
+capsaweb:
+  env:
+    SERVER_URL: https://api.demo.capsa.gg

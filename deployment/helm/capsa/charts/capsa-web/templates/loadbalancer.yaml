@@ -1,0 +1,23 @@
+{{- if .Values.digitalocean_loadbalancer.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: capsa-web-lb
+  annotations:
+    kubernetes.digitalocean.com/load-balancer-id: {{ .Values.digitalocean_loadbalancer.loadbalancerId }}
+    service.beta.kubernetes.io/do-loadbalancer-size-unit: "1"
+    service.beta.kubernetes.io/do-loadbalancer-disable-lets-encrypt-dns-records: "false"
+spec:
+  type: LoadBalancer
+  selector:
+    app:  capsa-web-app
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: {{ .Values.service.port }}
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: {{ .Values.service.port }}
+  {{- end }}

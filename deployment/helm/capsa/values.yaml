@@ -1,0 +1,31 @@
+capsa-web:
+  capsaweb:
+    env:
+      SERVER_URL: https://api.demo.capsa.gg
+
+capsa-server:
+  capsaserver:
+    env:
+      DEVELOPMENT: false
+      API_PORT: 5000
+      API_PROTOCOL: https
+      API_HOSTNAME: https://api.demo.capsa.gg
+      WEBAPP_HOSTNAME: https://web.demo.capsa.gg
+      JWK_PRIVATE_KEY_BASE64: |
+        BASE64STRING
+      DB_HOST: dbhost
+      DB_PORT: 5432
+      DB_NAME: capsadb
+      DB_USER: capsauser
+      DB_PASS: capsapass
+      DB_SSL: true
+      BLOBSTORAGE_ENDPOINT: ams3.digitaloceanspaces.com
+      BLOBSTORAGE_REGION: ams3
+      BLOBSTORAGE_KEY: key
+      BLOBSTORAGE_SECRET: secret
+      BLOBSTORAGE_BUCKET: capsa-storage
+      EMAIL_SENDER_NAME: Capsa
+      EMAIL_SENDER_EMAIL: no-reply@demo.capsa.gg
+      BREVO_API_KEY: apikey
+      LOG_RETENTION_DAYS: 90
+      LOG_MAX_DURATION_HOURS: 48
