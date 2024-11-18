@@ -1,3 +1,45 @@
+## [0.0.4](https://github.com/capsa-gg/capsa/compare/v0.0.3...v0.0.4) (2024-11-18)
+
+
+### Bug Fixes
+
+* **server:** correctly reset log fields on each request for auth middleware ([412e85e](https://github.com/capsa-gg/capsa/commit/412e85eded1d2a5000755bf14b6f1fecf1a02f50))
+* **web:** correct header names in log list ([70a18e1](https://github.com/capsa-gg/capsa/commit/70a18e1ca9311dd6c04382dc33f554adc91a3d9f))
+
+
+### chore
+
+* rename project ([7a604c5](https://github.com/capsa-gg/capsa/commit/7a604c5f0b9d9ec87083212f4d69603b327c6265))
+
+
+### Features
+
+* **ci:** add example Helm charts ([96bcadc](https://github.com/capsa-gg/capsa/commit/96bcadc45a60d3c0541edeb679db3037d1252665))
+* **deployment:** add DigitalOcean Apps specs ([11e8ab3](https://github.com/capsa-gg/capsa/commit/11e8ab31c9f5bbc168ab95804458fb11356b6292))
+* **server:** add log chunk processing for incoming logs ([2555702](https://github.com/capsa-gg/capsa/commit/2555702ffac4a73eb168c199a56eb7508d34a2d0))
+* **server:** add log chunk processing logic with unit tests ([5cd088d](https://github.com/capsa-gg/capsa/commit/5cd088dbff9162d226fe5668cd13bf210db8f4b5))
+* **server:** add version command ([4a945e6](https://github.com/capsa-gg/capsa/commit/4a945e631cddede188469c95bd3a7b4ad14bfaff))
+* **server:** expose log data in overview api ([cc7d71b](https://github.com/capsa-gg/capsa/commit/cc7d71bc8e15978bd49362733251076f9bf77b91))
+* **server:** include log link for clients on log session creation ([fa2c6b2](https://github.com/capsa-gg/capsa/commit/fa2c6b2a8227dddd8036bee23924bb5051fb9e7a))
+* **server:** serve static files and include logo in emails ([53422d8](https://github.com/capsa-gg/capsa/commit/53422d895ca2d2cf75b8a2cff1b36a63e4a781b7))
+* **web:** add (temp) branding ([e0d21f7](https://github.com/capsa-gg/capsa/commit/e0d21f7796d8f7ab842bf8a907ce96667bae7e4d))
+* **web:** add custom colors to Monaco editor ([77005b1](https://github.com/capsa-gg/capsa/commit/77005b181b156e64d43dbf11e69ad4fd1153f17c))
+* **web:** add Monaco editor for viewing logs ([4217345](https://github.com/capsa-gg/capsa/commit/42173452568b417e42b396af7906e1bdf2b0d4b3))
+* **web:** show log info in overview ([dc188d4](https://github.com/capsa-gg/capsa/commit/dc188d4706e05eeea04b3af7571d528297348a34))
+* **web:** support redirecting after login ([35e37a2](https://github.com/capsa-gg/capsa/commit/35e37a26a63c5e66048a38bd2a55800f82c115a1))
+
+
+### Performance Improvements
+
+* **server:** add benchmarking code for chunk processing of 1M lines ([b96ad72](https://github.com/capsa-gg/capsa/commit/b96ad72cbe55c7497b15889eb5e0d58e1a0db78a))
+
+
+### BREAKING CHANGES
+
+* moved project
+
+Signed-off-by: Luciano Nooijen <luciano@lucianonooijen.com>
+
 ## [0.0.3](https://github.com/capsa-gg/capsa/compare/v0.0.2...v0.0.3) (2024-11-11)
 
 
