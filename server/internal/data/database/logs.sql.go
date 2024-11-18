@@ -9,39 +9,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
-
-const addLogChunk = `-- name: AddLogChunk :exec
-INSERT INTO logs_chunks(log, blob_path, chunk_start, chunk_end, line_count, category_counts, severity_counts)
-VALUES ($1, $2, $3, $4, $5, $6, $7)
-`
-
-type AddLogChunkParams struct {
-	Log            int64                     `json:"log"`
-	BlobPath       string                    `json:"blobPath"`
-	ChunkStart     pgtype.Timestamp          `json:"chunkStart"`
-	ChunkEnd       pgtype.Timestamp          `json:"chunkEnd"`
-	LineCount      int32                     `json:"lineCount"`
-	CategoryCounts entities.LogChunkMetadata `json:"categoryCounts"`
-	SeverityCounts entities.LogChunkMetadata `json:"severityCounts"`
-}
-
-// Adds data for an uploaded log chunk
-func (q *Queries) AddLogChunk(ctx context.Context, arg AddLogChunkParams) error {
-	_, err := q.db.Exec(ctx, addLogChunk,
-		arg.Log,
-		arg.BlobPath,
-		arg.ChunkStart,
-		arg.ChunkEnd,
-		arg.LineCount,
-		arg.CategoryCounts,
-		arg.SeverityCounts,
-	)
-	return err
-}
 
 const addLogLink = `-- name: AddLogLink :exec
 INSERT INTO logs_links(source, link, description)
@@ -151,39 +120,6 @@ func (q *Queries) GetLogByUuid(ctx context.Context, logUuid uuid.UUID) (Log, err
 		&i.CreatedOn,
 	)
 	return i, err
-}
-
-const getLogChunksForLog = `-- name: GetLogChunksForLog :many
-SELECT created_on, blob_path
-FROM logs_chunks
-WHERE log = $1
-ORDER BY created_on
-`
-
-type GetLogChunksForLogRow struct {
-	CreatedOn time.Time `json:"createdOn"`
-	BlobPath  string    `json:"blobPath"`
-}
-
-// Gets the log chunk information for a given log
-func (q *Queries) GetLogChunksForLog(ctx context.Context, log int64) ([]GetLogChunksForLogRow, error) {
-	rows, err := q.db.Query(ctx, getLogChunksForLog, log)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []GetLogChunksForLogRow
-	for rows.Next() {
-		var i GetLogChunksForLogRow
-		if err := rows.Scan(&i.CreatedOn, &i.BlobPath); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
 }
 
 const getMetadataForLog = `-- name: GetMetadataForLog :many
