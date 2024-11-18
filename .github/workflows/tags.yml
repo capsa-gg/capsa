@@ -8,6 +8,8 @@ permissions:
   id-token: write
 
 on:
+  release:
+    types: [ published ]
   workflow_dispatch:
     inputs:
       confirm:
@@ -41,42 +43,42 @@ jobs:
 
       # Server
       - name: Extract metadata (labels) for Docker (Server)
-        id: meta
+        id: metaserver
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_SERVER }}
       - name: Build and push Docker image (Server)
-        id: push
+        id: pushserver
         uses: docker/build-push-action@v6
         with:
           context: server
           push: true
           tags: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_SERVER}}:latest,${{ env.DIGITALOCEAN_REGISTRY }}/${{ env.IMAGE_SERVER }}:latest
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: ${{ steps.metaserver.outputs.labels }}
       - name: Generate artifact attestation (Server)
         uses: actions/attest-build-provenance@v1
         with:
           subject-name: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_SERVER}}
-          subject-digest: ${{ steps.push.outputs.digest }}
+          subject-digest: ${{ steps.pushserver.outputs.digest }}
           push-to-registry: true
 
       # Web
       - name: Extract metadata (labels) for Docker (Web)
-        id: meta
+        id: metaweb
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_WEBAPP }}
       - name: Build and push Docker image (Web)
-        id: push
+        id: pushweb
         uses: docker/build-push-action@v6
         with:
           context: web
           push: true
           tags: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_WEBAPP}}:latest,${{ env.DIGITALOCEAN_REGISTRY }}/${{ env.IMAGE_WEBAPP }}:latest
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: ${{ steps.metaweb.outputs.labels }}
       - name: Generate artifact attestation (Web)
         uses: actions/attest-build-provenance@v1
         with:
           subject-name: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_WEBAPP}}
-          subject-digest: ${{ steps.push.outputs.digest }}
+          subject-digest: ${{ steps.pushweb.outputs.digest }}
           push-to-registry: true
