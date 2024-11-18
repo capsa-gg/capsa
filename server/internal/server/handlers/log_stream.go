@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/capsa-gg/capsa/server/internal/domain/logs"
+	"github.com/capsa-gg/capsa/server/internal/domain/logchunks"
 	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
@@ -52,7 +52,7 @@ func (h Handlers) StreamLogChunks(c *gin.Context) {
 
 	streamer := c.Writer.WriteString
 
-	err = logs.StreamLogChunks(h.services, logInfo.ID, streamer)
+	err = logchunk.StreamLogChunks(h.services, logInfo.ID, streamer)
 	if err != nil {
 		log.Errorf("error streaming log chunks: %s", err)
 
