@@ -42,18 +42,6 @@ ORDER BY links.created_on;
 INSERT INTO logs_chunks(log, blob_path, chunk_start, chunk_end, line_count, category_counts, severity_counts)
 VALUES ($1, $2, $3, $4, $5, $6, $7);
 
--- name: UpdateLogTimestamps :exec
--- Updates the timestamps for a log based on the chunk metadata
-UPDATE logs
-SET log_start =
-    CASE
-        WHEN log_start IS NULL THEN @log_start::timestamp -- In case the timestamp is not set
-        WHEN log_start < '2024-01-01' THEN @log_start::timestamp -- In case the timestamp is an empty time.Time{}
-        ELSE log_start
-    END,
-    log_end = COALESCE(GREATEST(@log_end::timestamp, log_end), log_end)
-WHERE log_uuid = $1;
-
 -- name: GetLogChunksForLog :many
 -- Gets the log chunk information for a given log
 SELECT created_on, blob_path

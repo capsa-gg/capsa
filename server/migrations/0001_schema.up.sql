@@ -47,9 +47,7 @@ CREATE TABLE logs (
     environment int NOT NULL REFERENCES environments(id),
     platform varchar NOT NULL,
     log_type log_client_type NOT NULL,
-    created_on timestamp NOT NULL DEFAULT now(),
-    log_start timestamp,
-    log_end timestamp
+    created_on timestamp NOT NULL DEFAULT now()
 );
 
 -- Logs chunks table

@@ -9,10 +9,9 @@ import (
 	"context"
 	"time"
 
+	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
-
-	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 const addLogChunk = `-- name: AddLogChunk :exec
@@ -136,7 +135,7 @@ func (q *Queries) GetLinkedLogsForLog(ctx context.Context, source int64) ([]GetL
 }
 
 const getLogByUuid = `-- name: GetLogByUuid :one
-SELECT id, log_uuid, environment, platform, log_type, created_on, log_start, log_end FROM logs
+SELECT id, log_uuid, environment, platform, log_type, created_on FROM logs
 WHERE log_uuid = $1
 `
 
@@ -150,8 +149,6 @@ func (q *Queries) GetLogByUuid(ctx context.Context, logUuid uuid.UUID) (Log, err
 		&i.Platform,
 		&i.LogType,
 		&i.CreatedOn,
-		&i.LogStart,
-		&i.LogEnd,
 	)
 	return i, err
 }
@@ -220,28 +217,4 @@ func (q *Queries) GetMetadataForLog(ctx context.Context, log int64) ([]GetMetada
 		return nil, err
 	}
 	return items, nil
-}
-
-const updateLogTimestamps = `-- name: UpdateLogTimestamps :exec
-UPDATE logs
-SET log_start =
-    CASE
-        WHEN log_start IS NULL THEN $2::timestamp -- In case the timestamp is not set
-        WHEN log_start < '2024-01-01' THEN $2::timestamp -- In case the timestamp is an empty time.Time{}
-        ELSE log_start
-    END,
-    log_end = COALESCE(GREATEST($3::timestamp, log_end), log_end)
-WHERE log_uuid = $1
-`
-
-type UpdateLogTimestampsParams struct {
-	LogUuid  uuid.UUID `json:"logUuid"`
-	LogStart time.Time `json:"logStart"`
-	LogEnd   time.Time `json:"logEnd"`
-}
-
-// Updates the timestamps for a log based on the chunk metadata
-func (q *Queries) UpdateLogTimestamps(ctx context.Context, arg UpdateLogTimestampsParams) error {
-	_, err := q.db.Exec(ctx, updateLogTimestamps, arg.LogUuid, arg.LogStart, arg.LogEnd)
-	return err
 }

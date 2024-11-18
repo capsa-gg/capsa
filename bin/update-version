@@ -72,7 +72,7 @@ const resHelmOne = replace.replaceInFileSync({
     to: `version: ${to}`,
 });
 
-console.log("done replacing Helm files (step 1/2:");
+console.log("done replacing Helm files (step 1/2):");
 console.table(resHelmOne);
 
 const resHelmTwo = replace.replaceInFileSync({
@@ -81,5 +81,5 @@ const resHelmTwo = replace.replaceInFileSync({
     to: `appVersion: ${to}`,
 });
 
-console.log("done replacing Helm files (step 2/2:");
+console.log("done replacing Helm files (step 2/2):");
 console.table(resHelmTwo);

@@ -64,16 +64,6 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 		return entities.NewDomainErrorFromDatabaseError(err)
 	}
 
-	// Update the log timestamps based on chunk metadata, logic for whether fields get updated is in the sql
-	err = s.Database.UpdateLogTimestamps(ctx, database.UpdateLogTimestampsParams{
-		LogUuid:  logInfo.LogUuid,
-		LogStart: chunkMetadata.Start,
-		LogEnd:   chunkMetadata.End,
-	})
-	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
-	}
-
 	log.With("chunk_ts_start", chunkMetadata.Start.String()).With("chunk_ts_end", chunkMetadata.End.String()).Debug("timestamps sent to database for processing")
 
 	return nil
