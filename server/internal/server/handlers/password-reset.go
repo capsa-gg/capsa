@@ -34,7 +34,7 @@ func (h Handlers) UserPasswordRequest(c *gin.Context) {
 	log = log.With("email", email)
 	log.Debug("attempting to start password reset flow")
 
-	err := user.PasswordResetStart(h.services, email)
+	err := user.PasswordResetStart(c, h.services, email)
 	if err != nil {
 		h.sendErrorResponse(c, err)
 
@@ -70,7 +70,7 @@ func (h Handlers) UserPasswordComplete(c *gin.Context) {
 	log = log.With("email", req.ResetToken)
 	log.Debug("attempting to complete password reset flow")
 
-	err = user.PasswordResetComplete(h.services, req.ResetToken, req.Password)
+	err = user.PasswordResetComplete(c, h.services, req.ResetToken, req.Password)
 	if err != nil {
 		h.sendErrorResponse(c, err)
 

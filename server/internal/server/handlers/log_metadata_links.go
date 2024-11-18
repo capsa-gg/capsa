@@ -45,7 +45,7 @@ func (h Handlers) LogMetadataSave(c *gin.Context) {
 
 	log.Debug("attempting to store log metadata")
 
-	err = logs.SaveLogMetadata(h.services, logID, req.AdditionalMetadata, req.LogLinks)
+	err = logs.SaveLogMetadata(c, h.services, logID, req.AdditionalMetadata, req.LogLinks)
 
 	if err != nil {
 		h.sendErrorResponse(c, err)

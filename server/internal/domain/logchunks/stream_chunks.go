@@ -12,9 +12,8 @@ type ChunkStreamer func(chunk string) (int, error)
 
 // StreamLogChunks fetches the log chunks and streams them.
 // NOTE: the ID is not validated, this should be done in the calling function.
-func StreamLogChunks(s *interactor.Services, logID int64, streamChunk ChunkStreamer) error {
+func StreamLogChunks(ctx context.Context, s *interactor.Services, logID int64, streamChunk ChunkStreamer) error {
 	log := s.GetDomainLogger("logs", "StreamLogChunks").With("log_id", logID)
-	ctx := context.TODO()
 
 	log.Debug("start chunk streaming")
 

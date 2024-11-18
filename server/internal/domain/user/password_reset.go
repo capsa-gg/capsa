@@ -11,9 +11,8 @@ import (
 )
 
 // PasswordResetStart starts the password reset flow for a user.
-func PasswordResetStart(s *interactor.Services, email string) error {
+func PasswordResetStart(ctx context.Context, s *interactor.Services, email string) error {
 	log := s.GetDomainLogger("user", "PasswordResetStart").With("email", email)
-	ctx := context.TODO()
 
 	log.Debug("attempting to fetch user by email")
 
@@ -56,9 +55,8 @@ func PasswordResetStart(s *interactor.Services, email string) error {
 }
 
 // PasswordResetComplete checks and consumes a password reset token and sets the new password.
-func PasswordResetComplete(s *interactor.Services, resetToken uuid.UUID, newPassword string) error {
+func PasswordResetComplete(ctx context.Context, s *interactor.Services, resetToken uuid.UUID, newPassword string) error {
 	log := s.GetDomainLogger("user", "PasswordResetComplete").With("reset_token", resetToken.String())
-	ctx := context.TODO()
 
 	log.Debug("attempting to fetch user by email")
 

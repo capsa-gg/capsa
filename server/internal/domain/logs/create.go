@@ -14,9 +14,8 @@ import (
 )
 
 // CreateNewLogSession registers a new log session, returning the data about the created log.
-func CreateNewLogSession(s *interactor.Services, envKey uuid.UUID, platform string, logType constants.LogType) (*entities.LogCreatedResult, error) {
+func CreateNewLogSession(ctx context.Context, s *interactor.Services, envKey uuid.UUID, platform string, logType constants.LogType) (*entities.LogCreatedResult, error) {
 	log := s.GetDomainLogger("logs", "CreateNewLogSession").With("env_key", envKey, "log_type", logType)
-	ctx := context.TODO()
 
 	log.Debug("attempting to register a new log session")
 

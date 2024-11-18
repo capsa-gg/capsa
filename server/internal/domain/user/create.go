@@ -14,10 +14,9 @@ import (
 
 // AddNewUser adds a new user and initializes the flow to set their password.
 // NOTE: if this becomes available in the API, the returned errors should be of type DomainError.
-func AddNewUser(s *interactor.Services, email, firstName, lastName string) error {
+func AddNewUser(ctx context.Context, s *interactor.Services, email, firstName, lastName string) error {
 	log := s.GetDomainLogger("user", "AddNewUser").
 		With("email", email, "first_name", firstName, "last_name", lastName)
-	ctx := context.TODO()
 
 	log.Debugf("attempting to add new user")
 
@@ -73,7 +72,7 @@ func AddNewUserWithPassword(s *interactor.Services, email, firstName, lastName, 
 
 	log := s.GetDomainLogger("user", "AddNewUser").
 		With("email", email, "first_name", firstName, "last_name", lastName)
-	ctx := context.TODO()
+	ctx := context.Background()
 
 	log.Debugf("attempting to add new user")
 

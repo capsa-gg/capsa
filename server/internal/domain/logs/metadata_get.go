@@ -11,9 +11,8 @@ import (
 )
 
 // GetMetadataForLog fetches the metadata for a given log.
-func GetMetadataForLog(s *interactor.Services, logUUID uuid.UUID) (*entities.LogMetadata, error) {
+func GetMetadataForLog(ctx context.Context, s *interactor.Services, logUUID uuid.UUID) (*entities.LogMetadata, error) {
 	log := s.GetDomainLogger("logs", "GetMetadataForLog")
-	ctx := context.TODO()
 
 	// Get from database
 	logData, err := s.Database.GetLogByUuid(ctx, logUUID)

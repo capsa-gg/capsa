@@ -1,12 +1,11 @@
 package handlers
 
 import (
-	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/capsa-gg/capsa/server/internal/domain/logchunks"
+	logchunk "github.com/capsa-gg/capsa/server/internal/domain/logchunks"
 	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
@@ -36,7 +35,7 @@ func (h Handlers) StreamLogChunks(c *gin.Context) {
 
 	// Validate if log exists, and get id from uuid
 	// NOTE: this logic is usually done in the domain logic, but due to the streaming later in the handler, it's done here
-	logInfo, err := h.services.Database.GetLogByUuid(context.TODO(), logUUID)
+	logInfo, err := h.services.Database.GetLogByUuid(c, logUUID)
 	if err != nil {
 		h.sendErrorResponse(c, entities.NewDomainErrorFromDatabaseError(err))
 
@@ -52,7 +51,7 @@ func (h Handlers) StreamLogChunks(c *gin.Context) {
 
 	streamer := c.Writer.WriteString
 
-	err = logchunk.StreamLogChunks(h.services, logInfo.ID, streamer)
+	err = logchunk.StreamLogChunks(c, h.services, logInfo.ID, streamer)
 	if err != nil {
 		log.Errorf("error streaming log chunks: %s", err)
 

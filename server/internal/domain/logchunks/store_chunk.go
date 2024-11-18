@@ -15,7 +15,7 @@ import (
 // TODO: can logData be passed or do we need a reader?
 func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) error {
 	log := s.GetDomainLogger("logs", "StoreLogChunk")
-	ctx := context.TODO()
+	ctx := context.Background() // We don't want to cancel the log storing procedure if the connection gets lost
 
 	log.Debug("storing chunk")
 

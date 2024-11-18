@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"context"
+
 	"github.com/spf13/cobra"
 
 	"github.com/capsa-gg/capsa/server/internal/domain/admin"
@@ -32,7 +34,7 @@ var envAddCmd = &cobra.Command{
 			log.Fatalf("title argument is required")
 		}
 
-		err := admin.AddNewEnvironment(s, environmentAddTitle, environmentAddName)
+		err := admin.AddNewEnvironment(context.Background(), s, environmentAddTitle, environmentAddName)
 		if err != nil {
 			log.Fatalf("error adding new environment to title: %s", err)
 		}
@@ -48,7 +50,7 @@ var envListCmd = &cobra.Command{
 		s := getAndValidateServicesInteractor()
 		log := getCmdLogger(s.Config, "env").Named("list")
 
-		res, err := admin.ListAllTitlesAndEnvironments(s)
+		res, err := admin.ListAllTitlesAndEnvironments(context.Background(), s)
 		if err != nil {
 			log.Fatalf("error listing environment and titles: %s", err)
 		}

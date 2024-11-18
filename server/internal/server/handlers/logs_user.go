@@ -23,7 +23,7 @@ import (
 func (h Handlers) LogsList(c *gin.Context) {
 	log := h.logger.Named("LogsList")
 
-	res, err := logs.GetAllLogsOverview(h.services)
+	res, err := logs.GetAllLogsOverview(c, h.services)
 	if err != nil {
 		h.sendErrorResponse(c, err)
 
@@ -55,7 +55,7 @@ func (h Handlers) LogGetMetadata(c *gin.Context) {
 		return // Response sent by getLogUUIDFromURI
 	}
 
-	res, err := logs.GetMetadataForLog(h.services, logUUID)
+	res, err := logs.GetMetadataForLog(c, h.services, logUUID)
 	if err != nil {
 		h.sendErrorResponse(c, err)
 

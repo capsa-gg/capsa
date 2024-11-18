@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"context"
+
 	"github.com/spf13/cobra"
 
 	"github.com/capsa-gg/capsa/server/internal/domain/admin"
@@ -26,7 +28,7 @@ var titleAddCmd = &cobra.Command{
 			log.Fatalf("name argument is required")
 		}
 
-		err := admin.AddNewTitle(s, titleAddName)
+		err := admin.AddNewTitle(context.Background(), s, titleAddName)
 		if err != nil {
 			log.Fatalf("error adding new title: %s", err)
 		}

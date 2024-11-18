@@ -12,9 +12,8 @@ import (
 
 // GetAllLogsOverview fetches the high-level overview of all available logs.
 // TODO: pagination.
-func GetAllLogsOverview(s *interactor.Services) ([]entities.LogOverview, error) {
+func GetAllLogsOverview(ctx context.Context, s *interactor.Services) ([]entities.LogOverview, error) {
 	log := s.GetDomainLogger("logs", "GetAllLogsOverview")
-	ctx := context.TODO()
 
 	// Get from database
 	rows, err := s.Database.ListAllAvailableLogs(ctx)

@@ -46,7 +46,7 @@ func (h Handlers) ClientAuth(c *gin.Context) {
 		return
 	}
 
-	sesInfo, err := logs.CreateNewLogSession(h.services, req.Key, req.Platform, logType)
+	sesInfo, err := logs.CreateNewLogSession(c, h.services, req.Key, req.Platform, logType)
 	if err != nil {
 		h.sendErrorResponse(c, err)
 
