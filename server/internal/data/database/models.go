@@ -9,10 +9,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
-
-	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 type LogClientType string
@@ -66,14 +65,12 @@ type Environment struct {
 }
 
 type Log struct {
-	ID          int64            `json:"id"`
-	LogUuid     uuid.UUID        `json:"logUuid"`
-	Environment int32            `json:"environment"`
-	Platform    string           `json:"platform"`
-	LogType     LogClientType    `json:"logType"`
-	CreatedOn   time.Time        `json:"createdOn"`
-	LogStart    pgtype.Timestamp `json:"logStart"`
-	LogEnd      pgtype.Timestamp `json:"logEnd"`
+	ID          int64         `json:"id"`
+	LogUuid     uuid.UUID     `json:"logUuid"`
+	Environment int32         `json:"environment"`
+	Platform    string        `json:"platform"`
+	LogType     LogClientType `json:"logType"`
+	CreatedOn   time.Time     `json:"createdOn"`
 }
 
 type LogsChunk struct {
