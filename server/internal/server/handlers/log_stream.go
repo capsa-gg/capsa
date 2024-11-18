@@ -2,10 +2,11 @@ package handlers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
-	logchunk "github.com/capsa-gg/capsa/server/internal/domain/logchunks"
+	"github.com/capsa-gg/capsa/server/internal/domain/logchunk"
 	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
@@ -14,7 +15,10 @@ import (
 // @Tags        UserLogs
 // @Produce    	plain
 // @Produce    	json
-// @Description	Allows users to stream all uploaded chunks for a given log id
+// @Param		included_severities	query	string 		false 		"Included log line severities, optional"
+// @Param		included_categories	query	string 		false 		"Included log categories, optional"
+// @Param		excluded_categories	query	string 		false 		"Excluded log categories, will be ignored if included_categories is set, optional"
+// @Description	Allows users to stream all uploaded chunks for a given log id. If no query parameters are set, the whole log will be fetched.
 // @Security	JwtUser
 // @Success		200		{string}	string 							"Log chunk stream"
 // @Failure     400		{object}	bodies.ErrorResponse
@@ -32,6 +36,26 @@ func (h Handlers) StreamLogChunks(c *gin.Context) {
 	}
 
 	log = log.With("log_uuid", logUUID)
+
+	// Build the log line filters
+	filters := logchunk.LogStreamLineFilters{}
+
+	includedSeverities := c.Query("included_severities")
+	if includedSeverities != "" {
+		filters.IncludedSeverities = strings.Split(includedSeverities, ",")
+	}
+
+	includedCategories := c.Query("included_categories")
+	if includedCategories != "" {
+		filters.IncludedCategories = strings.Split(includedCategories, ",")
+	}
+
+	excludedCategories := c.Query("excluded_categories")
+	if excludedCategories != "" {
+		filters.ExcludedCategories = strings.Split(excludedCategories, ",")
+	}
+
+	log.Debugf("filters: %#v", filters)
 
 	// Validate if log exists, and get id from uuid
 	// NOTE: this logic is usually done in the domain logic, but due to the streaming later in the handler, it's done here
@@ -51,7 +75,16 @@ func (h Handlers) StreamLogChunks(c *gin.Context) {
 
 	streamer := c.Writer.WriteString
 
-	err = logchunk.StreamLogChunks(c, h.services, logInfo.ID, streamer)
+	hasFilters := filters.HasFilters()
+
+	log.With("has_filters", hasFilters)
+
+	if hasFilters {
+		_, err = logchunk.StreamFilteredLogChunks(c, h.services, logInfo.ID, filters, streamer)
+	} else {
+		err = logchunk.StreamUnfilteredLogChunks(c, h.services, logInfo.ID, streamer)
+	}
+
 	if err != nil {
 		log.Errorf("error streaming log chunks: %s", err)
 
@@ -62,4 +95,6 @@ func (h Handlers) StreamLogChunks(c *gin.Context) {
 	}
 
 	c.Status(http.StatusOK)
+
+	log.Debug("finished streaming log")
 }

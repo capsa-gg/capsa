@@ -9,7 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	logchunk "github.com/capsa-gg/capsa/server/internal/domain/logchunks"
+	"github.com/capsa-gg/capsa/server/internal/domain/logchunk"
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
 

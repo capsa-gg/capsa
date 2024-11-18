@@ -651,7 +651,22 @@ paths:
       - UserLogs
   /user/logs/{logid}/log:
     get:
-      description: Allows users to stream all uploaded chunks for a given log id
+      description: Allows users to stream all uploaded chunks for a given log id.
+        If no query parameters are set, the whole log will be fetched.
+      parameters:
+      - description: Included log line severities, optional
+        in: query
+        name: included_severities
+        type: string
+      - description: Included log categories, optional
+        in: query
+        name: included_categories
+        type: string
+      - description: Excluded log categories, will be ignored if included_categories
+          is set, optional
+        in: query
+        name: excluded_categories
+        type: string
       produces:
       - text/plain
       - application/json

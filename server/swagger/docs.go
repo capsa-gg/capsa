@@ -742,7 +742,7 @@ const docTemplate = `{
                         "JwtUser": []
                     }
                 ],
-                "description": "Allows users to stream all uploaded chunks for a given log id",
+                "description": "Allows users to stream all uploaded chunks for a given log id. If no query parameters are set, the whole log will be fetched.",
                 "produces": [
                     "text/plain",
                     "application/json"
@@ -751,6 +751,26 @@ const docTemplate = `{
                     "UserLogs"
                 ],
                 "summary": "Log chunk storage",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Included log line severities, optional",
+                        "name": "included_severities",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Included log categories, optional",
+                        "name": "included_categories",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Excluded log categories, will be ignored if included_categories is set, optional",
+                        "name": "excluded_categories",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Log chunk stream",
