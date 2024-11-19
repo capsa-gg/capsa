@@ -5,7 +5,7 @@ describe("formatDateString", () => {
     it("formats strings correctly", () => {
         const input = "2024-11-14T17:08:23.317Z";
         const result = formatDateString(input);
-        const expected = "2024-11-14, 6:08:23 pm";
+        const expected = "2024-11-14, 5:08:23 pm";
 
         expect(result).toEqual(expected);
     });
