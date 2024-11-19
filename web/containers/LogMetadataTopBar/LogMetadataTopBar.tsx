@@ -1,10 +1,12 @@
 import React from "react";
-import { useGetSingleLogMetadata } from "@/api/hooks";
 import { Alert, AlertTitle, Divider, Typography } from "@mui/material";
 import { LogMetadataList } from "@/containers/LogMetadataTopBar/LogMetadataTopBar.components";
+import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
 
-const LogMetadataTopBar: React.FC<{ logUUID: string }> = ({ logUUID }) => {
-    const { data, isLoading, error } = useGetSingleLogMetadata(logUUID);
+const LogMetadataTopBar: React.FC = () => {
+    const {
+        metadata: { error, isLoading, data },
+    } = useSingleLogContext();
 
     if (error) {
         return (

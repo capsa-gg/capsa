@@ -1,5 +1,6 @@
 import React from "react";
 import { Typography } from "@mui/material";
+import { SingleLogContextProvider } from "@/context/SingleLogContext/SingleLogContext";
 
 const SingleLogLayout = async ({ params, children }: SingleLogLayoutProps) => {
     const { id } = await params;
@@ -8,7 +9,7 @@ const SingleLogLayout = async ({ params, children }: SingleLogLayoutProps) => {
             <Typography variant="h6" mb={4}>
                 Log ID: {id}
             </Typography>
-            {children}
+            <SingleLogContextProvider logUUID={id}>{children}</SingleLogContextProvider>
         </>
     );
 };

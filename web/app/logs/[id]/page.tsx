@@ -26,7 +26,7 @@ const SingleLog: React.FC<SingleLogProps> = ({ params }) => {
 
     return (
         <Box width="97%" height="calc(100vh - 200px)">
-            <LogMetadataTopBar logUUID={paramsUse.id} />
+            <LogMetadataTopBar />
             <LogViewer data={logText} />
         </Box>
     );
