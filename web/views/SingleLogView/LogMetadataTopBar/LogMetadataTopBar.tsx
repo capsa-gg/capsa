@@ -1,6 +1,6 @@
 import React from "react";
 import { Alert, AlertTitle, Divider, Typography } from "@mui/material";
-import { LogMetadataList } from "@/containers/LogMetadataTopBar/LogMetadataTopBar.components";
+import { LogMetadataList } from "@/views/SingleLogView/LogMetadataTopBar/LogMetadataTopBar.components";
 import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
 
 const LogMetadataTopBar: React.FC = () => {
