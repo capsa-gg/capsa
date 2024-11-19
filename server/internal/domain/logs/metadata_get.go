@@ -60,6 +60,8 @@ func GetMetadataForLog(ctx context.Context, s *interactor.Services, logUUID uuid
 		linkedLogs[i].Description = linkedLogsDB[i].Description
 	}
 
+	// TODO: Add categories and severities count like in log overview
+
 	// Assemble the log metadata
 	metadata := entities.LogMetadata{
 		AdditionalMetadata: additionalMetadata,

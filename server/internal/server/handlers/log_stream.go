@@ -10,6 +10,12 @@ import (
 	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
+const (
+	logModeHeaderName       = "X-Capsa-Log-Mode"
+	logModeSingleUnfiltered = "SingleUnfiltered"
+	logModeSingleFiltered   = "SingleFiltered"
+)
+
 // StreamLogChunks allows users to stream all uploaded chunks for a given log id
 // @Summary 	Log chunk storage
 // @Tags        UserLogs
@@ -25,6 +31,7 @@ import (
 // @Failure     404		{object}	bodies.ErrorResponse
 // @Failure     500		{object}	bodies.ErrorResponse
 // @Header		all		{string} 	X-Capsa-Server-Version			"Current Capsa Server version"
+// @Header		all		{string} 	X-Capsa-Log-Mode				"Indicates the log mode, which can change the log content response, possible values: SingleUnfiltered|SingleFiltered"
 // @Header		500		{string} 	X-Capsa-Error					"Server error information"
 // @Router 		/user/logs/{logid}/log [get]
 func (h Handlers) StreamLogChunks(c *gin.Context) {
@@ -80,8 +87,10 @@ func (h Handlers) StreamLogChunks(c *gin.Context) {
 	log.With("has_filters", hasFilters)
 
 	if hasFilters {
-		_, err = logchunk.StreamFilteredLogChunks(c, h.services, logInfo.ID, filters, streamer)
+		c.Header(logModeHeaderName, logModeSingleUnfiltered)
+		err = logchunk.StreamFilteredLogChunks(c, h.services, logInfo.ID, filters, streamer)
 	} else {
+		c.Header(logModeHeaderName, logModeSingleFiltered)
 		err = logchunk.StreamUnfilteredLogChunks(c, h.services, logInfo.ID, streamer)
 	}
 

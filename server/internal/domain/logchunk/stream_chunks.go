@@ -3,6 +3,8 @@ package logchunk
 import (
 	"context"
 	"slices"
+	"strconv"
+	"strings"
 
 	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
@@ -72,10 +74,9 @@ func StreamUnfilteredLogChunks(ctx context.Context, s *interactor.Services, logI
 	return nil
 }
 
-// StreamFilteredLogChunks fetches the log chunks and streams them after filtering them with the setting in LogStreamLineFilters.
-// Returns the included line numbers as the first argument, and an error as the second
+// StreamFilteredLogChunks fetches the log chunks and streams them after filtering them with the setting in LogStreamLineFilters, the absolute line numbers are added as prefixes with {int}.
 // NOTE: the ID is not validated, this should be done in the calling function.
-func StreamFilteredLogChunks(ctx context.Context, s *interactor.Services, logID int64, filters LogStreamLineFilters, streamChunk ChunkStreamer) ([]int, error) {
+func StreamFilteredLogChunks(ctx context.Context, s *interactor.Services, logID int64, filters LogStreamLineFilters, streamChunk ChunkStreamer) error {
 	log := s.GetDomainLogger("logs", "StreamLogChunks").With("log_id", logID)
 
 	log.Debug("start chunk streaming")
@@ -83,11 +84,10 @@ func StreamFilteredLogChunks(ctx context.Context, s *interactor.Services, logID 
 	// Get chunks from database
 	chunks, err := s.Database.GetLogChunksForLog(ctx, logID)
 	if err != nil {
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return entities.NewDomainErrorFromDatabaseError(err)
 	}
 
-	lineCounter := 1 // Line counts start at 1, but we increment when we find a \n from 0 to 1
-	includedLines := []int{}
+	lineCounter := 0 // Line counts start at 1, but we increment when we find a \n from 0 to 1
 
 	// Loop over log, and stream chunks
 	for i, c := range chunks { //nolint:gocritic // 144 bytes, for now this is fine
@@ -97,12 +97,12 @@ func StreamFilteredLogChunks(ctx context.Context, s *interactor.Services, logID 
 		if err != nil {
 			logLoop.Errorf("error fetching chunk: %s", err)
 
-			return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "error getting chunk from storage", err)
+			return entities.NewDomainError(entities.DomainErrorUnexpected, "error getting chunk from storage", err)
 		}
 
 		logLoop.Debug("fetched chunk contents")
 
-		filteredLines := filterLinesForChunk(chunkText, filters, &lineCounter, &includedLines)
+		filteredLines := filterLinesForChunk(chunkText, filters, &lineCounter)
 
 		if len(filteredLines) == 0 {
 			logLoop.Warn("no contents after filtering chunk, not streaming data")
@@ -115,16 +115,16 @@ func StreamFilteredLogChunks(ctx context.Context, s *interactor.Services, logID 
 		if err != nil {
 			logLoop.Errorf("error streaming filtered chunk: %s", err)
 
-			return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "error streaming chunk", err)
+			return entities.NewDomainError(entities.DomainErrorUnexpected, "error streaming chunk", err)
 		}
 
 		logLoop.Debugf("streamed %d bytes", bytesWritten)
 	}
 
-	return includedLines, nil
+	return nil
 }
 
-func filterLinesForChunk(chunk []byte, filters LogStreamLineFilters, lineCounter *int, includedLines *[]int) []byte {
+func filterLinesForChunk(chunk []byte, filters LogStreamLineFilters, lineCounter *int) []byte {
 	filteredLines := make([]byte, 0, 16*1024)
 	currentLineContents := make([]byte, 0, 1024)
 
@@ -143,9 +143,17 @@ func filterLinesForChunk(chunk []byte, filters LogStreamLineFilters, lineCounter
 		lineMetadata, err := extractMetadataFromLine(currentLineContents)
 
 		includeLine := err == nil && lineMetadata.isComplete() && shouldIncludeLineBasedOnFilters(lineMetadata, filters)
-		if includeLine {
-			*includedLines = append(*includedLines, *lineCounter)
 
+		// Build prefix with the absolute line number
+		sb := strings.Builder{}
+		sb.WriteByte('{')
+		sb.WriteString(strconv.Itoa(*lineCounter))
+		sb.WriteByte('}')
+
+		prefix := []byte(sb.String())
+
+		if includeLine {
+			filteredLines = append(filteredLines, prefix...)              // Write the absolute line prefix
 			filteredLines = append(filteredLines, currentLineContents...) // Linebreak is in currentLineContents
 		}
 

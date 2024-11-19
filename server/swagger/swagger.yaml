@@ -674,6 +674,10 @@ paths:
         "200":
           description: Log chunk stream
           headers:
+            X-Capsa-Log-Mode:
+              description: 'Indicates the log mode, which can change the log content
+                response, possible values: SingleUnfiltered|SingleFiltered'
+              type: string
             X-Capsa-Server-Version:
               description: Current Capsa Server version
               type: string
@@ -682,6 +686,10 @@ paths:
         "400":
           description: Bad Request
           headers:
+            X-Capsa-Log-Mode:
+              description: 'Indicates the log mode, which can change the log content
+                response, possible values: SingleUnfiltered|SingleFiltered'
+              type: string
             X-Capsa-Server-Version:
               description: Current Capsa Server version
               type: string
@@ -690,6 +698,10 @@ paths:
         "404":
           description: Not Found
           headers:
+            X-Capsa-Log-Mode:
+              description: 'Indicates the log mode, which can change the log content
+                response, possible values: SingleUnfiltered|SingleFiltered'
+              type: string
             X-Capsa-Server-Version:
               description: Current Capsa Server version
               type: string
@@ -700,6 +712,10 @@ paths:
           headers:
             X-Capsa-Error:
               description: Server error information
+              type: string
+            X-Capsa-Log-Mode:
+              description: 'Indicates the log mode, which can change the log content
+                response, possible values: SingleUnfiltered|SingleFiltered'
               type: string
             X-Capsa-Server-Version:
               description: Current Capsa Server version

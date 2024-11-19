@@ -107,47 +107,47 @@ func TestFilterLinesForChunk(t *testing.T) {
 	tests := map[string]struct {
 		filters             LogStreamLineFilters
 		expectedFilteredLog []byte
-		includedLines       []int
 	}{
-		"no filters": {
-			filters:             LogStreamLineFilters{},
-			expectedFilteredLog: input,
-			includedLines:       []int{1, 2, 3, 4, 5, 6},
+		"no effective filters": {
+			filters: LogStreamLineFilters{ExcludedCategories: []string{"LogTestNonExistent"}},
+			expectedFilteredLog: []byte(`{1}[2024.11.14-16.08.23.916][Error][LogTestOne]: This is a test log line
+{2}[2024.11.14-16.08.23.919][Warning][LogTestOne]: This is a test log line
+{3}[2024.11.14-16.08.23.919][Log][LogTestOne]: This is a test log line
+{4}[2024.11.14-16.08.23.955][Display][LogTestTwo]: This is a test log line
+{5}[2024.11.14-16.08.25.493][Verbose][LogTestTwo]: This is a test log line
+{6}[2024.11.14-16.08.25.493][VeryVerbose][LogTestTwo]: This is a test log line
+`),
 		},
 		"severity only": {
 			filters: LogStreamLineFilters{IncludedSeverities: []string{"Error", "Log", "Verbose"}},
-			expectedFilteredLog: []byte(`[2024.11.14-16.08.23.916][Error][LogTestOne]: This is a test log line
-[2024.11.14-16.08.23.919][Log][LogTestOne]: This is a test log line
-[2024.11.14-16.08.25.493][Verbose][LogTestTwo]: This is a test log line
+			expectedFilteredLog: []byte(`{1}[2024.11.14-16.08.23.916][Error][LogTestOne]: This is a test log line
+{3}[2024.11.14-16.08.23.919][Log][LogTestOne]: This is a test log line
+{5}[2024.11.14-16.08.25.493][Verbose][LogTestTwo]: This is a test log line
 `),
-			includedLines: []int{1, 3, 5},
 		},
 		"included category": {
 			filters: LogStreamLineFilters{IncludedCategories: []string{"LogTestTwo"}},
-			expectedFilteredLog: []byte(`[2024.11.14-16.08.23.955][Display][LogTestTwo]: This is a test log line
-[2024.11.14-16.08.25.493][Verbose][LogTestTwo]: This is a test log line
-[2024.11.14-16.08.25.493][VeryVerbose][LogTestTwo]: This is a test log line
+			expectedFilteredLog: []byte(`{4}[2024.11.14-16.08.23.955][Display][LogTestTwo]: This is a test log line
+{5}[2024.11.14-16.08.25.493][Verbose][LogTestTwo]: This is a test log line
+{6}[2024.11.14-16.08.25.493][VeryVerbose][LogTestTwo]: This is a test log line
 `),
-			includedLines: []int{4, 5, 6},
 		},
 		"excluded category": {
 			filters: LogStreamLineFilters{ExcludedCategories: []string{"LogTestTwo"}},
-			expectedFilteredLog: []byte(`[2024.11.14-16.08.23.916][Error][LogTestOne]: This is a test log line
-[2024.11.14-16.08.23.919][Warning][LogTestOne]: This is a test log line
-[2024.11.14-16.08.23.919][Log][LogTestOne]: This is a test log line
+			expectedFilteredLog: []byte(`{1}[2024.11.14-16.08.23.916][Error][LogTestOne]: This is a test log line
+{2}[2024.11.14-16.08.23.919][Warning][LogTestOne]: This is a test log line
+{3}[2024.11.14-16.08.23.919][Log][LogTestOne]: This is a test log line
 `),
-			includedLines: []int{1, 2, 3},
 		},
 		"included category overriding excluded category": {
 			filters: LogStreamLineFilters{
 				IncludedCategories: []string{"LogTestTwo"},
 				ExcludedCategories: []string{"LogTestTwo"},
 			},
-			expectedFilteredLog: []byte(`[2024.11.14-16.08.23.955][Display][LogTestTwo]: This is a test log line
-[2024.11.14-16.08.25.493][Verbose][LogTestTwo]: This is a test log line
-[2024.11.14-16.08.25.493][VeryVerbose][LogTestTwo]: This is a test log line
+			expectedFilteredLog: []byte(`{4}[2024.11.14-16.08.23.955][Display][LogTestTwo]: This is a test log line
+{5}[2024.11.14-16.08.25.493][Verbose][LogTestTwo]: This is a test log line
+{6}[2024.11.14-16.08.25.493][VeryVerbose][LogTestTwo]: This is a test log line
 `),
-			includedLines: []int{4, 5, 6},
 		},
 		"mixed": {
 			filters: LogStreamLineFilters{
@@ -155,21 +155,18 @@ func TestFilterLinesForChunk(t *testing.T) {
 				IncludedCategories: []string{"LogTestOne"},
 				ExcludedCategories: []string{"LogTestTwo"},
 			},
-			expectedFilteredLog: []byte(`[2024.11.14-16.08.23.916][Error][LogTestOne]: This is a test log line
-[2024.11.14-16.08.23.919][Warning][LogTestOne]: This is a test log line
+			expectedFilteredLog: []byte(`{1}[2024.11.14-16.08.23.916][Error][LogTestOne]: This is a test log line
+{2}[2024.11.14-16.08.23.919][Warning][LogTestOne]: This is a test log line
 `),
-			includedLines: []int{1, 2},
 		},
 	}
 
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			counter := 0
-			includedLines := []int{}
-			result := filterLinesForChunk(input, tt.filters, &counter, &includedLines)
+			result := filterLinesForChunk(input, tt.filters, &counter)
 
 			require.Equal(t, tt.expectedFilteredLog, result)
-			require.Equal(t, tt.includedLines, includedLines)
 		})
 	}
 }

@@ -11,29 +11,26 @@ var testIncludeAllFilter = LogStreamLineFilters{
 }
 
 func BenchmarkFilterLinesForChunk_IncludeAll_1k(b *testing.B) {
-	counter := 0
-	includedLines := []int{}
-
 	for i := 0; i <= b.N; i++ {
-		filterLinesForChunk(oneThousandLineChunk, testIncludeAllFilter, &counter, &includedLines)
+		counter := 0
+
+		filterLinesForChunk(oneThousandLineChunk, testIncludeAllFilter, &counter)
 	}
 }
 
 func BenchmarkFilterLinesForChunk_IncludeAll_10k(b *testing.B) {
-	counter := 0
-	includedLines := []int{}
-
 	for i := 0; i <= b.N; i++ {
-		filterLinesForChunk(tenThousandsLineChunk, testIncludeAllFilter, &counter, &includedLines)
+		counter := 0
+
+		filterLinesForChunk(tenThousandsLineChunk, testIncludeAllFilter, &counter)
 	}
 }
 
 func BenchmarkFilterLinesForChunk_IncludeAll_100k(b *testing.B) {
-	counter := 0
-	includedLines := []int{}
-
 	for i := 0; i <= b.N; i++ {
-		filterLinesForChunk(hundredThousandsLineChunk, testIncludeAllFilter, &counter, &includedLines)
+		counter := 0
+
+		filterLinesForChunk(hundredThousandsLineChunk, testIncludeAllFilter, &counter)
 	}
 }
 
@@ -44,28 +41,25 @@ var testExcludeAllFilter = LogStreamLineFilters{
 }
 
 func BenchmarkFilterLinesForChunk_ExcludeAll_1k(b *testing.B) {
-	counter := 0
-	includedLines := []int{}
-
 	for i := 0; i <= b.N; i++ {
-		filterLinesForChunk(oneThousandLineChunk, testExcludeAllFilter, &counter, &includedLines)
+		counter := 0
+
+		filterLinesForChunk(oneThousandLineChunk, testExcludeAllFilter, &counter)
 	}
 }
 
 func BenchmarkFilterLinesForChunk_ExcludeAll_10k(b *testing.B) {
-	counter := 0
-	includedLines := []int{}
-
 	for i := 0; i <= b.N; i++ {
-		filterLinesForChunk(tenThousandsLineChunk, testExcludeAllFilter, &counter, &includedLines)
+		counter := 0
+
+		filterLinesForChunk(tenThousandsLineChunk, testExcludeAllFilter, &counter)
 	}
 }
 
 func BenchmarkFilterLinesForChunk_ExcludeAll_100k(b *testing.B) {
-	counter := 0
-	includedLines := []int{}
-
 	for i := 0; i <= b.N; i++ {
-		filterLinesForChunk(hundredThousandsLineChunk, testExcludeAllFilter, &counter, &includedLines)
+		counter := 0
+
+		filterLinesForChunk(hundredThousandsLineChunk, testExcludeAllFilter, &counter)
 	}
 }

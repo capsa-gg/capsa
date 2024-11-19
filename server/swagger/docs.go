@@ -778,6 +778,10 @@ const docTemplate = `{
                             "type": "string"
                         },
                         "headers": {
+                            "X-Capsa-Log-Mode": {
+                                "type": "string",
+                                "description": "Indicates the log mode, which can change the log content response, possible values: SingleUnfiltered|SingleFiltered"
+                            },
                             "X-Capsa-Server-Version": {
                                 "type": "string",
                                 "description": "Current Capsa Server version"
@@ -790,6 +794,10 @@ const docTemplate = `{
                             "$ref": "#/definitions/bodies.ErrorResponse"
                         },
                         "headers": {
+                            "X-Capsa-Log-Mode": {
+                                "type": "string",
+                                "description": "Indicates the log mode, which can change the log content response, possible values: SingleUnfiltered|SingleFiltered"
+                            },
                             "X-Capsa-Server-Version": {
                                 "type": "string",
                                 "description": "Current Capsa Server version"
@@ -802,6 +810,10 @@ const docTemplate = `{
                             "$ref": "#/definitions/bodies.ErrorResponse"
                         },
                         "headers": {
+                            "X-Capsa-Log-Mode": {
+                                "type": "string",
+                                "description": "Indicates the log mode, which can change the log content response, possible values: SingleUnfiltered|SingleFiltered"
+                            },
                             "X-Capsa-Server-Version": {
                                 "type": "string",
                                 "description": "Current Capsa Server version"
@@ -817,6 +829,10 @@ const docTemplate = `{
                             "X-Capsa-Error": {
                                 "type": "string",
                                 "description": "Server error information"
+                            },
+                            "X-Capsa-Log-Mode": {
+                                "type": "string",
+                                "description": "Indicates the log mode, which can change the log content response, possible values: SingleUnfiltered|SingleFiltered"
                             },
                             "X-Capsa-Server-Version": {
                                 "type": "string",
