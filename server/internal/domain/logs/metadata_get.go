@@ -14,7 +14,7 @@ import (
 )
 
 // GetMetadataForLog fetches the metadata for a given log.
-func GetMetadataForLog(ctx context.Context, s *interactor.Services, logUUID uuid.UUID) (*entities.LogMetadata, error) { //nolint:funlen // For now this is fine, we might want to abstract the struct conversion later
+func GetMetadataForLog(ctx context.Context, s *interactor.Services, logUUID uuid.UUID) (*entities.LogMetadata, error) { //nolint:funlen,gocyclo // For now this is fine, we might want to abstract the struct conversion later
 	log := s.GetDomainLogger("logs", "GetMetadataForLog").With("log_uuid", logUUID)
 
 	// Get from database
