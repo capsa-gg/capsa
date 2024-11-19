@@ -47,5 +47,7 @@ jobs:
         run: npm ci
       - name: Build Next
         run: npm run build
+      - name: Jest tests
+        run: npm run test
       - name: Lint Next
         run: npm run lint
