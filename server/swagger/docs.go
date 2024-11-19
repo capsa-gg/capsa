@@ -1071,6 +1071,9 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/entities.LogLink"
                     }
+                },
+                "logData": {
+                    "$ref": "#/definitions/entities.LogOverview"
                 }
             }
         },

@@ -114,6 +114,8 @@ definitions:
         items:
           $ref: '#/definitions/entities.LogLink'
         type: array
+      logData:
+        $ref: '#/definitions/entities.LogOverview'
     type: object
   entities.LogOverview:
     properties:
