@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import moment from "moment";
 import { useRouter } from "next/navigation";
 import { Alert, AlertTitle, Box, Link, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -9,6 +8,7 @@ import Spinner from "@/components/Spinner";
 import { useGetAllLogs } from "@/api/hooks";
 import { LogOverviewItem } from "@/types/api/logs";
 import ColoredSeverities from "@/components/ColoredSeverities";
+import { formatDateString } from "@/util/formatDateString";
 
 const columns: GridColDef<LogOverviewItem>[] = [
     { field: "id", headerName: "ID", maxWidth: 300, flex: 4, renderCell: row => <LogLink id={row.row.id} /> },
@@ -36,18 +36,18 @@ const columns: GridColDef<LogOverviewItem>[] = [
         headerName: "First timestamp",
         flex: 3,
         maxWidth: 200,
-        valueFormatter: value => moment(value).format("YYYY-MM-DD, h:mm:ss a"),
+        valueFormatter: value => formatDateString(value),
     },
     {
         field: "tsLastLine",
         headerName: "Last timestamp",
         flex: 3,
         maxWidth: 200,
-        valueFormatter: value => moment(value).format("YYYY-MM-DD, h:mm:ss a"),
+        valueFormatter: value => formatDateString(value),
     },
 ];
 
-const Home = () => {
+const LogsOverviewPage = () => {
     const { data, error, isLoading } = useGetAllLogs();
 
     // eslint-disable-next-line react/no-unstable-nested-components
@@ -89,7 +89,7 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default LogsOverviewPage;
 
 const LogLink: React.FC<{ id: string }> = ({ id }) => {
     const router = useRouter();

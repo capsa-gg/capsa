@@ -12,7 +12,7 @@ import { ApplicationError } from "@/types/api/error";
 import { UserAuth } from "@/api/userauth";
 import { Environments } from "@/api/environments";
 import { ListAllEnvironmentsResponse } from "@/types/api/environments";
-import { LogOverviewResponse } from "@/types/api/logs";
+import { LogMetadata, LogOverviewResponse } from "@/types/api/logs";
 import { Logs } from "@/api/logs";
 
 type ApiCallFunc<Req, Res> = (req: Req) => Promise<ApiResponse<Res>>;
@@ -47,6 +47,24 @@ const apiCallToSwrPlain = <Res>(
     return () => useSWR(name, fetcher);
 };
 
+const apiCallToSwrWithIdArg = <Res>(
+    baseName: string,
+    apiCallFunc: (arg: string) => Promise<ApiResponse<Res>>,
+): ((arg: string) => SWRResponse<Res, ApplicationError, null>) => {
+    const fetcher = async (arg: string) => {
+        // Remove basename, which is required in the useSWR hook to not have swr cache values
+        const id = arg.slice(baseName.length + 1); // +1 for the `-` character
+
+        const [res, err] = await apiCallFunc(id);
+        if (err) {
+            throw new ApplicationError(err);
+        }
+        return res;
+    };
+
+    return (id: string) => useSWR(`${baseName}-${id}`, fetcher);
+};
+
 /**
  * SWR HOOKS
  */
@@ -64,3 +82,7 @@ export const useGetAllEnvironments = apiCallToSwrPlain<ListAllEnvironmentsRespon
 
 // Logs
 export const useGetAllLogs = apiCallToSwrPlain<LogOverviewResponse>("getalllogs", Logs.ListAllLogs);
+export const useGetSingleLogMetadata = apiCallToSwrWithIdArg<LogMetadata>(
+    "singlelogmetadata",
+    Logs.GetSingleLogMetadata,
+);
