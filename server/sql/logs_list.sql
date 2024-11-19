@@ -1,5 +1,6 @@
--- name: ListAllAvailableLogs :many
+-- name: ListAvailableLogs :many
 -- Fetches all log chunks and aggregates an overview.
+-- LogUUID is an optional field used as a filter, which if set will return only a single result.
 WITH cat_counts AS (
     SELECT log, (jsb).key AS category, sum((jsb).value::int) AS count
     FROM (
@@ -42,5 +43,6 @@ FROM logs l
 JOIN cat_counts cc ON cc.log = l.id
 JOIN sev_counts sc ON sc.log = l.id
 JOIN chunk_data cd ON cd.log = l.id
+WHERE ( l.log_uuid = sqlc.narg(filter_by_log_uuid) OR sqlc.narg(filter_by_log_uuid) IS NULL ) -- Optionally filter by Log UUID
 GROUP BY l.id, cd.line_count, cd.chunk_count, cd.earliest_start, cd.latest_end
 ORDER BY earliest DESC;

@@ -29,6 +29,7 @@ type LogOverview struct {
 
 // LogMetadata contains the metadata for a stored log.
 type LogMetadata struct {
+	LogData            LogOverview             `json:"logData"`
 	AdditionalMetadata []LogAdditionalMetadata `json:"additionalMetadata"`
 	Links              []LogLink               `json:"linkedLogs"`
 }

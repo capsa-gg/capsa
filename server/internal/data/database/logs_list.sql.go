@@ -9,9 +9,10 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const listAllAvailableLogs = `-- name: ListAllAvailableLogs :many
+const listAvailableLogs = `-- name: ListAvailableLogs :many
 WITH cat_counts AS (
     SELECT log, (jsb).key AS category, sum((jsb).value::int) AS count
     FROM (
@@ -54,11 +55,12 @@ FROM logs l
 JOIN cat_counts cc ON cc.log = l.id
 JOIN sev_counts sc ON sc.log = l.id
 JOIN chunk_data cd ON cd.log = l.id
+WHERE ( l.log_uuid = $1 OR $1 IS NULL ) -- Optionally filter by Log UUID
 GROUP BY l.id, cd.line_count, cd.chunk_count, cd.earliest_start, cd.latest_end
 ORDER BY earliest DESC
 `
 
-type ListAllAvailableLogsRow struct {
+type ListAvailableLogsRow struct {
 	LogUuid         uuid.UUID     `json:"logUuid"`
 	Platform        string        `json:"platform"`
 	LogType         LogClientType `json:"logType"`
@@ -71,15 +73,16 @@ type ListAllAvailableLogsRow struct {
 }
 
 // Fetches all log chunks and aggregates an overview.
-func (q *Queries) ListAllAvailableLogs(ctx context.Context) ([]ListAllAvailableLogsRow, error) {
-	rows, err := q.db.Query(ctx, listAllAvailableLogs)
+// LogUUID is an optional field used as a filter, which if set will return only a single result.
+func (q *Queries) ListAvailableLogs(ctx context.Context, filterByLogUuid pgtype.UUID) ([]ListAvailableLogsRow, error) {
+	rows, err := q.db.Query(ctx, listAvailableLogs, filterByLogUuid)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []ListAllAvailableLogsRow
+	var items []ListAvailableLogsRow
 	for rows.Next() {
-		var i ListAllAvailableLogsRow
+		var i ListAvailableLogsRow
 		if err := rows.Scan(
 			&i.LogUuid,
 			&i.Platform,

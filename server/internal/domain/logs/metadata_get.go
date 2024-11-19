@@ -5,14 +5,17 @@ import (
 	"encoding/json"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 
+	"github.com/capsa-gg/capsa/server/constants"
 	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/internal/util"
 )
 
 // GetMetadataForLog fetches the metadata for a given log.
 func GetMetadataForLog(ctx context.Context, s *interactor.Services, logUUID uuid.UUID) (*entities.LogMetadata, error) {
-	log := s.GetDomainLogger("logs", "GetMetadataForLog")
+	log := s.GetDomainLogger("logs", "GetMetadataForLog").With("log_uuid", logUUID)
 
 	// Get from database
 	logData, err := s.Database.GetLogByUuid(ctx, logUUID)
@@ -60,12 +63,57 @@ func GetMetadataForLog(ctx context.Context, s *interactor.Services, logUUID uuid
 		linkedLogs[i].Description = linkedLogsDB[i].Description
 	}
 
-	// TODO: Add categories and severities count like in log overview
-
 	// Assemble the log metadata
 	metadata := entities.LogMetadata{
 		AdditionalMetadata: additionalMetadata,
 		Links:              linkedLogs,
+	}
+
+	// Get log data from database
+	rows, err := s.Database.ListAvailableLogs(ctx, pgtype.UUID{Valid: true, Bytes: logUUID})
+	if err != nil {
+		return nil, entities.NewDomainErrorFromDatabaseError(err)
+	}
+
+	if len(rows) != 1 {
+		log.Errorf("logData query yielded %d results, expected 1", len(rows))
+	} else {
+		logDataResponse := rows[0]
+
+		metadata.LogData.LogUUID = logDataResponse.LogUuid
+		metadata.LogData.LogType = constants.LogType(logDataResponse.LogType) // safe conversion
+		metadata.LogData.Platform = logDataResponse.Platform
+		metadata.LogData.LineCount = logDataResponse.LineCount
+
+		earliest := logDataResponse.Earliest
+
+		if earliest != nil {
+			earliestTS, err := util.ExtractTimeFromAny(earliest)
+			if err != nil {
+				log.Errorf("could not convert earlist value %#v to time: %s", earliest, err)
+			} else {
+				metadata.LogData.TimestampFirstLine = &earliestTS
+			}
+		}
+
+		last := logDataResponse.Last
+
+		if last != nil {
+			lastTS, err := util.ExtractTimeFromAny(last)
+			if err != nil {
+				log.Errorf("could not convert last value %#v to time: %s", last, err)
+			} else {
+				metadata.LogData.TimestampLastLine = &lastTS
+			}
+		}
+
+		if err = json.Unmarshal(logDataResponse.CategoriesCount, &metadata.LogData.CategoriesCounts); err != nil {
+			log.Errorf("cannot convert CategoriesCount to map[string]int: %s", err)
+		}
+
+		if err = json.Unmarshal(logDataResponse.SeveritiesCount, &metadata.LogData.SeveritiesCounts); err != nil {
+			log.Errorf("cannot convert SeveritiesCounts to map[string]int: %s", err)
+		}
 	}
 
 	log.Info("metadata fetching completed")

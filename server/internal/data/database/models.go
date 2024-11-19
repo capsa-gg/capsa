@@ -9,10 +9,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
-
-	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 type LogClientType string
