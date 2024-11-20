@@ -10,28 +10,6 @@ import (
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
-// LogStreamLineFilters contains the filters for streaming a log.
-// If none of the fields are set, the whole log will be streamed.
-type LogStreamLineFilters struct {
-	// IncludedSeverities specifies the severities that should be included.
-	IncludedSeverities []string
-
-	// IncludedCategories specifies the categories that should be included.
-	// If set, the ExcludedCategories is ignored.
-	IncludedCategories []string
-
-	// ExcludedCategories specifies the categories that should be excluded.
-	// Will be ignored if IncludedCategories is set.
-	ExcludedCategories []string
-}
-
-// HasFilters returns true if at least one of the filters is specified.
-func (lslf LogStreamLineFilters) HasFilters() bool {
-	return len(lslf.IncludedSeverities) > 0 ||
-		len(lslf.IncludedCategories) > 0 ||
-		len(lslf.ExcludedCategories) > 0
-}
-
 // ChunkStreamer is the type used to stream chunks.
 type ChunkStreamer func(chunk string) (int, error)
 
@@ -92,6 +70,20 @@ func StreamFilteredLogChunks(ctx context.Context, s *interactor.Services, logID 
 	// Loop over log, and stream chunks
 	for i, c := range chunks { //nolint:gocritic // 144 bytes, for now this is fine
 		logLoop := log.With("i_chunk", i, "blob_path", c.BlobPath, "created_on", c.CreatedOn)
+
+		shouldStreamChunk := filters.shouldStreamChunk(logChunkMetadata{
+			// Note: we omit some fields here, as they are not used
+			SeveritiesCount: c.SeverityCounts,
+			CategoriesCount: c.CategoryCounts,
+		})
+
+		if !shouldStreamChunk {
+			lineCounter += int(c.LineCount)
+
+			logLoop.Info("shouldStreamChunk returned false, skipping chunk processing/streaming")
+
+			continue
+		}
 
 		chunkText, err := s.LogChunks.GetChunk(c.BlobPath)
 		if err != nil {

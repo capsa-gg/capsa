@@ -1086,6 +1086,9 @@ const docTemplate = `{
                         "type": "integer"
                     }
                 },
+                "chunkCount": {
+                    "type": "integer"
+                },
                 "id": {
                     "type": "string"
                 },

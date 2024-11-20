@@ -61,8 +61,8 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 		Log:            logInfo.ID,
 		BlobPath:       fileName,
 		LineCount:      chunkMetadata.LineCount,
-		ChunkStart:     pgtype.Timestamp{Time: chunkMetadata.Start},
-		ChunkEnd:       pgtype.Timestamp{Time: chunkMetadata.End},
+		ChunkStart:     pgtype.Timestamp{Time: chunkMetadata.Start, Valid: true},
+		ChunkEnd:       pgtype.Timestamp{Time: chunkMetadata.End, Valid: true},
 		CategoryCounts: chunkMetadata.CategoriesCount,
 		SeverityCounts: chunkMetadata.SeveritiesCount,
 	}

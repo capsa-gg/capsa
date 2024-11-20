@@ -123,6 +123,8 @@ definitions:
         additionalProperties:
           type: integer
         type: object
+      chunkCount:
+        type: integer
       id:
         type: string
       lineCount:
