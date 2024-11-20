@@ -3,18 +3,21 @@
 import { useState, useEffect, useCallback } from "react";
 import LogProcessor from "@/data/LogProcessor/LogProcessor";
 import { UseLogProcessorHook } from "@/hooks/useLogProcessor/useLogProcessor.types";
-import { LogFilters } from "@/data/LogProcessor/LogProcessor.types";
+import { LogFilters, LogMode } from "@/data/LogProcessor/LogProcessor.types";
 import { FilterState } from "@/context/SingleLogContext/SingleLogContext.types";
 
 const useLogProcessor: UseLogProcessorHook = () => {
     const [logWorkerManager] = useState(() => new LogProcessor());
     const [fullLog, setFullLog] = useState("Log not loaded");
+    const [absoluteLineNumbers, setAbsoluteLineNumbers] = useState<number[] | null>(null);
+    const [logMode, setLogMode] = useState<LogMode | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isDone, setIsDone] = useState(false);
 
     useEffect(() => {
-        logWorkerManager.setOnLogContentsUpdated(newFullLog => {
+        logWorkerManager.setOnLogContentsUpdated((newFullLog, lineNumbers) => {
             setFullLog(newFullLog);
+            setAbsoluteLineNumbers(lineNumbers);
         });
 
         logWorkerManager.setOnError(newError => {
@@ -23,6 +26,10 @@ const useLogProcessor: UseLogProcessorHook = () => {
 
         logWorkerManager.setOnDone(() => {
             setIsDone(true);
+        });
+
+        logWorkerManager.setOnLogModeReceived(logModeVal => {
+            setLogMode(logModeVal);
         });
 
         return () => {
@@ -47,6 +54,8 @@ const useLogProcessor: UseLogProcessorHook = () => {
         fullLog,
         error,
         isDone,
+        logMode,
+        absoluteLineNumbers,
         startFetchingLog,
         stopFetchingLog,
     };

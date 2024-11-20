@@ -19,7 +19,7 @@ const SingleLogView: React.FC = () => {
         <Box width="97%" height="calc(100vh - 200px)">
             <LogLineFilterDrawer />
             <LogMetadataTopBar />
-            <LogViewer data={logViewerData()} />
+            <LogViewer data={logViewerData()} absoluteLineNumbers={logProcessor.absoluteLineNumbers} />
         </Box>
     );
 };

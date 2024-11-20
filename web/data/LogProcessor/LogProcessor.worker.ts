@@ -43,7 +43,8 @@ async function fetchLog(reqUrl: URL, jwt: string): Promise<void> {
             throw new Error("Log mode header not set");
         }
 
-        self.postMessage({ type: "LOG_MODE_RECEIVED", payload: { logMode } });
+        const message: WorkerPostMessage = { type: "LOG_MODE_RECEIVED", payload: { logMode } };
+        self.postMessage(message);
 
         const reader = res.body?.getReader();
         if (!reader) {
@@ -51,7 +52,9 @@ async function fetchLog(reqUrl: URL, jwt: string): Promise<void> {
         }
 
         const decoder = new TextDecoder();
+
         let fullLog = "";
+        let absoluteLineNumbers: number[] = [];
 
         while (true) {
             const { done, value } = await reader.read();
@@ -60,15 +63,33 @@ async function fetchLog(reqUrl: URL, jwt: string): Promise<void> {
             }
             const chunk = decoder.decode(value);
 
-            // Process the chunk based on logMode
-            const processedChunk = processChunk(chunk, logMode);
-            fullLog += processedChunk;
+            switch (logMode) {
+                case "SingleUnfiltered": {
+                    fullLog += chunk;
 
-            const updateMessage: WorkerPostMessage = {
-                type: "LOG_CONTENTS_UPDATED",
-                payload: { fullLog },
-            };
-            self.postMessage(updateMessage);
+                    const updateMessage: WorkerPostMessage = {
+                        type: "LOG_CONTENTS_UPDATED",
+                        payload: { fullLog, lineNumbers: null },
+                    };
+                    self.postMessage(updateMessage);
+
+                    break;
+                }
+                case "SingleFiltered":
+                    const [chunkText, lineNumbers] = processFilteredChunk(chunk);
+                    fullLog += chunkText;
+                    absoluteLineNumbers = [...absoluteLineNumbers, ...lineNumbers];
+
+                    const updateMessage: WorkerPostMessage = {
+                        type: "LOG_CONTENTS_UPDATED",
+                        payload: { fullLog, lineNumbers: absoluteLineNumbers },
+                    };
+                    self.postMessage(updateMessage);
+
+                    break;
+                default:
+                    throw new Error(`log mode ${logMode} not supported`);
+            }
         }
 
         const doneMessage: WorkerPostMessage = { type: "LOG_FETCHING_DONE", payload: undefined };
@@ -81,10 +102,19 @@ async function fetchLog(reqUrl: URL, jwt: string): Promise<void> {
     }
 }
 
-function processChunk(chunk: string, logMode: LogMode): string {
-    // Implement chunk processing based on logMode
-    // This is a placeholder implementation
-    return logMode === "SingleFiltered" ? chunk.toUpperCase() : chunk;
+function processFilteredChunk(chunk: string): [string, number[]] {
+    const absoluteLineNumbers = [];
+    const cleanedLines = [];
+
+    const regex = /\{(\d+)}(.*)/g;
+
+    let match;
+    while ((match = regex.exec(chunk)) !== null) {
+        absoluteLineNumbers.push(parseInt(match[1], 10));
+        cleanedLines.push(match[2]);
+    }
+
+    return [cleanedLines.join("\n"), absoluteLineNumbers];
 }
 
 function generateLogUrlWithParams(urlBase: string, filters: LogFilters): URL {
