@@ -10,7 +10,7 @@ const SingleLog: React.FC<SingleLogProps> = ({ params }) => {
         return null;
     }
 
-    return <SingleLogView logUUID={paramsUse.id} />;
+    return <SingleLogView />;
 };
 
 export default SingleLog;

@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { LogMetadataList } from "@/views/SingleLogView/LogMetadataTopBar/LogMetadataTopBar.components";
 import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
-import LogProcessor from "@/data/LogProcessor/LogProcessor";
+import CopyUrlButton from "@/components/CopyUrlButton";
 
 const LogMetadataTopBar: React.FC = () => {
     const {

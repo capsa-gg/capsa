@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import { Stack, styled } from "@mui/system";
-import { Divider, Paper } from "@mui/material";
+import { Badge, Divider, IconButton, Paper } from "@mui/material";
 import { LogMetadata } from "@/types/api/logs";
 import { formatDateString } from "@/util/formatDateString";
 
-const Item = styled(Paper)(({ theme }) => ({
+const MetadataItem = styled(Paper)(({ theme }) => ({
     // @ts-ignore
     ...theme.typography.body,
     textAlign: "center",
@@ -25,27 +25,27 @@ export const LogMetadataList: React.FC<{ logMetadata: LogMetadata }> = ({ logMet
         }}
     >
         <Stack direction="row" spacing={2}>
-            <Item>
+            <MetadataItem>
                 Log type: <b>{logMetadata.logData.logType}</b>
-            </Item>
-            <Item>
+            </MetadataItem>
+            <MetadataItem>
                 Platform: <b>{logMetadata.logData.platform}</b>
-            </Item>
-            <Item>
+            </MetadataItem>
+            <MetadataItem>
                 Line: <b>{logMetadata.logData.lineCount}</b>
-            </Item>
-            <Item>
+            </MetadataItem>
+            <MetadataItem>
                 Chunks: <b>{logMetadata.logData.chunkCount}</b>
-            </Item>
-            <Item>
+            </MetadataItem>
+            <MetadataItem>
                 Categories: <b>{Object.keys(logMetadata.logData.categoriesCounts).length}</b>
-            </Item>
-            <Item>
+            </MetadataItem>
+            <MetadataItem>
                 Start: <b>{formatDateString(logMetadata.logData.tsFirstLine)}</b>
-            </Item>
-            <Item>
+            </MetadataItem>
+            <MetadataItem>
                 End: <b>{formatDateString(logMetadata.logData.tsLastLine)}</b>
-            </Item>
+            </MetadataItem>
         </Stack>
     </Box>
 );
