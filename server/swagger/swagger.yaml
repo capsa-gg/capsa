@@ -114,6 +114,8 @@ definitions:
         items:
           $ref: '#/definitions/entities.LogLink'
         type: array
+      logData:
+        $ref: '#/definitions/entities.LogOverview'
     type: object
   entities.LogOverview:
     properties:
@@ -121,6 +123,8 @@ definitions:
         additionalProperties:
           type: integer
         type: object
+      chunkCount:
+        type: integer
       id:
         type: string
       lineCount:
@@ -651,7 +655,22 @@ paths:
       - UserLogs
   /user/logs/{logid}/log:
     get:
-      description: Allows users to stream all uploaded chunks for a given log id
+      description: Allows users to stream all uploaded chunks for a given log id.
+        If no query parameters are set, the whole log will be fetched.
+      parameters:
+      - description: Included log line severities, optional
+        in: query
+        name: included_severities
+        type: string
+      - description: Included log categories, optional
+        in: query
+        name: included_categories
+        type: string
+      - description: Excluded log categories, will be ignored if included_categories
+          is set, optional
+        in: query
+        name: excluded_categories
+        type: string
       produces:
       - text/plain
       - application/json
@@ -659,6 +678,10 @@ paths:
         "200":
           description: Log chunk stream
           headers:
+            X-Capsa-Log-Mode:
+              description: 'Indicates the log mode, which can change the log content
+                response, possible values: SingleUnfiltered|SingleFiltered'
+              type: string
             X-Capsa-Server-Version:
               description: Current Capsa Server version
               type: string
@@ -667,6 +690,10 @@ paths:
         "400":
           description: Bad Request
           headers:
+            X-Capsa-Log-Mode:
+              description: 'Indicates the log mode, which can change the log content
+                response, possible values: SingleUnfiltered|SingleFiltered'
+              type: string
             X-Capsa-Server-Version:
               description: Current Capsa Server version
               type: string
@@ -675,6 +702,10 @@ paths:
         "404":
           description: Not Found
           headers:
+            X-Capsa-Log-Mode:
+              description: 'Indicates the log mode, which can change the log content
+                response, possible values: SingleUnfiltered|SingleFiltered'
+              type: string
             X-Capsa-Server-Version:
               description: Current Capsa Server version
               type: string
@@ -685,6 +716,10 @@ paths:
           headers:
             X-Capsa-Error:
               description: Server error information
+              type: string
+            X-Capsa-Log-Mode:
+              description: 'Indicates the log mode, which can change the log content
+                response, possible values: SingleUnfiltered|SingleFiltered'
               type: string
             X-Capsa-Server-Version:
               description: Current Capsa Server version

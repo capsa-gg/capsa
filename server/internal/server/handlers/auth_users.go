@@ -35,7 +35,7 @@ func (h Handlers) UserLogin(c *gin.Context) {
 
 	log = log.With("user_email", req.Email)
 
-	loginInfo, err := user.Login(h.services, req.Email, req.Password)
+	loginInfo, err := user.Login(c, h.services, req.Email, req.Password)
 	if err != nil {
 		log.Warn("failed login attempt")
 

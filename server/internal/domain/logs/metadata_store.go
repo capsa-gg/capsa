@@ -12,9 +12,8 @@ import (
 )
 
 // SaveLogMetadata saves the log metadata and attempts to link the linked logs.
-func SaveLogMetadata(s *interactor.Services, logUUID uuid.UUID, metadata map[string]any, linkedLogs map[uuid.UUID]string) error {
+func SaveLogMetadata(ctx context.Context, s *interactor.Services, logUUID uuid.UUID, metadata map[string]any, linkedLogs map[uuid.UUID]string) error {
 	log := s.GetDomainLogger("logs", "SaveLogMetadata").With("log_uuid", logUUID.String())
-	ctx := context.TODO()
 
 	// Get log
 	logInfo, err := s.Database.GetLogByUuid(ctx, logUUID)

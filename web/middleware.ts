@@ -18,7 +18,7 @@ export async function middleware(req: NextRequest) {
     // Sent users that are not logged requesting non-auth pages in to the login page
     if (!isAuthenticated && !isAuthRoute) {
         await deleteJwtCookie(req);
-        
+
         const url = new URL("/auth/login", req.url);
         url.searchParams.set("redirect", req.url);
         return NextResponse.redirect(url);

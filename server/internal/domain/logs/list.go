@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/jackc/pgx/v5/pgtype"
+
 	"github.com/capsa-gg/capsa/server/constants"
 	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
@@ -12,12 +14,11 @@ import (
 
 // GetAllLogsOverview fetches the high-level overview of all available logs.
 // TODO: pagination.
-func GetAllLogsOverview(s *interactor.Services) ([]entities.LogOverview, error) {
+func GetAllLogsOverview(ctx context.Context, s *interactor.Services) ([]entities.LogOverview, error) {
 	log := s.GetDomainLogger("logs", "GetAllLogsOverview")
-	ctx := context.TODO()
 
 	// Get from database
-	rows, err := s.Database.ListAllAvailableLogs(ctx)
+	rows, err := s.Database.ListAvailableLogs(ctx, pgtype.UUID{Valid: false})
 	if err != nil {
 		return nil, entities.NewDomainErrorFromDatabaseError(err)
 	}
@@ -31,6 +32,7 @@ func GetAllLogsOverview(s *interactor.Services) ([]entities.LogOverview, error) 
 		logsAvailable[i].LogType = constants.LogType(rows[i].LogType) // safe conversion
 		logsAvailable[i].Platform = rows[i].Platform
 		logsAvailable[i].LineCount = rows[i].LineCount
+		logsAvailable[i].ChunkCount = rows[i].ChunkCount
 
 		earliest := rows[i].Earliest
 

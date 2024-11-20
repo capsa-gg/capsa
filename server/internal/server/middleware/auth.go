@@ -27,7 +27,7 @@ func AuthClientMiddleware(s *interactor.Services) gin.HandlerFunc { //nolint:dup
 		}
 
 		// Validate the token
-		claims, err := logs.ValidateClientJwt(s, tok)
+		claims, err := logs.ValidateClientJwt(c, s, tok)
 		if err != nil {
 			sendValidationError(c, err)
 
@@ -59,7 +59,7 @@ func AuthUserMiddleware(s *interactor.Services) gin.HandlerFunc { //nolint:dupl 
 		}
 
 		// Validate the token
-		claims, err := user.ValidateUserJwt(s, tok)
+		claims, err := user.ValidateUserJwt(c, s, tok)
 		if err != nil {
 			sendValidationError(c, err)
 

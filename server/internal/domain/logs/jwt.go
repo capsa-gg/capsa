@@ -12,9 +12,8 @@ import (
 )
 
 // ValidateClientJwt validates if the token passed in is valid for a client.
-func ValidateClientJwt(s *interactor.Services, tok string) (*token.JwtClaims, error) {
+func ValidateClientJwt(ctx context.Context, s *interactor.Services, tok string) (*token.JwtClaims, error) {
 	log := s.GetDomainLogger("logs", "ValidateClientJwt")
-	ctx := context.TODO()
 
 	log.Debug("starting client jwt validation")
 

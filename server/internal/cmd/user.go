@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"context"
+
 	"github.com/spf13/cobra"
 
 	"github.com/capsa-gg/capsa/server/internal/domain/user"
@@ -41,11 +43,8 @@ var userAddCmd = &cobra.Command{
 			log.Fatalf("adding a user with a password is only enabled development mode")
 		}
 
-		//nolint:ineffassign // Being explicit here is nice
-		var err error = nil
-
 		if userAddPassword == "" {
-			err = user.AddNewUser(s, userAddEmail, userAddFirstName, userAddLastName)
+			err := user.AddNewUser(context.Background(), s, userAddEmail, userAddFirstName, userAddLastName)
 			if err != nil {
 				log.Fatalf("error adding new user: %s", err)
 			}

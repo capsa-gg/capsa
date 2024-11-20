@@ -14,8 +14,8 @@ import { AppContextProvider } from "@/context/AppContext/AppContext";
 import { UserProvider } from "@/context/UserContext";
 
 export const metadata: Metadata = {
-    title: "Capsa Webapp Homepage",
-    description: "Capsa WebApp access",
+    title: "Capsa Webapp",
+    description: "Capsa WebApp",
 };
 
 // TODO: Error boundary

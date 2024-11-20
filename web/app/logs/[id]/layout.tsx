@@ -1,14 +1,28 @@
 import React from "react";
-import { Typography } from "@mui/material";
+import { Badge, Typography, Stack, Box } from "@mui/material";
+import { SingleLogContextProvider } from "@/context/SingleLogContext/SingleLogContext";
+import CopyUrlButton from "@/components/CopyUrlButton";
 
 const SingleLogLayout = async ({ params, children }: SingleLogLayoutProps) => {
     const { id } = await params;
     return (
         <>
-            <Typography variant="h6" mb={4}>
-                Log ID: {id}
-            </Typography>
-            {children}
+            <Stack
+                direction="row"
+                gap={4}
+                sx={{
+                    alignItems: "center",
+                    mb: 4,
+                }}
+            >
+                <Typography variant="h6">Log ID: {id}</Typography>
+                <Box>
+                    <Badge color="primary">
+                        <CopyUrlButton />
+                    </Badge>
+                </Box>
+            </Stack>
+            <SingleLogContextProvider logUUID={id}>{children}</SingleLogContextProvider>
         </>
     );
 };

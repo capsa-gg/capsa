@@ -9,9 +9,8 @@ import (
 )
 
 // AddNewTitle adds a new title to the database.
-func AddNewTitle(s *interactor.Services, title string) error {
+func AddNewTitle(ctx context.Context, s *interactor.Services, title string) error {
 	log := s.GetDomainLogger("admin", "AddNewTitle").With("title", title)
-	ctx := context.TODO()
 
 	log.Debug("attempting to add title")
 

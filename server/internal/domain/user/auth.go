@@ -12,9 +12,8 @@ import (
 )
 
 // Login validates a user's password and returns the login result if everything is valid.
-func Login(s *interactor.Services, email, password string) (*entities.UserLoginResult, error) {
+func Login(ctx context.Context, s *interactor.Services, email, password string) (*entities.UserLoginResult, error) {
 	log := s.GetDomainLogger("user", "CreateNewLogSession").With("email", email)
-	ctx := context.TODO()
 
 	log.Debug("attempting to log in user")
 

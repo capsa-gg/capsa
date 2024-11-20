@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import moment from "moment";
 import { useRouter } from "next/navigation";
 import { Alert, AlertTitle, Box, Link, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -9,6 +8,7 @@ import Spinner from "@/components/Spinner";
 import { useGetAllLogs } from "@/api/hooks";
 import { LogOverviewItem } from "@/types/api/logs";
 import ColoredSeverities from "@/components/ColoredSeverities";
+import { formatDate } from "@/util/formatDate";
 
 const columns: GridColDef<LogOverviewItem>[] = [
     { field: "id", headerName: "ID", maxWidth: 300, flex: 4, renderCell: row => <LogLink id={row.row.id} /> },
@@ -32,22 +32,28 @@ const columns: GridColDef<LogOverviewItem>[] = [
         valueFormatter: value => Object.keys(value).length,
     },
     {
+        field: "chunkCount",
+        headerName: "Chunks",
+        flex: 1,
+        maxWidth: 100,
+    },
+    {
         field: "tsFirstLine",
         headerName: "First timestamp",
         flex: 3,
         maxWidth: 200,
-        valueFormatter: value => moment(value).format("YYYY-MM-DD, h:mm:ss a"),
+        valueFormatter: value => formatDate(value),
     },
     {
         field: "tsLastLine",
         headerName: "Last timestamp",
         flex: 3,
         maxWidth: 200,
-        valueFormatter: value => moment(value).format("YYYY-MM-DD, h:mm:ss a"),
+        valueFormatter: value => formatDate(value),
     },
 ];
 
-const Home = () => {
+const LogsOverviewPage = () => {
     const { data, error, isLoading } = useGetAllLogs();
 
     // eslint-disable-next-line react/no-unstable-nested-components
@@ -73,7 +79,7 @@ const Home = () => {
         }
 
         return (
-            <Box sx={{ width: "100%", maxWidth: "1300px" }}>
+            <Box sx={{ width: "100%", maxWidth: "1400px" }}>
                 <DataGrid rows={data} columns={columns} getRowId={row => row.id} disableRowSelectionOnClick />
             </Box>
         );
@@ -89,7 +95,7 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default LogsOverviewPage;
 
 const LogLink: React.FC<{ id: string }> = ({ id }) => {
     const router = useRouter();

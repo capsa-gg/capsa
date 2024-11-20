@@ -9,9 +9,8 @@ import (
 )
 
 // AddNewEnvironment adds a new environment to the database for a given title.
-func AddNewEnvironment(s *interactor.Services, title, env string) error {
+func AddNewEnvironment(ctx context.Context, s *interactor.Services, title, env string) error {
 	log := s.GetDomainLogger("admin", "AddNewEnvironment").With("title", title, "environment", env)
-	ctx := context.TODO()
 
 	log.Debug("attempting to add environment")
 
@@ -42,9 +41,8 @@ func AddNewEnvironment(s *interactor.Services, title, env string) error {
 }
 
 // ListAllTitlesAndEnvironments lists all titles and environments, with the associated keys.
-func ListAllTitlesAndEnvironments(s *interactor.Services) ([]entities.TitleEnvironment, error) {
+func ListAllTitlesAndEnvironments(ctx context.Context, s *interactor.Services) ([]entities.TitleEnvironment, error) {
 	log := s.GetDomainLogger("admin", "ListAllTitlesAndEnvironments")
-	ctx := context.TODO()
 
 	res, err := s.Database.ListAllEnvironmentsAndTitles(ctx)
 	if err != nil {

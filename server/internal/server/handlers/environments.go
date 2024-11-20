@@ -23,7 +23,7 @@ import (
 func (h Handlers) EnvironmentsList(c *gin.Context) {
 	log := h.logger.Named("LogsList")
 
-	res, err := admin.ListAllTitlesAndEnvironments(h.services)
+	res, err := admin.ListAllTitlesAndEnvironments(c, h.services)
 	if err != nil {
 		h.sendErrorResponse(c, err)
 

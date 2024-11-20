@@ -742,7 +742,7 @@ const docTemplate = `{
                         "JwtUser": []
                     }
                 ],
-                "description": "Allows users to stream all uploaded chunks for a given log id",
+                "description": "Allows users to stream all uploaded chunks for a given log id. If no query parameters are set, the whole log will be fetched.",
                 "produces": [
                     "text/plain",
                     "application/json"
@@ -751,6 +751,26 @@ const docTemplate = `{
                     "UserLogs"
                 ],
                 "summary": "Log chunk storage",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Included log line severities, optional",
+                        "name": "included_severities",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Included log categories, optional",
+                        "name": "included_categories",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Excluded log categories, will be ignored if included_categories is set, optional",
+                        "name": "excluded_categories",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Log chunk stream",
@@ -758,6 +778,10 @@ const docTemplate = `{
                             "type": "string"
                         },
                         "headers": {
+                            "X-Capsa-Log-Mode": {
+                                "type": "string",
+                                "description": "Indicates the log mode, which can change the log content response, possible values: SingleUnfiltered|SingleFiltered"
+                            },
                             "X-Capsa-Server-Version": {
                                 "type": "string",
                                 "description": "Current Capsa Server version"
@@ -770,6 +794,10 @@ const docTemplate = `{
                             "$ref": "#/definitions/bodies.ErrorResponse"
                         },
                         "headers": {
+                            "X-Capsa-Log-Mode": {
+                                "type": "string",
+                                "description": "Indicates the log mode, which can change the log content response, possible values: SingleUnfiltered|SingleFiltered"
+                            },
                             "X-Capsa-Server-Version": {
                                 "type": "string",
                                 "description": "Current Capsa Server version"
@@ -782,6 +810,10 @@ const docTemplate = `{
                             "$ref": "#/definitions/bodies.ErrorResponse"
                         },
                         "headers": {
+                            "X-Capsa-Log-Mode": {
+                                "type": "string",
+                                "description": "Indicates the log mode, which can change the log content response, possible values: SingleUnfiltered|SingleFiltered"
+                            },
                             "X-Capsa-Server-Version": {
                                 "type": "string",
                                 "description": "Current Capsa Server version"
@@ -797,6 +829,10 @@ const docTemplate = `{
                             "X-Capsa-Error": {
                                 "type": "string",
                                 "description": "Server error information"
+                            },
+                            "X-Capsa-Log-Mode": {
+                                "type": "string",
+                                "description": "Indicates the log mode, which can change the log content response, possible values: SingleUnfiltered|SingleFiltered"
                             },
                             "X-Capsa-Server-Version": {
                                 "type": "string",
@@ -1035,6 +1071,9 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/entities.LogLink"
                     }
+                },
+                "logData": {
+                    "$ref": "#/definitions/entities.LogOverview"
                 }
             }
         },
@@ -1046,6 +1085,9 @@ const docTemplate = `{
                     "additionalProperties": {
                         "type": "integer"
                     }
+                },
+                "chunkCount": {
+                    "type": "integer"
                 },
                 "id": {
                     "type": "string"
