@@ -53,6 +53,7 @@ func (f LogStreamLineFilters) shouldStreamChunk(chunkMetadata logChunkMetadata) 
 			}
 		}
 
+		// If we don't have at least one matching category, return false
 		if !hasCategory {
 			return false
 		}
@@ -74,6 +75,7 @@ func (f LogStreamLineFilters) shouldStreamChunk(chunkMetadata logChunkMetadata) 
 			}
 		}
 
+		// If we only have ignored categories, return false
 		if !hasOtherCategory {
 			return false
 		}
@@ -87,6 +89,10 @@ func (f LogStreamLineFilters) shouldStreamChunk(chunkMetadata logChunkMetadata) 
 }
 
 func (f LogStreamLineFilters) chunkHasMatchingSeverities(chunkSeverities []string) bool {
+	if len(f.IncludedSeverities) == 0 {
+		return true
+	}
+
 	// See if there are chunkSeverities present
 	for _, severity := range f.IncludedSeverities {
 		if slices.Contains(chunkSeverities, severity) {

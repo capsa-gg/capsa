@@ -50,7 +50,7 @@ var shouldStreamChunkTests = map[string]struct {
 	},
 	"only excluded categories no stream": {
 		filters: LogStreamLineFilters{
-			IncludedSeverities: []string{"Log"},
+			IncludedSeverities: []string{},
 			IncludedCategories: []string{},
 			ExcludedCategories: []string{"LogExclude"},
 		},
@@ -74,7 +74,7 @@ var shouldStreamChunkTests = map[string]struct {
 	},
 	"both included and excluded categories": {
 		filters: LogStreamLineFilters{
-			IncludedSeverities: []string{"Log"},
+			IncludedSeverities: []string{},
 			IncludedCategories: []string{"LogInclude"},
 			ExcludedCategories: []string{"LogExclude"},
 		},
@@ -83,6 +83,18 @@ var shouldStreamChunkTests = map[string]struct {
 			CategoriesCount: map[string]int{"LogInclude": 1, "LogExclude": 2},
 		},
 		expected: true,
+	},
+	"mixed no stream": {
+		filters: LogStreamLineFilters{
+			IncludedSeverities: []string{"Fatal"},
+			IncludedCategories: []string{"LogInclude"},
+			ExcludedCategories: []string{"LogExclude"},
+		},
+		chunkMetadata: logChunkMetadata{
+			SeveritiesCount: map[string]int{"Log": 1},
+			CategoriesCount: map[string]int{"LogInclude": 1, "LogExclude": 2},
+		},
+		expected: false,
 	},
 }
 
