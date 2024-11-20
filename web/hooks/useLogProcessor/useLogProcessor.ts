@@ -81,7 +81,7 @@ const filterStateToWorkerFilters = (filterState: FilterState): LogFilters => {
 
     return {
         includedSeverities: getIncludedSeverities(),
-        includedCategories: [],
-        excludedCategories: [],
+        includedCategories: filterState.includedCategories,
+        excludedCategories: filterState.excludedCategories,
     };
 };

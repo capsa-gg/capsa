@@ -4,7 +4,9 @@ import Box from "@mui/material/Box";
 import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
 import { Stack } from "@mui/system";
 import {
+    ExcludedCategoriesFilters,
     FilterButtons,
+    IncludedCategoriesFilters,
     SeveritiesFilters,
 } from "@/views/SingleLogView/LogLineFilterDrawer/LogLineFilterDrawer.components";
 
@@ -20,8 +22,10 @@ const LogLineFilterDrawer: React.FC = () => {
                 <Typography variant="h3">Log line filters</Typography>
                 <Divider sx={{ mt: 2, mb: 5 }} />
                 <Stack direction="column" justifyContent="space-between" sx={{ height: "100%" }}>
-                    <Stack direction="row">
+                    <Stack direction="column" gap={6}>
                         <SeveritiesFilters />
+                        <IncludedCategoriesFilters />
+                        <ExcludedCategoriesFilters />
                     </Stack>
                     <FilterButtons />
                 </Stack>

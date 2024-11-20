@@ -5,6 +5,7 @@ import { SingleLogContextProviderProps, SingleLogContextData } from "@/context/S
 import { useGetSingleLogMetadata } from "@/api/hooks";
 import useLogProcessor from "@/hooks/useLogProcessor/useLogProcessor";
 import { filterReducer, getFilterReducerInitialState } from "@/context/SingleLogContext/SingleLogContext.reducers";
+import { setSingleLogFilterStateInLocalStorage } from "@/context/SingleLogContext/SingleLogContext.storage";
 
 //@ts-ignore // This is fine, we are checking with the use hook
 export const SingleLogContext = createContext<SingleLogContextData>(undefined);
@@ -16,9 +17,11 @@ export const SingleLogContextProvider: React.FC<SingleLogContextProviderProps> =
     const logProcessor = useLogProcessor();
 
     const saveFilters = useCallback(() => {
+        const [filterState] = filters;
+        setSingleLogFilterStateInLocalStorage(filterState);
         drawerState[1](false); // Hide drawer
         logProcessor.stopFetchingLog; // Stop fetching current log
-        logProcessor.startFetchingLog(logUUID, filters[0]); // Start fetching log with set filters
+        logProcessor.startFetchingLog(logUUID, filterState); // Start fetching log with set filters
     }, [logUUID, logProcessor.startFetchingLog, logProcessor.stopFetchingLog, filters]);
 
     // Start loading logs with the initial filter state on load

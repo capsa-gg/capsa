@@ -76,7 +76,7 @@ async function fetchLog(reqUrl: URL, jwt: string): Promise<void> {
                     break;
                 }
                 case "SingleFiltered":
-                    const [chunkText, lineNumbers] = processFilteredChunk(chunk);
+                    const [chunkText, lineNumbers] = await processFilteredChunk(chunk);
                     fullLog += chunkText;
                     absoluteLineNumbers = [...absoluteLineNumbers, ...lineNumbers];
 
@@ -102,7 +102,7 @@ async function fetchLog(reqUrl: URL, jwt: string): Promise<void> {
     }
 }
 
-function processFilteredChunk(chunk: string): [string, number[]] {
+async function processFilteredChunk(chunk: string): Promise<[string, number[]]> {
     const absoluteLineNumbers = [];
     const cleanedLines = [];
 
