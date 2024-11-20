@@ -9,8 +9,6 @@ export const filterReducer = (state: FilterState, action: FilterAction) => {
         }
         case "SWITCH_SEVERITY": {
             const sev = action.severity;
-            const hasSev = state.severities[sev];
-            if (!hasSev) return state;
 
             return {
                 ...state,
@@ -66,7 +64,7 @@ export const filterReducer = (state: FilterState, action: FilterAction) => {
     return state;
 };
 
-export const getFilterReducerInitialState = (): FilterState => {
+export const getFilterReducerLocalInitialState = (): FilterState => {
     const stateFromLocalStorage = getSingleLogFilterStateFromLocalStorage();
     return stateFromLocalStorage ?? defaultFilterReducerState;
 };

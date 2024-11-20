@@ -14,13 +14,19 @@ export const getSingleLogFilterStateFromLocalStorage = (): FilterState | null =>
         return null;
     }
 
-    const { data, success, error } = FilterStateSchema.safeParse(JSON.parse(filterStateJson));
-    if (!success) {
-        console.error("error parsing single log context state", error);
+    try {
+        const { data, success, error } = FilterStateSchema.safeParse(JSON.parse(filterStateJson));
+        if (!success) {
+            console.error("error parsing single log context state", error);
+            removeSingleLogFilterStateFromLocalStorage();
+            return null;
+        }
+        return data;
+    } catch (e) {
+        console.error("error parsing single log context state", e);
+        removeSingleLogFilterStateFromLocalStorage();
         return null;
     }
-
-    return data;
 };
 
 export const setSingleLogFilterStateInLocalStorage = (data: FilterState) => {

@@ -125,7 +125,7 @@ function generateLogUrlWithParams(urlBase: string, filters: LogFilters): URL {
         filters.includedCategories.length === 0 &&
         filters.excludedCategories.length === 0;
     if (emptyFilters) {
-        console.log("Empty log filters, not setting search parameters");
+        console.log("[generateLogUrlWithParams]: Empty log filters, not setting search parameters");
         return url;
     }
 
@@ -141,7 +141,7 @@ function generateLogUrlWithParams(urlBase: string, filters: LogFilters): URL {
         url.searchParams.set("excluded_categories", filters.excludedCategories.join(","));
     }
 
-    console.log("Filters set, search params: ", url.searchParams.toString());
+    console.log("[generateLogUrlWithParams]: Filters set, search params: ", url.searchParams.toString());
 
     return url;
 }
