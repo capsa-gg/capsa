@@ -256,11 +256,12 @@ paths:
     post:
       consumes:
       - text/plain
+      - application/gzip
       description: Allows clients to upload log chunks for their log sessions. To
         test this endpoint, please run the upload locally to add the correct request
         body.
       parameters:
-      - description: Plain text log
+      - description: Log contents, in line with the Content-Type specified
         in: body
         name: log
         required: true

@@ -140,7 +140,8 @@ const docTemplate = `{
                 ],
                 "description": "Allows clients to upload log chunks for their log sessions. To test this endpoint, please run the upload locally to add the correct request body.",
                 "consumes": [
-                    "text/plain"
+                    "text/plain",
+                    "application/gzip"
                 ],
                 "tags": [
                     "ClientAuthenticated"
@@ -148,7 +149,7 @@ const docTemplate = `{
                 "summary": "Log chunk storage",
                 "parameters": [
                     {
-                        "description": "Plain text log",
+                        "description": "Log contents, in line with the Content-Type specified",
                         "name": "log",
                         "in": "body",
                         "required": true,
