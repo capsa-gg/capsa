@@ -1,29 +1,27 @@
 package handlers
 
 import (
+	"bytes"
+	"compress/gzip"
 	"fmt"
 	"io"
 	"net/http"
-	"slices"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 
 	"github.com/capsa-gg/capsa/server/internal/domain/logchunk"
+	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
-
-var allowedLogChunkUploadContentTypes = []string{
-	"text/plain",
-}
 
 // LogStoreChunk allows clients to upload log chunks
 // @Summary 	Log chunk storage
 // @Tags        ClientAuthenticated
 // @Accept     	plain
+// @Accept     	application/gzip
 // @Description	Allows clients to upload log chunks for their log sessions. To test this endpoint, please run the upload locally to add the correct request body.
 // @Security	JwtClient
-// @Param 		log		body 		string 		true 	"Plain text log"
+// @Param 		log		body 		string 		true 	"Log contents, in line with the Content-Type specified"
 // @Success		201
 // @Success		304
 // @Failure     400		{object}	bodies.ErrorResponse
@@ -43,10 +41,45 @@ func (h Handlers) LogStoreChunk(c *gin.Context) {
 		return
 	}
 
-	if !slices.Contains(allowedLogChunkUploadContentTypes, strings.ToLower(contentType)) {
+	var chunkText []byte
+
+	// Handle plain text stream
+	switch contentType {
+	case "text/plain":
+		var err error
+		chunkText, err = io.ReadAll(c.Request.Body)
+
+		if err != nil {
+			log.Error("cannot extract payload from plain text chunkText")
+
+			c.JSON(http.StatusInternalServerError, bodies.ErrorResponse{Error: "cannot extract log chunkText from request chunkText"})
+
+			return
+		}
+	case "application/gzip":
+		decodedBody, err := decodeGzipBody(c)
+		log.Errorf("gzip: %s", decodedBody)
+
+		if err != nil {
+			h.sendErrorResponse(c, err)
+
+			return
+		}
+
+		chunkText = decodedBody
+	default:
 		c.JSON(http.StatusUnsupportedMediaType, bodies.ErrorResponse{
 			Error: fmt.Sprintf("content-type %s is not supported", contentType),
 		})
+
+		return
+	}
+
+	// Arbitrary number
+	if len(chunkText) < 10 {
+		log.Infof("chunkText length %d too short for processing", len(chunkText))
+
+		c.Status(http.StatusNotModified)
 
 		return
 	}
@@ -56,28 +89,10 @@ func (h Handlers) LogStoreChunk(c *gin.Context) {
 		return // Response has been sent by extractClientJwtClaimsFromContext
 	}
 
-	// Extract payload, plain text
-	chunk, err := io.ReadAll(c.Request.Body)
-	if err != nil {
-		log.Error("cannot extract payload from plain text chunk")
+	log = log.With("log_uuid", logID)
+	log.Debug("attempting to store log chunkText")
 
-		c.JSON(http.StatusInternalServerError, bodies.ErrorResponse{Error: "cannot extract log chunk from request chunk"})
-
-		return
-	}
-
-	// Arbitrary number
-	if len(chunk) < 10 {
-		log.Infof("chunk length %d too short for processing", len(chunk))
-
-		c.Status(http.StatusNotModified)
-
-		return
-	}
-
-	log.Debug("attempting to store log chunk")
-
-	err = logchunk.StoreLogChunk(h.services, logID, chunk)
+	err := logchunk.StoreLogChunk(h.services, logID, chunkText)
 
 	if err != nil {
 		h.sendErrorResponse(c, err)
@@ -85,7 +100,30 @@ func (h Handlers) LogStoreChunk(c *gin.Context) {
 		return
 	}
 
-	log.Info("chunk stored")
+	log.Info("chunkText stored")
 
 	c.Status(http.StatusCreated)
+}
+
+func decodeGzipBody(c *gin.Context) ([]byte, error) {
+	gzipContents, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot extract request body", err)
+	}
+
+	buf := bytes.NewBuffer(gzipContents)
+
+	reader, err := gzip.NewReader(buf)
+	if err != nil {
+		return nil, entities.NewDomainError(entities.DomainErrorInvalidArgument, "cannot decompress request body", err)
+	}
+
+	defer reader.Close()
+
+	logContents, err := io.ReadAll(reader)
+	if err != nil {
+		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot read decompressed log data", err)
+	}
+
+	return logContents, nil
 }
