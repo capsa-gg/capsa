@@ -32,6 +32,7 @@ func GetAllLogsOverview(ctx context.Context, s *interactor.Services) ([]entities
 		logsAvailable[i].LogType = constants.LogType(rows[i].LogType) // safe conversion
 		logsAvailable[i].Platform = rows[i].Platform
 		logsAvailable[i].LineCount = rows[i].LineCount
+		logsAvailable[i].ChunkCount = rows[i].ChunkCount
 
 		earliest := rows[i].Earliest
 

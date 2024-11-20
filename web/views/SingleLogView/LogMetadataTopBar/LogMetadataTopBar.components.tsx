@@ -32,7 +32,10 @@ export const LogMetadataList: React.FC<{ logMetadata: LogMetadata }> = ({ logMet
                 Platform: <b>{logMetadata.logData.platform}</b>
             </Item>
             <Item>
-                Line count: <b>{logMetadata.logData.lineCount}</b>
+                Line: <b>{logMetadata.logData.lineCount}</b>
+            </Item>
+            <Item>
+                Chunks: <b>{logMetadata.logData.chunkCount}</b>
             </Item>
             <Item>
                 Categories: <b>{Object.keys(logMetadata.logData.categoriesCounts).length}</b>

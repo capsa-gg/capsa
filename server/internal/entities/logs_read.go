@@ -21,6 +21,7 @@ type LogOverview struct {
 	Platform           string            `json:"platform"`
 	LogType            constants.LogType `json:"logType"`
 	LineCount          int64             `json:"lineCount"`
+	ChunkCount         int64             `json:"chunkCount"`
 	TimestampFirstLine *time.Time        `json:"tsFirstLine"`
 	TimestampLastLine  *time.Time        `json:"tsLastLine"`
 	CategoriesCounts   map[string]int    `json:"categoriesCounts"`

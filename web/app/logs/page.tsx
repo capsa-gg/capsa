@@ -32,6 +32,12 @@ const columns: GridColDef<LogOverviewItem>[] = [
         valueFormatter: value => Object.keys(value).length,
     },
     {
+        field: "chunkCount",
+        headerName: "Chunks",
+        flex: 1,
+        maxWidth: 100,
+    },
+    {
         field: "tsFirstLine",
         headerName: "First timestamp",
         flex: 3,
@@ -73,7 +79,7 @@ const LogsOverviewPage = () => {
         }
 
         return (
-            <Box sx={{ width: "100%", maxWidth: "1300px" }}>
+            <Box sx={{ width: "100%", maxWidth: "1400px" }}>
                 <DataGrid rows={data} columns={columns} getRowId={row => row.id} disableRowSelectionOnClick />
             </Box>
         );
