@@ -1,11 +1,10 @@
 import * as React from "react";
 import { Tooltip, Typography } from "@mui/material";
 import LogsColors from "@/styles/LogsColors";
+import logSeverities from "@/types/logSeverities";
 
 const ColoredSeverities: React.FC<{ severities: Record<string, number> }> = ({ severities }) => {
-    const orderedSeverities = ["Fatal", "Error", "Warning", "Log", "Display", "Verbose", "VeryVerbose"];
-
-    const severityItems = orderedSeverities.map(s => <Severity key={s} severity={s} count={severities[s] ?? 0} />);
+    const severityItems = logSeverities.map(s => <Severity key={s} severity={s} count={severities[s] ?? 0} />);
 
     // eslint-disable-next-line react/jsx-no-useless-fragment
     return <>{severityItems}</>;

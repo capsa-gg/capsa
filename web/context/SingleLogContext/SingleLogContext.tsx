@@ -1,17 +1,37 @@
 "use client";
 
-import React, { createContext, useContext } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useReducer, useState } from "react";
 import { SingleLogContextProviderProps, SingleLogContextData } from "@/context/SingleLogContext/SingleLogContext.types";
 import { useGetSingleLogMetadata } from "@/api/hooks";
+import useLogProcessor from "@/hooks/useLogProcessor/useLogProcessor";
+import { filterReducer, getFilterReducerInitialState } from "@/context/SingleLogContext/SingleLogContext.reducers";
 
 //@ts-ignore // This is fine, we are checking with the use hook
 export const SingleLogContext = createContext<SingleLogContextData>(undefined);
 
 export const SingleLogContextProvider: React.FC<SingleLogContextProviderProps> = ({ logUUID, children }) => {
+    const drawerState = useState(false);
+    const filters = useReducer(filterReducer, getFilterReducerInitialState());
     const metadata = useGetSingleLogMetadata(logUUID);
+    const logProcessor = useLogProcessor();
+
+    const saveFilters = useCallback(() => {
+        drawerState[1](false); // Hide drawer
+        logProcessor.stopFetchingLog; // Stop fetching current log
+        logProcessor.startFetchingLog(logUUID, filters[0]); // Start fetching log with set filters
+    }, [logUUID, logProcessor.startFetchingLog, logProcessor.stopFetchingLog, filters]);
+
+    // Start loading logs with the initial filter state on load
+    useEffect(() => {
+        saveFilters();
+    }, []);
 
     const context: SingleLogContextData = {
-        metadata: metadata,
+        drawerState,
+        metadata,
+        logProcessor,
+        filters,
+        saveFilters,
     };
 
     return <SingleLogContext.Provider value={context}>{children}</SingleLogContext.Provider>;

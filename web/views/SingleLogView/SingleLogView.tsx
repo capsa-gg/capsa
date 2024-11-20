@@ -1,28 +1,23 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import LogViewer from "@/containers/LogViewer/LogViewer";
 import LogMetadataTopBar from "@/views/SingleLogView/LogMetadataTopBar/LogMetadataTopBar";
-import useLogProcessor from "@/hooks/useLogProcessor/useLogProcessor";
+import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
+import LogLineFilterDrawer from "@/views/SingleLogView/LogLineFilterDrawer/LogLineFilterDrawer";
 
-const SingleLogView: React.FC<{ logUUID: string }> = ({ logUUID }) => {
-    const { fullLog, error, startFetchingLog, stopFetchingLog } = useLogProcessor();
-
-    useEffect(() => {
-        startFetchingLog(logUUID);
-        return () => {
-            stopFetchingLog();
-        };
-    }, [logUUID, startFetchingLog, stopFetchingLog]);
+const SingleLogView: React.FC = () => {
+    const { logProcessor } = useSingleLogContext();
 
     const logViewerData = () => {
-        if (error) return `${error}`;
-        return fullLog;
+        if (logProcessor.error) return `${logProcessor.error}`;
+        return logProcessor.fullLog;
     };
 
     return (
         <Box width="97%" height="calc(100vh - 200px)">
+            <LogLineFilterDrawer />
             <LogMetadataTopBar />
             <LogViewer data={logViewerData()} />
         </Box>

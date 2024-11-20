@@ -1,6 +1,6 @@
 "use client";
 
-import { WorkerCommandMessage, WorkerPostMessage } from "./LogProcessor.types";
+import { LogFilters, WorkerCommandMessage, WorkerPostMessage } from "./LogProcessor.types";
 import { getRequestUrl } from "@/api/apibase";
 import { getJwtFromLocalStorage } from "@/data/jwt/localStorage";
 
@@ -44,7 +44,7 @@ export default class LogProcessor {
         });
     }
 
-    public async startFetchingLog(id: string) {
+    public async startFetchingLog(id: string, filters: LogFilters) {
         const path = `/user/logs/${id}/log`;
         const reqUrl = await getRequestUrl(path);
 
@@ -57,7 +57,10 @@ export default class LogProcessor {
             return;
         }
 
-        const message: WorkerCommandMessage = { type: "START_FETCHING_LOG", payload: { reqUrl, jwt } };
+        const message: WorkerCommandMessage = {
+            type: "START_FETCHING_LOG",
+            payload: { logUrlBase: reqUrl, jwt, filters },
+        };
         this.worker.postMessage(message);
     }
 
