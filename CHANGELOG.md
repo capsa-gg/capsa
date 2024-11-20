@@ -1,3 +1,33 @@
+## [0.0.5](https://github.com/capsa-gg/capsa/compare/v0.0.4...v0.0.5) (2024-11-20)
+
+
+### Bug Fixes
+
+* **server:** allow clients to access headers ([1bceed3](https://github.com/capsa-gg/capsa/commit/1bceed38c25925f20a6fd168a23a651682d1f58f))
+* **server:** include number of unprocessed lines in chunk line count ([47d2edd](https://github.com/capsa-gg/capsa/commit/47d2edd5e4705bc0354aea25c285c6d01b270bd9))
+* **web:** show all times in UTC ([f51152d](https://github.com/capsa-gg/capsa/commit/f51152da81cc4581def18c000e66ed784537f4ff))
+
+
+### Features
+
+* **server:** add absolute line numbers for filtered logs ([2b118c1](https://github.com/capsa-gg/capsa/commit/2b118c15ccb9ea54da0f3e1a772f12b85086a9d6))
+* **server:** add basic log data to metadata api endpoint ([4ce95a0](https://github.com/capsa-gg/capsa/commit/4ce95a0959e96abcf028ff5070ad56b48ad9e542))
+* **server:** support gzip log uploads ([d2680de](https://github.com/capsa-gg/capsa/commit/d2680de621774e53b4f9eee2f17ee19772d340ec))
+* **server:** support log lines in log streaming with url params ([f9cb388](https://github.com/capsa-gg/capsa/commit/f9cb388e55c726cb3a16d093c1ac03c0b9c20389))
+* show chunk count with log metadata ([01a90d7](https://github.com/capsa-gg/capsa/commit/01a90d7e00274c4596154d45399283947e6bc731))
+* **web:** add absolute line numbers for filtered logs ([aa4ee4b](https://github.com/capsa-gg/capsa/commit/aa4ee4b888ef034146c05a344085e86f881b4f64))
+* **web:** add copy url button for sharing log view with filters ([c6922f8](https://github.com/capsa-gg/capsa/commit/c6922f8e627d4d42ccfa780483a2459d91b21a26))
+* **web:** add filters to URL bar on single log ([3b91bd3](https://github.com/capsa-gg/capsa/commit/3b91bd31958c4cdfd735fdb04e45ffad4c911168))
+* **web:** add single log line filtering by severity ([c2a5f4e](https://github.com/capsa-gg/capsa/commit/c2a5f4e77b83a114969b52174c3932f09a839c05))
+* **web:** display log metadata on single log page ([8f8276d](https://github.com/capsa-gg/capsa/commit/8f8276d1f29fb5c593835e49d0a4b7ca637234be))
+* **web:** filter log lines by included and excluded categories ([3b3d13d](https://github.com/capsa-gg/capsa/commit/3b3d13d44576d27ebc5d32ea1dad375c5b1ffa69))
+* **web:** use a Worker for fetching and processing log data ([bfba4c0](https://github.com/capsa-gg/capsa/commit/bfba4c04297dbf3b7784403a7251132abf2ef690))
+
+
+### Performance Improvements
+
+* **server:** do not fetch chunks that can be ignored ([310b356](https://github.com/capsa-gg/capsa/commit/310b356de70eff330c417f9e314e6ae09516adad))
+
 ## [0.0.4](https://github.com/capsa-gg/capsa/compare/v0.0.3...v0.0.4) (2024-11-18)
 
 
