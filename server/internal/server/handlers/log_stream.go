@@ -87,10 +87,10 @@ func (h Handlers) StreamLogChunks(c *gin.Context) {
 	log.With("has_filters", hasFilters)
 
 	if hasFilters {
-		c.Header(logModeHeaderName, logModeSingleUnfiltered)
+		c.Header(logModeHeaderName, logModeSingleFiltered)
 		err = logchunk.StreamFilteredLogChunks(c, h.services, logInfo.ID, filters, streamer)
 	} else {
-		c.Header(logModeHeaderName, logModeSingleFiltered)
+		c.Header(logModeHeaderName, logModeSingleUnfiltered)
 		err = logchunk.StreamUnfilteredLogChunks(c, h.services, logInfo.ID, streamer)
 	}
 

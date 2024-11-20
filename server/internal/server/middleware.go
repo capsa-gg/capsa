@@ -20,6 +20,11 @@ func registerMiddleware(router *gin.Engine, logger *zap.Logger) {
 	// TODO: Configure properly
 	config := cors.DefaultConfig()
 	config.AllowAllOrigins = true
+	config.ExposeHeaders = []string{
+		"X-Capsa-Log-Mode",
+		"X-Capsa-Server-Version",
+		"X-Capsa-Error",
+	}
 	config.AllowHeaders = []string{
 		"Access-Control-Allow-Headers",
 		"Content-Type",
