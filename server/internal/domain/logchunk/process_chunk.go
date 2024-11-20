@@ -18,7 +18,7 @@ var (
 	errorLineMissingEndOfMetadataChar = errors.New("metadata blocks should be ended with a `:` character")
 )
 
-const timestampParseLayout = "2006.01.02-15.04.05.999"
+const timestampParseLayout = "2006.01.02-15.04.05.000"
 
 type logChunkLineMetadata struct {
 	Timestamp time.Time
