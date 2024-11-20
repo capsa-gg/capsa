@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import { Stack, styled } from "@mui/system";
 import { Badge, Divider, IconButton, Paper } from "@mui/material";
 import { LogMetadata } from "@/types/api/logs";
-import { formatDateString } from "@/util/formatDateString";
+import { formatDate } from "@/util/formatDate";
 
 const MetadataItem = styled(Paper)(({ theme }) => ({
     // @ts-ignore
@@ -41,10 +41,10 @@ export const LogMetadataList: React.FC<{ logMetadata: LogMetadata }> = ({ logMet
                 Categories: <b>{Object.keys(logMetadata.logData.categoriesCounts).length}</b>
             </MetadataItem>
             <MetadataItem>
-                Start: <b>{formatDateString(logMetadata.logData.tsFirstLine)}</b>
+                Start: <b>{formatDate(logMetadata.logData.tsFirstLine)}</b>
             </MetadataItem>
             <MetadataItem>
-                End: <b>{formatDateString(logMetadata.logData.tsLastLine)}</b>
+                End: <b>{formatDate(logMetadata.logData.tsLastLine)}</b>
             </MetadataItem>
         </Stack>
     </Box>

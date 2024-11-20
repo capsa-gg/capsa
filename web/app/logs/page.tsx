@@ -8,7 +8,7 @@ import Spinner from "@/components/Spinner";
 import { useGetAllLogs } from "@/api/hooks";
 import { LogOverviewItem } from "@/types/api/logs";
 import ColoredSeverities from "@/components/ColoredSeverities";
-import { formatDateString } from "@/util/formatDateString";
+import { formatDate } from "@/util/formatDate";
 
 const columns: GridColDef<LogOverviewItem>[] = [
     { field: "id", headerName: "ID", maxWidth: 300, flex: 4, renderCell: row => <LogLink id={row.row.id} /> },
@@ -42,14 +42,14 @@ const columns: GridColDef<LogOverviewItem>[] = [
         headerName: "First timestamp",
         flex: 3,
         maxWidth: 200,
-        valueFormatter: value => formatDateString(value),
+        valueFormatter: value => formatDate(value),
     },
     {
         field: "tsLastLine",
         headerName: "Last timestamp",
         flex: 3,
         maxWidth: 200,
-        valueFormatter: value => formatDateString(value),
+        valueFormatter: value => formatDate(value),
     },
 ];
 

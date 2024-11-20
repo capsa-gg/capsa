@@ -7,8 +7,8 @@ export const LogOverviewItemSchema = z.object({
     logType: z.string(),
     lineCount: z.number(),
     chunkCount: z.number(),
-    tsFirstLine: z.string(),
-    tsLastLine: z.string(),
+    tsFirstLine: z.string().nullable(),
+    tsLastLine: z.string().nullable(),
     categoriesCounts: z.record(z.string(), z.number()),
     severitiesCounts: z.record(z.string(), z.number()),
 });
