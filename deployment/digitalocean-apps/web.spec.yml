@@ -1,4 +1,4 @@
-name: dev-capsa-web
+name: capsa-web
 region: ams
 alerts:
   - rule: DEPLOYMENT_FAILED
@@ -21,11 +21,10 @@ services:
     instance_count: 1
     instance_size_slug: basic-xxs
     image:
-      deploy_on_push:
-        enabled: true
-      registry_type: DOCR # TODO: Move to other registry
-      repository: web
-      tag: latest
+      registry: capsa-gg
+      registry_type: GHCR
+      repository: capsa-web
+      tag: latest # REPLACEME with the latest tag
     health_check:
       http_path: /auth/login
     alerts:
@@ -44,6 +43,6 @@ services:
     envs:
       - key: SERVER_URL
         scope: RUN_AND_BUILD_TIME
-        value: <REPLACEME>
+        value: https://api.demo.capsa.gg # REPLACEME
 
 

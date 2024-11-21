@@ -6,7 +6,7 @@ databases: # Note: this is a development database, you can set a production data
   - engine: PG
     name: psql
 domains:
-  - domain: api.demo.capsa.gg
+  - domain: api.demo.capsa.gg # REPLACEME
     type: PRIMARY
     zone: capsa.gg
 features:
@@ -26,11 +26,12 @@ services:
     http_port: 8080
     run_command: ./capsa server start
     image:
-      deploy_on_push:
-        enabled: true
-      registry_type: DOCR # TODO: Move to other registry
+      registry: capsa-gg
+      registry_type: GHCR
       repository: capsa-server
-      tag: latest
+      tag: latest # REPLACEME with the latest tag
+    health_check:
+      http_path: /v1/status
     alerts:
       - operator: GREATER_THAN
         rule: CPU_UTILIZATION
@@ -55,12 +56,15 @@ services:
         scope: RUN_AND_BUILD_TIME
         value: |-
           <REPLACEME>
+      - key: API_PROTOCOL
+        scope: RUN_AND_BUILD_TIME
+        value: https
       - key: API_HOSTNAME
         scope: RUN_AND_BUILD_TIME
         value: ${_self.PUBLIC_URL}
       - key: WEBAPP_HOSTNAME
         scope: RUN_AND_BUILD_TIME
-        value: web.capsa.dev
+        value: web.demo.capsa.gg # REPLACEME
       - key: DB_HOST
         scope: RUN_AND_BUILD_TIME
         value: ${psql.HOSTNAME}
@@ -90,10 +94,10 @@ services:
         value: <REPLACEME>
       - key: BLOBSTORAGE_ENDPOINT
         scope: RUN_AND_BUILD_TIME
-        value: https://ams3.digitaloceanspaces.com
+        value: https://ams3.digitaloceanspaces.com # REPLACEME
       - key: BLOBSTORAGE_REGION
         scope: RUN_AND_BUILD_TIME
-        value: ams3
+        value: ams3 # REPLACEME
       - key: BLOBSTORAGE_KEY
         scope: RUN_AND_BUILD_TIME
         value: <REPLACEME>
@@ -105,7 +109,7 @@ services:
         value: <REPLACEME>
       - key: LOG_RETENTION_DAYS
         scope: RUN_AND_BUILD_TIME
-        value: "90"
+        value: "30"
       - key: LOG_MAX_DURATION_HOURS
         scope: RUN_AND_BUILD_TIME
         value: "48"
