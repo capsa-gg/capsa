@@ -12,33 +12,40 @@ import (
 )
 
 const addUser = `-- name: AddUser :exec
-INSERT INTO users (email, first_name, last_name)
-VALUES ($1, $2, $3)
+INSERT INTO users (email, first_name, last_name, user_role)
+VALUES ($1, $2, $3, $4)
 `
 
 type AddUserParams struct {
-	Email     string `json:"email"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
+	Email     string    `json:"email"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
+	UserRole  UserRoles `json:"userRole"`
 }
 
 // Inserts new user into database without a password hash
 func (q *Queries) AddUser(ctx context.Context, arg AddUserParams) error {
-	_, err := q.db.Exec(ctx, addUser, arg.Email, arg.FirstName, arg.LastName)
+	_, err := q.db.Exec(ctx, addUser,
+		arg.Email,
+		arg.FirstName,
+		arg.LastName,
+		arg.UserRole,
+	)
 	return err
 }
 
 const addUserWithPassHash = `-- name: AddUserWithPassHash :one
-INSERT INTO users (email, first_name, last_name, password_hash, password_uuid)
-VALUES ($1, $2, $3, $4, uuid_generate_v4())
+INSERT INTO users (email, first_name, last_name, password_hash, password_uuid, user_role)
+VALUES ($1, $2, $3, $4, uuid_generate_v4(), $5)
 RETURNING user_uuid
 `
 
 type AddUserWithPassHashParams struct {
-	Email        string  `json:"email"`
-	FirstName    string  `json:"firstName"`
-	LastName     string  `json:"lastName"`
-	PasswordHash *string `json:"passwordHash"`
+	Email        string    `json:"email"`
+	FirstName    string    `json:"firstName"`
+	LastName     string    `json:"lastName"`
+	PasswordHash *string   `json:"passwordHash"`
+	UserRole     UserRoles `json:"userRole"`
 }
 
 // Inserts new user into database with a password hash
@@ -48,14 +55,27 @@ func (q *Queries) AddUserWithPassHash(ctx context.Context, arg AddUserWithPassHa
 		arg.FirstName,
 		arg.LastName,
 		arg.PasswordHash,
+		arg.UserRole,
 	)
 	var user_uuid uuid.UUID
 	err := row.Scan(&user_uuid)
 	return user_uuid, err
 }
 
+const deactivateUser = `-- name: DeactivateUser :exec
+UPDATE users
+SET deactivated_on = now(), password_uuid = NULL, password_hash = NULL
+WHERE id = $1
+`
+
+// Marks a user as deactivated
+func (q *Queries) DeactivateUser(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, deactivateUser, id)
+	return err
+}
+
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, user_uuid, password_hash, password_uuid, email, first_name, last_name, created_at FROM users
+SELECT id, user_uuid, password_hash, password_uuid, email, first_name, last_name, user_role, created_at, deactivated_on FROM users
 WHERE email = $1
 `
 
@@ -70,13 +90,15 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 		&i.Email,
 		&i.FirstName,
 		&i.LastName,
+		&i.UserRole,
 		&i.CreatedAt,
+		&i.DeactivatedOn,
 	)
 	return i, err
 }
 
 const getUserByID = `-- name: GetUserByID :one
-SELECT id, user_uuid, password_hash, password_uuid, email, first_name, last_name, created_at FROM users
+SELECT id, user_uuid, password_hash, password_uuid, email, first_name, last_name, user_role, created_at, deactivated_on FROM users
 WHERE id = $1
 `
 
@@ -91,13 +113,15 @@ func (q *Queries) GetUserByID(ctx context.Context, id int32) (User, error) {
 		&i.Email,
 		&i.FirstName,
 		&i.LastName,
+		&i.UserRole,
 		&i.CreatedAt,
+		&i.DeactivatedOn,
 	)
 	return i, err
 }
 
 const getUserByUuid = `-- name: GetUserByUuid :one
-SELECT id, user_uuid, password_hash, password_uuid, email, first_name, last_name, created_at FROM users
+SELECT id, user_uuid, password_hash, password_uuid, email, first_name, last_name, user_role, created_at, deactivated_on FROM users
 WHERE user_uuid = $1
 `
 
@@ -112,9 +136,23 @@ func (q *Queries) GetUserByUuid(ctx context.Context, userUuid uuid.UUID) (User, 
 		&i.Email,
 		&i.FirstName,
 		&i.LastName,
+		&i.UserRole,
 		&i.CreatedAt,
+		&i.DeactivatedOn,
 	)
 	return i, err
+}
+
+const removeUserDeactivation = `-- name: RemoveUserDeactivation :exec
+UPDATE users
+SET deactivated_on = NULL
+WHERE id = $1
+`
+
+// Removes the user deactivation
+func (q *Queries) RemoveUserDeactivation(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, removeUserDeactivation, id)
+	return err
 }
 
 const updateUserPassword = `-- name: UpdateUserPassword :exec

@@ -48,7 +48,7 @@ func AuthClientMiddleware(s *interactor.Services) gin.HandlerFunc { //nolint:dup
 }
 
 // AuthUserMiddleware is middleware to validate that a user is correctly authenticated.
-func AuthUserMiddleware(s *interactor.Services) gin.HandlerFunc { //nolint:dupl // Not similar enough for a layer of abstraction
+func AuthUserMiddleware(s *interactor.Services, allowedRoles []constants.UserRole) gin.HandlerFunc { //nolint:dupl // Not similar enough for a layer of abstraction
 	return func(c *gin.Context) {
 		log := s.Config.RootLogger.Named("AuthUserMiddleware").Sugar()
 
@@ -59,7 +59,7 @@ func AuthUserMiddleware(s *interactor.Services) gin.HandlerFunc { //nolint:dupl 
 		}
 
 		// Validate the token
-		claims, err := user.ValidateUserJwt(c, s, tok)
+		claims, err := user.ValidateUserJwt(c, s, tok, allowedRoles)
 		if err != nil {
 			sendValidationError(c, err)
 

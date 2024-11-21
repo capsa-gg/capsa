@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/capsa-gg/capsa/server/constants"
 	"github.com/capsa-gg/capsa/server/internal/entities"
 
 	"github.com/google/uuid"
@@ -13,8 +14,7 @@ import (
 )
 
 // AddNewUser adds a new user and initializes the flow to set their password.
-// NOTE: if this becomes available in the API, the returned errors should be of type DomainError.
-func AddNewUser(ctx context.Context, s *interactor.Services, email, firstName, lastName string) error {
+func AddNewUser(ctx context.Context, s *interactor.Services, email, firstName, lastName string, role constants.UserRole) error {
 	log := s.GetDomainLogger("user", "AddNewUser").
 		With("email", email, "first_name", firstName, "last_name", lastName)
 
@@ -24,29 +24,30 @@ func AddNewUser(ctx context.Context, s *interactor.Services, email, firstName, l
 		Email:     email,
 		FirstName: firstName,
 		LastName:  lastName,
+		UserRole:  database.UserRoles(role),
 	})
 
 	if err != nil {
-		return fmt.Errorf("error creating new user: %w", err)
+		return entities.NewDomainErrorFromDatabaseError(err)
 	}
 
 	user, err := s.Database.GetUserByEmail(ctx, email)
 	if err != nil {
-		return fmt.Errorf("error getting created user by email: %w", err)
+		return entities.NewDomainErrorFromDatabaseError(err)
 	}
 
 	log = log.With("user_id", user.ID)
 
 	err = s.Database.InitializeUserPasswordReset(ctx, user.ID)
 	if err != nil {
-		return fmt.Errorf("error initializing password setting flow for user: %w", err)
+		return entities.NewDomainErrorFromDatabaseError(err)
 	}
 
 	log.Debug("password flow initialized")
 
 	reset, err := s.Database.GetPasswordResetByUserId(ctx, user.ID)
 	if err != nil {
-		return fmt.Errorf("error getting password reset data flow for user with id %d: %w", user.ID, err)
+		return entities.NewDomainErrorFromDatabaseError(err)
 	}
 
 	log = log.With("reset_code", reset.ResetToken.String())
@@ -54,7 +55,7 @@ func AddNewUser(ctx context.Context, s *interactor.Services, email, firstName, l
 
 	err = s.Emails.SendAccountSetPassword(user.Email, user.FirstName, reset.ResetToken.String())
 	if err != nil {
-		return fmt.Errorf("error getting password reset data flow for user with id %d: %w", user.ID, err)
+		return entities.NewDomainError(entities.DomainErrorUnexpected, "error sending password set email to user", err)
 	}
 
 	log.Infof("user added and email sent")

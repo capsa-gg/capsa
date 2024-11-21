@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 
@@ -27,10 +28,17 @@ func PasswordResetStart(ctx context.Context, s *interactor.Services, email strin
 	log = log.With("user_id", user.ID).With("user_uuid", user.UserUuid)
 	log.Debug("user found")
 
+	// Don't allow password reset for deactivated users
+	if user.DeactivatedOn.Valid {
+		log.Warnf("user tried to reset password, but is deactivated on %s", user.DeactivatedOn.Time)
+
+		return entities.NewDomainError(entities.DomainErrorNotFound, "no active user found", fmt.Errorf("user deactivated on %s", user.DeactivatedOn.Time))
+	}
+
 	// Init reset flow
 	err = s.Database.InitializeUserPasswordReset(ctx, user.ID)
 	if err != nil {
-		log.Warn("password reset could not be initialized")
+		log.Warnf("password reset could not be initialized: %s", err)
 
 		return entities.NewDomainErrorFromDatabaseError(err)
 	}
@@ -38,7 +46,7 @@ func PasswordResetStart(ctx context.Context, s *interactor.Services, email strin
 	// Get reset data
 	reset, err := s.Database.GetPasswordResetByUserId(ctx, user.ID)
 	if err != nil {
-		log.Warn("password reset data could not be fetched")
+		log.Warnf("password reset data could not be fetched: %s", err)
 
 		return entities.NewDomainErrorFromDatabaseError(err)
 	}

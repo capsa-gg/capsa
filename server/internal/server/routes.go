@@ -47,7 +47,7 @@ func registerRoutes(r *gin.RouterGroup, h *handlers.Handlers, s *interactor.Serv
 
 	// Authenticated user routes
 	userRoutes := r.Group("/user")
-	userRoutes.Use(middleware.AuthUserMiddleware(s)) // Add authentication middleware
+	userRoutes.Use(middleware.AuthUserMiddleware(s, constants.AllUserRoles)) // Add authentication middleware
 	{
 		// Log routes
 		userRoutes.GET("/logs", h.LogsList)
@@ -56,6 +56,14 @@ func registerRoutes(r *gin.RouterGroup, h *handlers.Handlers, s *interactor.Serv
 
 		// Environments
 		userRoutes.GET("/environments", h.EnvironmentsList)
+	}
+
+	// Admin routes
+	adminRoutes := r.Group("/admin")
+	adminRoutes.Use(middleware.AuthUserMiddleware(s, []constants.UserRole{constants.UserRoleAdmin}))
+	{
+		// Example route
+		adminRoutes.GET("/status", h.Status)
 	}
 }
 

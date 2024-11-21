@@ -58,7 +58,7 @@ func (t *Token) GenerateClientJwt(subject string) (string, error) {
 }
 
 // GenerateUserJwt generates a JWT for users (log readers).
-func (t *Token) GenerateUserJwt(subject, tokenID, name string) (string, error) {
+func (t *Token) GenerateUserJwt(subject, tokenID, name, role string) (string, error) {
 	now := time.Now()
 	oneMonthFromNow := now.AddDate(0, 1, 0)
 
@@ -71,6 +71,7 @@ func (t *Token) GenerateUserJwt(subject, tokenID, name string) (string, error) {
 		IssuedAt:  now.Unix(),
 		JwtID:     tokenID,
 		Name:      name,
+		Role:      role,
 	}
 
 	tok, err := t.GenerateTokenForClaims(claims)

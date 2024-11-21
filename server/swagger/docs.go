@@ -1142,6 +1142,9 @@ const docTemplate = `{
                 "lastName": {
                     "type": "string"
                 },
+                "role": {
+                    "type": "string"
+                },
                 "token": {
                     "type": "string"
                 },

@@ -1,13 +1,25 @@
 -- name: AddUser :exec
 -- Inserts new user into database without a password hash
-INSERT INTO users (email, first_name, last_name)
-VALUES ($1, $2, $3);
+INSERT INTO users (email, first_name, last_name, user_role)
+VALUES ($1, $2, $3, $4);
 
 -- name: AddUserWithPassHash :one
 -- Inserts new user into database with a password hash
-INSERT INTO users (email, first_name, last_name, password_hash, password_uuid)
-VALUES ($1, $2, $3, $4, uuid_generate_v4())
+INSERT INTO users (email, first_name, last_name, password_hash, password_uuid, user_role)
+VALUES ($1, $2, $3, $4, uuid_generate_v4(), $5)
 RETURNING user_uuid;
+
+-- name: DeactivateUser :exec
+-- Marks a user as deactivated
+UPDATE users
+SET deactivated_on = now(), password_uuid = NULL, password_hash = NULL
+WHERE id = $1;
+
+-- name: RemoveUserDeactivation :exec
+-- Removes the user deactivation
+UPDATE users
+SET deactivated_on = NULL
+WHERE id = $1;
 
 -- name: UpdateUserPassword :exec
 -- Update password_hash for user based on id.

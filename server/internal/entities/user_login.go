@@ -11,5 +11,6 @@ type UserLoginResult struct {
 	LastName    string    `json:"lastName"`
 	Email       string    `json:"email"`
 	UserUUID    string    `json:"userUUID"`
+	Role        string    `json:"role"`
 	TokenExpiry time.Time `json:"tokenExpiry"`
 }
