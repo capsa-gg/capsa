@@ -30,7 +30,7 @@
     "@emotion/styled": "^11.13.0",
     "@hookform/resolvers": "^3.9.1",
     "@monaco-editor/react": "^4.6.0",
-    "@mui/icons-material": "^6.1.7",
+    "@mui/icons-material": "^6.1.8",
     "@mui/material": "^6.1.7",
     "@mui/material-nextjs": "^6.1.7",
     "@mui/system": "^6.1.8",
