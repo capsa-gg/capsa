@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Requirements
 
--   NodeJS 22
+- NodeJS 22
 
 ## Getting Started
 

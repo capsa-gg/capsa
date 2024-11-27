@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Button, Tooltip } from "@mui/material";
 import { Check, ContentCopy } from "@mui/icons-material";
 
-export const CopyUrlButton = () => {
+const CopyUrlButton = () => {
     const [hasCopied, setHasCopied] = useState(false);
 
     const copy = async () => {
