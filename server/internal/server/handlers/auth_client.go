@@ -35,12 +35,18 @@ func (h Handlers) ClientAuth(c *gin.Context) {
 		return // Error sent by extractBodyJSON
 	}
 
+	if req == nil {
+		h.sendErrorResponse(c, jsonBodyExtractionError)
+
+		return
+	}
+
 	logType, err := constants.LogTypeFromString(req.Type)
 	if err != nil {
 		log.Infof("error getting logtype from string: %s", err)
 
 		c.JSON(http.StatusBadRequest, bodies.ErrorResponse{
-			Error: fmt.Sprintf("%s is not a valid log type", req.Type),
+			Error: "not a valid log type: " + req.Type,
 		})
 
 		return

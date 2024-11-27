@@ -11,6 +11,7 @@ export const UserJwtDataSchema = z.object({
     email: z.string(),
     userUUID: z.string(),
     tokenExpiry: z.string(),
+    role: z.string(),
 });
 
 export type UserJwtData = z.infer<typeof UserJwtDataSchema>;

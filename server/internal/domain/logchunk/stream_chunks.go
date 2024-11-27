@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
@@ -23,18 +23,18 @@ func StreamUnfilteredLogChunks(ctx context.Context, s *interactor.Services, logI
 	// Get chunks from database
 	chunks, err := s.Database.GetLogChunksForLog(ctx, logID)
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	// Loop over log, and stream chunks
-	for i, c := range chunks { //nolint:gocritic // 144 bytes, for now this is fine
+	for i, c := range chunks {
 		logLoop := log.With("i_chunk", i, "blob_path", c.BlobPath, "created_on", c.CreatedOn)
 
 		chunkText, err := s.LogChunks.GetChunk(c.BlobPath)
 		if err != nil {
 			logLoop.Errorf("error fetching chunk: %s", err)
 
-			return entities.NewDomainError(entities.DomainErrorUnexpected, "error getting chunk from storage", err)
+			return domainerror.New(domainerror.Unexpected, "error getting chunk from storage", err)
 		}
 
 		logLoop.Debug("fetched chunk contents")
@@ -43,7 +43,7 @@ func StreamUnfilteredLogChunks(ctx context.Context, s *interactor.Services, logI
 		if err != nil {
 			logLoop.Errorf("error streaming chunk: %s", err)
 
-			return entities.NewDomainError(entities.DomainErrorUnexpected, "error streaming chunk", err)
+			return domainerror.New(domainerror.Unexpected, "error streaming chunk", err)
 		}
 
 		logLoop.Debugf("streamed %d bytes", bytesWritten)
@@ -62,13 +62,13 @@ func StreamFilteredLogChunks(ctx context.Context, s *interactor.Services, logID 
 	// Get chunks from database
 	chunks, err := s.Database.GetLogChunksForLog(ctx, logID)
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	lineCounter := 0 // Line counts start at 1, but we increment when we find a \n from 0 to 1
 
 	// Loop over log, and stream chunks
-	for i, c := range chunks { //nolint:gocritic // 144 bytes, for now this is fine
+	for i, c := range chunks {
 		logLoop := log.With("i_chunk", i, "blob_path", c.BlobPath, "created_on", c.CreatedOn)
 
 		shouldStreamChunk := filters.shouldStreamChunk(logChunkMetadata{
@@ -89,7 +89,7 @@ func StreamFilteredLogChunks(ctx context.Context, s *interactor.Services, logID 
 		if err != nil {
 			logLoop.Errorf("error fetching chunk: %s", err)
 
-			return entities.NewDomainError(entities.DomainErrorUnexpected, "error getting chunk from storage", err)
+			return domainerror.New(domainerror.Unexpected, "error getting chunk from storage", err)
 		}
 
 		logLoop.Debug("fetched chunk contents")
@@ -107,7 +107,7 @@ func StreamFilteredLogChunks(ctx context.Context, s *interactor.Services, logID 
 		if err != nil {
 			logLoop.Errorf("error streaming filtered chunk: %s", err)
 
-			return entities.NewDomainError(entities.DomainErrorUnexpected, "error streaming chunk", err)
+			return domainerror.New(domainerror.Unexpected, "error streaming chunk", err)
 		}
 
 		logLoop.Debugf("streamed %d bytes", bytesWritten)

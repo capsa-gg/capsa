@@ -35,6 +35,12 @@ func (h Handlers) LogMetadataSave(c *gin.Context) {
 		return // Error sent by extractBodyJSON
 	}
 
+	if req == nil {
+		h.sendErrorResponse(c, jsonBodyExtractionError)
+
+		return
+	}
+
 	log.Debug("body extracted")
 
 	if len(req.AdditionalMetadata) == 0 && len(req.LogLinks) == 0 {

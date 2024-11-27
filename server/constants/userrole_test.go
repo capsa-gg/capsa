@@ -9,29 +9,29 @@ import (
 	"github.com/capsa-gg/capsa/server/constants"
 )
 
-func TestLogTypeFromString(t *testing.T) {
+func TestUserRoleFromString(t *testing.T) {
 	tests := map[string]struct {
 		input     string
-		wantValue constants.LogType
+		wantValue constants.UserRole
 		wantErr   bool
 	}{
-		"Valid Client": {
-			input:     "Client",
-			wantValue: constants.LogTypeClient,
+		"Valid Admin": {
+			input:     "Admin",
+			wantValue: constants.UserRoleAdmin,
 			wantErr:   false,
 		},
-		"Valid Server": {
-			input:     "Server",
-			wantValue: constants.LogTypeServer,
+		"Valid User": {
+			input:     "User",
+			wantValue: constants.UserRoleUser,
 			wantErr:   false,
 		},
-		"Client invalid casing": {
-			input:     "client",
+		"Admin invalid casing": {
+			input:     "admin",
 			wantValue: "",
 			wantErr:   true,
 		},
-		"Server invalid casing": {
-			input:     "server",
+		"User invalid casing": {
+			input:     "user",
 			wantValue: "",
 			wantErr:   true,
 		},
@@ -44,7 +44,7 @@ func TestLogTypeFromString(t *testing.T) {
 
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			got, err := constants.LogTypeFromString(tt.input)
+			got, err := constants.UserRoleFromString(tt.input)
 
 			if tt.wantErr {
 				require.Error(t, err)

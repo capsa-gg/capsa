@@ -2,6 +2,7 @@ package token
 
 import (
 	"crypto/rsa"
+	"errors"
 	"fmt"
 	"strconv"
 
@@ -29,7 +30,7 @@ type Token struct {
 // New returns a Token instance after validating the *rsa.PrivateKey.
 func New(c *entities.Config, pk *rsa.PrivateKey) (*Token, error) {
 	if pk == nil {
-		return nil, fmt.Errorf("private key argument is required")
+		return nil, errors.New("private key argument is required")
 	}
 
 	if err := pk.Validate(); err != nil {

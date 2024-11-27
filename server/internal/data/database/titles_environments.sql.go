@@ -7,6 +7,7 @@ package database
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -178,6 +179,36 @@ func (q *Queries) ListAllEnvironmentsAndTitles(ctx context.Context) ([]ListAllEn
 	for rows.Next() {
 		var i ListAllEnvironmentsAndTitlesRow
 		if err := rows.Scan(&i.Title, &i.Environment, &i.EnvironmentKey); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listTitles = `-- name: ListTitles :many
+SELECT name, created_on FROM titles
+`
+
+type ListTitlesRow struct {
+	Name      string    `json:"name"`
+	CreatedOn time.Time `json:"createdOn"`
+}
+
+// Returns all titles
+func (q *Queries) ListTitles(ctx context.Context) ([]ListTitlesRow, error) {
+	rows, err := q.db.Query(ctx, listTitles)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ListTitlesRow
+	for rows.Next() {
+		var i ListTitlesRow
+		if err := rows.Scan(&i.Name, &i.CreatedOn); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

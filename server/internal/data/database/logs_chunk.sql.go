@@ -7,8 +7,7 @@ package database
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
+	"time"
 
 	"github.com/capsa-gg/capsa/server/internal/entities"
 )
@@ -21,8 +20,8 @@ VALUES ($1, $2, $3, $4, $5, $6, $7)
 type AddLogChunkParams struct {
 	Log            int64                     `json:"log"`
 	BlobPath       string                    `json:"blobPath"`
-	ChunkStart     pgtype.Timestamp          `json:"chunkStart"`
-	ChunkEnd       pgtype.Timestamp          `json:"chunkEnd"`
+	ChunkStart     *time.Time                `json:"chunkStart"`
+	ChunkEnd       *time.Time                `json:"chunkEnd"`
 	LineCount      int32                     `json:"lineCount"`
 	CategoryCounts entities.LogChunkMetadata `json:"categoryCounts"`
 	SeverityCounts entities.LogChunkMetadata `json:"severityCounts"`

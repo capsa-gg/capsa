@@ -9,7 +9,6 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const listAvailableLogs = `-- name: ListAvailableLogs :many
@@ -74,7 +73,7 @@ type ListAvailableLogsRow struct {
 
 // Fetches all log chunks and aggregates an overview.
 // LogUUID is an optional field used as a filter, which if set will return only a single result.
-func (q *Queries) ListAvailableLogs(ctx context.Context, filterByLogUuid pgtype.UUID) ([]ListAvailableLogsRow, error) {
+func (q *Queries) ListAvailableLogs(ctx context.Context, filterByLogUuid *uuid.UUID) ([]ListAvailableLogsRow, error) {
 	rows, err := q.db.Query(ctx, listAvailableLogs, filterByLogUuid)
 	if err != nil {
 		return nil, err

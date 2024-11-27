@@ -2,51 +2,55 @@ package user
 
 import (
 	"context"
-	"fmt"
-
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"errors"
 
 	"github.com/google/uuid"
+
+	"github.com/capsa-gg/capsa/server/constants"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 
 	"github.com/capsa-gg/capsa/server/internal/data/database"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
 // AddNewUser adds a new user and initializes the flow to set their password.
-// NOTE: if this becomes available in the API, the returned errors should be of type DomainError.
-func AddNewUser(ctx context.Context, s *interactor.Services, email, firstName, lastName string) error {
+func AddNewUser(ctx context.Context, s *interactor.Services, email, firstName, lastName string, role constants.UserRole) (*uuid.UUID, error) {
 	log := s.GetDomainLogger("user", "AddNewUser").
 		With("email", email, "first_name", firstName, "last_name", lastName)
 
 	log.Debugf("attempting to add new user")
 
-	err := s.Database.AddUser(ctx, database.AddUserParams{
+	userUUID, err := s.Database.AddUser(ctx, database.AddUserParams{
 		Email:     email,
 		FirstName: firstName,
 		LastName:  lastName,
+		UserRole:  database.UserRoles(role),
 	})
 
+	log = log.With("user_uuid", userUUID)
+	log.Info("user added to database")
+
 	if err != nil {
-		return fmt.Errorf("error creating new user: %w", err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
-	user, err := s.Database.GetUserByEmail(ctx, email)
+	user, err := s.Database.GetUserByUuid(ctx, userUUID)
 	if err != nil {
-		return fmt.Errorf("error getting created user by email: %w", err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("user_id", user.ID)
 
 	err = s.Database.InitializeUserPasswordReset(ctx, user.ID)
 	if err != nil {
-		return fmt.Errorf("error initializing password setting flow for user: %w", err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log.Debug("password flow initialized")
 
 	reset, err := s.Database.GetPasswordResetByUserId(ctx, user.ID)
 	if err != nil {
-		return fmt.Errorf("error getting password reset data flow for user with id %d: %w", user.ID, err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("reset_code", reset.ResetToken.String())
@@ -54,12 +58,12 @@ func AddNewUser(ctx context.Context, s *interactor.Services, email, firstName, l
 
 	err = s.Emails.SendAccountSetPassword(user.Email, user.FirstName, reset.ResetToken.String())
 	if err != nil {
-		return fmt.Errorf("error getting password reset data flow for user with id %d: %w", user.ID, err)
+		return nil, domainerror.New(domainerror.Unexpected, "error sending password set email to user", err)
 	}
 
 	log.Infof("user added and email sent")
 
-	return nil
+	return &userUUID, nil
 }
 
 // AddNewUserWithPassword adds a new user with a password set.
@@ -67,7 +71,7 @@ func AddNewUser(ctx context.Context, s *interactor.Services, email, firstName, l
 // With development mode disabled, this function returns an error.
 func AddNewUserWithPassword(s *interactor.Services, email, firstName, lastName, password string) (*uuid.UUID, error) {
 	if !s.Config.IsDevMode {
-		return nil, fmt.Errorf("adding a user with a password set is only available in development mode")
+		return nil, errors.New("adding a user with a password set is only available in development mode")
 	}
 
 	log := s.GetDomainLogger("user", "AddNewUser").
@@ -78,7 +82,7 @@ func AddNewUserWithPassword(s *interactor.Services, email, firstName, lastName, 
 
 	passHash, err := s.Passhash.PlainTextToHash(password)
 	if err != nil {
-		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot generate password hash", err)
+		return nil, domainerror.New(domainerror.Unexpected, "cannot generate password hash", err)
 	}
 
 	userUUID, err := s.Database.AddUserWithPassHash(ctx, database.AddUserWithPassHashParams{
@@ -91,7 +95,7 @@ func AddNewUserWithPassword(s *interactor.Services, email, firstName, lastName, 
 	if err != nil {
 		log.Warnf("cannot add user: %s", err)
 
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("user_uuid", userUUID)

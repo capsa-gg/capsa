@@ -14,14 +14,15 @@ import (
 // @Produce    	json
 // @Description	Allows users to fetch all available environments from the database
 // @Security	JwtUser
-// @Success		200		{array}		entities.TitleEnvironment
+// @Security	JwtAdmin
+// @Success		200		{array}		bodies.TitleEnvironmentResponse
 // @Failure     400		{object}	bodies.ErrorResponse
 // @Failure     404		{object}	bodies.ErrorResponse
 // @Failure     500		{object}	bodies.ErrorResponse
 // @Header		all		{string} 	X-Capsa-Server-Version			"Current Capsa Server version"
 // @Router 		/user/environments [get]
 func (h Handlers) EnvironmentsList(c *gin.Context) {
-	log := h.logger.Named("LogsList")
+	log := h.logger.Named("EnvironmentsList")
 
 	res, err := admin.ListAllTitlesAndEnvironments(c, h.services)
 	if err != nil {

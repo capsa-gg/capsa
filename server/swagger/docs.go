@@ -19,6 +19,592 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/admin/environments": {
+            "post": {
+                "security": [
+                    {
+                        "JwtAdmin": []
+                    }
+                ],
+                "description": "Allows admins to add new environments for an existing title",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminTitleEnvironment"
+                ],
+                "summary": "Add new environment for an existing title",
+                "parameters": [
+                    {
+                        "description": "EnvironmentAddRequest",
+                        "name": "environment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bodies.AddEnvironmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/bodies.TitleEnvironmentResponse"
+                            }
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/titles": {
+            "get": {
+                "security": [
+                    {
+                        "JwtAdmin": []
+                    }
+                ],
+                "description": "Allows admins to add list all titles in the database",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminTitleEnvironment"
+                ],
+                "summary": "List all titles",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/bodies.TitleResponse"
+                            }
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "JwtAdmin": []
+                    }
+                ],
+                "description": "Allows admins to add new titles",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminTitleEnvironment"
+                ],
+                "summary": "Add new title",
+                "parameters": [
+                    {
+                        "description": "TitleAddRequest",
+                        "name": "title",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bodies.AddTitleRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/bodies.TitleResponse"
+                            }
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/users": {
+            "get": {
+                "security": [
+                    {
+                        "JwtAdmin": []
+                    }
+                ],
+                "description": "Allows admins to fetch all users from the database",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminUsers"
+                ],
+                "summary": "List all users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/bodies.UserInfoResponse"
+                            }
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "JwtAdmin": []
+                    }
+                ],
+                "description": "Allows admins to create a new user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminUsers"
+                ],
+                "summary": "Creates a new user",
+                "parameters": [
+                    {
+                        "description": "UserCreateRequest",
+                        "name": "userinfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bodies.UserCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.UserInfoResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/users/{useruuid}": {
+            "put": {
+                "security": [
+                    {
+                        "JwtAdmin": []
+                    }
+                ],
+                "description": "Allows admins to update a user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminUsers"
+                ],
+                "summary": "Update a user's info in the database",
+                "parameters": [
+                    {
+                        "description": "UserUpdateRequest",
+                        "name": "userinfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bodies.UserUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.UserInfoResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/users/{useruuid}/activation": {
+            "post": {
+                "security": [
+                    {
+                        "JwtAdmin": []
+                    }
+                ],
+                "description": "Allows admins to reactivate a deactivated user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminUsers"
+                ],
+                "summary": "Reactivate a deactivated user's account",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.UserInfoResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "JwtAdmin": []
+                    }
+                ],
+                "description": "Allows admins to deactivate a user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminUsers"
+                ],
+                "summary": "Deactivate a user's account",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.UserInfoResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/client/auth": {
             "post": {
                 "description": "Allows clients to create a log session and receive a token to send logs with",
@@ -369,7 +955,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/entities.UserLoginResult"
+                            "$ref": "#/definitions/bodies.UserLoginResult"
                         },
                         "headers": {
                             "X-Capsa-Server-Version": {
@@ -601,6 +1187,9 @@ const docTemplate = `{
                 "security": [
                     {
                         "JwtUser": []
+                    },
+                    {
+                        "JwtAdmin": []
                     }
                 ],
                 "description": "Allows users to fetch all available environments from the database",
@@ -617,7 +1206,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/entities.TitleEnvironment"
+                                "$ref": "#/definitions/bodies.TitleEnvironmentResponse"
                             }
                         },
                         "headers": {
@@ -671,6 +1260,9 @@ const docTemplate = `{
                 "security": [
                     {
                         "JwtUser": []
+                    },
+                    {
+                        "JwtAdmin": []
                     }
                 ],
                 "description": "Allows users to fetch available logs from the database",
@@ -687,7 +1279,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/entities.LogOverview"
+                                "$ref": "#/definitions/bodies.LogOverview"
                             }
                         },
                         "headers": {
@@ -741,6 +1333,9 @@ const docTemplate = `{
                 "security": [
                     {
                         "JwtUser": []
+                    },
+                    {
+                        "JwtAdmin": []
                     }
                 ],
                 "description": "Allows users to stream all uploaded chunks for a given log id. If no query parameters are set, the whole log will be fetched.",
@@ -849,6 +1444,9 @@ const docTemplate = `{
                 "security": [
                     {
                         "JwtUser": []
+                    },
+                    {
+                        "JwtAdmin": []
                     }
                 ],
                 "description": "Allows users to fetch metadata for a log",
@@ -863,7 +1461,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/entities.LogMetadata"
+                            "$ref": "#/definitions/bodies.LogMetadata"
                         },
                         "headers": {
                             "X-Capsa-Server-Version": {
@@ -913,6 +1511,38 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "bodies.AddEnvironmentRequest": {
+            "type": "object",
+            "required": [
+                "environment",
+                "title"
+            ],
+            "properties": {
+                "environment": {
+                    "type": "string",
+                    "maxLength": 24,
+                    "minLength": 4
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 24,
+                    "minLength": 4
+                }
+            }
+        },
+        "bodies.AddTitleRequest": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "maxLength": 24,
+                    "minLength": 4
+                }
+            }
+        },
         "bodies.ClientLogCreationRequest": {
             "type": "object",
             "required": [
@@ -969,6 +1599,49 @@ const docTemplate = `{
                 }
             }
         },
+        "bodies.LogAdditionalMetadata": {
+            "type": "object",
+            "properties": {
+                "metadata": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "savedOn": {
+                    "type": "string"
+                }
+            }
+        },
+        "bodies.LogLink": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "linkedLog": {
+                    "type": "string"
+                }
+            }
+        },
+        "bodies.LogMetadata": {
+            "type": "object",
+            "properties": {
+                "additionalMetadata": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/bodies.LogAdditionalMetadata"
+                    }
+                },
+                "linkedLogs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/bodies.LogLink"
+                    }
+                },
+                "logData": {
+                    "$ref": "#/definitions/bodies.LogOverview"
+                }
+            }
+        },
         "bodies.LogMetadataSaveRequest": {
             "type": "object",
             "properties": {
@@ -984,101 +1657,7 @@ const docTemplate = `{
                 }
             }
         },
-        "bodies.StatusResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 200
-                },
-                "message": {
-                    "type": "string",
-                    "example": "ok"
-                },
-                "version": {
-                    "type": "string",
-                    "example": "0.0.1"
-                }
-            }
-        },
-        "bodies.UserLoginRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string",
-                    "maxLength": 64,
-                    "minLength": 12
-                }
-            }
-        },
-        "bodies.UserPasswordResetCompleteRequest": {
-            "type": "object",
-            "required": [
-                "password",
-                "resetToken"
-            ],
-            "properties": {
-                "password": {
-                    "type": "string",
-                    "maxLength": 64,
-                    "minLength": 12
-                },
-                "resetToken": {
-                    "type": "string"
-                }
-            }
-        },
-        "entities.LogAdditionalMetadata": {
-            "type": "object",
-            "properties": {
-                "metadata": {
-                    "type": "object",
-                    "additionalProperties": {}
-                },
-                "savedOn": {
-                    "type": "string"
-                }
-            }
-        },
-        "entities.LogLink": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "linkedLog": {
-                    "type": "string"
-                }
-            }
-        },
-        "entities.LogMetadata": {
-            "type": "object",
-            "properties": {
-                "additionalMetadata": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/entities.LogAdditionalMetadata"
-                    }
-                },
-                "linkedLogs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/entities.LogLink"
-                    }
-                },
-                "logData": {
-                    "$ref": "#/definitions/entities.LogOverview"
-                }
-            }
-        },
-        "entities.LogOverview": {
+        "bodies.LogOverview": {
             "type": "object",
             "properties": {
                 "categoriesCounts": {
@@ -1116,7 +1695,24 @@ const docTemplate = `{
                 }
             }
         },
-        "entities.TitleEnvironment": {
+        "bodies.StatusResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "message": {
+                    "type": "string",
+                    "example": "ok"
+                },
+                "version": {
+                    "type": "string",
+                    "example": "0.0.1"
+                }
+            }
+        },
+        "bodies.TitleEnvironmentResponse": {
             "type": "object",
             "properties": {
                 "environmentKey": {
@@ -1130,7 +1726,91 @@ const docTemplate = `{
                 }
             }
         },
-        "entities.UserLoginResult": {
+        "bodies.TitleResponse": {
+            "type": "object",
+            "properties": {
+                "createdOn": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "bodies.UserCreateRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "firstName",
+                "lastName"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "role": {
+                    "description": "Conversion to UserRole happens in handler",
+                    "type": "string",
+                    "enum": [
+                        "User",
+                        "Admin"
+                    ]
+                }
+            }
+        },
+        "bodies.UserInfoResponse": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deactivatedTs": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "hasPasswordSet": {
+                    "type": "boolean"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "userUuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "bodies.UserLoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 64,
+                    "minLength": 12
+                }
+            }
+        },
+        "bodies.UserLoginResult": {
             "type": "object",
             "properties": {
                 "email": {
@@ -1140,6 +1820,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "lastName": {
+                    "type": "string"
+                },
+                "role": {
                     "type": "string"
                 },
                 "token": {
@@ -1152,9 +1835,55 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "bodies.UserPasswordResetCompleteRequest": {
+            "type": "object",
+            "required": [
+                "password",
+                "resetToken"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "maxLength": 64,
+                    "minLength": 12
+                },
+                "resetToken": {
+                    "type": "string"
+                }
+            }
+        },
+        "bodies.UserUpdateRequest": {
+            "type": "object",
+            "required": [
+                "firstName",
+                "lastName"
+            ],
+            "properties": {
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "role": {
+                    "description": "Conversion to UserRole happens in domain",
+                    "type": "string",
+                    "enum": [
+                        "User",
+                        "Admin"
+                    ]
+                }
+            }
         }
     },
     "securityDefinitions": {
+        "JwtAdmin": {
+            "description": "Header value should be \"Bearer UserJwtString\", this JWT is similar to JwtUser, but contains the \"Admin\" role",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        },
         "JwtClient": {
             "description": "Header value should be \"Bearer ClientJwtString\"",
             "type": "apiKey",
@@ -1162,7 +1891,7 @@ const docTemplate = `{
             "in": "header"
         },
         "JwtUser": {
-            "description": "Header value should be \"Bearer UserJwtString\"",
+            "description": "Header value should be \"Bearer UserJwtString\", JwtAdmin also works for this endpoint",
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"

@@ -7,38 +7,49 @@ package database
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 )
 
-const addUser = `-- name: AddUser :exec
-INSERT INTO users (email, first_name, last_name)
-VALUES ($1, $2, $3)
+const addUser = `-- name: AddUser :one
+INSERT INTO users (email, first_name, last_name, user_role)
+VALUES ($1, $2, $3, $4)
+RETURNING user_uuid
 `
 
 type AddUserParams struct {
-	Email     string `json:"email"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
+	Email     string    `json:"email"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
+	UserRole  UserRoles `json:"userRole"`
 }
 
 // Inserts new user into database without a password hash
-func (q *Queries) AddUser(ctx context.Context, arg AddUserParams) error {
-	_, err := q.db.Exec(ctx, addUser, arg.Email, arg.FirstName, arg.LastName)
-	return err
+func (q *Queries) AddUser(ctx context.Context, arg AddUserParams) (uuid.UUID, error) {
+	row := q.db.QueryRow(ctx, addUser,
+		arg.Email,
+		arg.FirstName,
+		arg.LastName,
+		arg.UserRole,
+	)
+	var user_uuid uuid.UUID
+	err := row.Scan(&user_uuid)
+	return user_uuid, err
 }
 
 const addUserWithPassHash = `-- name: AddUserWithPassHash :one
-INSERT INTO users (email, first_name, last_name, password_hash, password_uuid)
-VALUES ($1, $2, $3, $4, uuid_generate_v4())
+INSERT INTO users (email, first_name, last_name, password_hash, password_uuid, user_role)
+VALUES ($1, $2, $3, $4, uuid_generate_v4(), $5)
 RETURNING user_uuid
 `
 
 type AddUserWithPassHashParams struct {
-	Email        string  `json:"email"`
-	FirstName    string  `json:"firstName"`
-	LastName     string  `json:"lastName"`
-	PasswordHash *string `json:"passwordHash"`
+	Email        string    `json:"email"`
+	FirstName    string    `json:"firstName"`
+	LastName     string    `json:"lastName"`
+	PasswordHash *string   `json:"passwordHash"`
+	UserRole     UserRoles `json:"userRole"`
 }
 
 // Inserts new user into database with a password hash
@@ -48,14 +59,27 @@ func (q *Queries) AddUserWithPassHash(ctx context.Context, arg AddUserWithPassHa
 		arg.FirstName,
 		arg.LastName,
 		arg.PasswordHash,
+		arg.UserRole,
 	)
 	var user_uuid uuid.UUID
 	err := row.Scan(&user_uuid)
 	return user_uuid, err
 }
 
+const deactivateUser = `-- name: DeactivateUser :exec
+UPDATE users
+SET deactivated_on = now(), password_uuid = NULL, password_hash = NULL
+WHERE id = $1
+`
+
+// Marks a user as deactivated
+func (q *Queries) DeactivateUser(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, deactivateUser, id)
+	return err
+}
+
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, user_uuid, password_hash, password_uuid, email, first_name, last_name, created_at FROM users
+SELECT id, user_uuid, password_hash, password_uuid, email, first_name, last_name, user_role, created_at, deactivated_on FROM users
 WHERE email = $1
 `
 
@@ -70,13 +94,15 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 		&i.Email,
 		&i.FirstName,
 		&i.LastName,
+		&i.UserRole,
 		&i.CreatedAt,
+		&i.DeactivatedOn,
 	)
 	return i, err
 }
 
 const getUserByID = `-- name: GetUserByID :one
-SELECT id, user_uuid, password_hash, password_uuid, email, first_name, last_name, created_at FROM users
+SELECT id, user_uuid, password_hash, password_uuid, email, first_name, last_name, user_role, created_at, deactivated_on FROM users
 WHERE id = $1
 `
 
@@ -91,13 +117,15 @@ func (q *Queries) GetUserByID(ctx context.Context, id int32) (User, error) {
 		&i.Email,
 		&i.FirstName,
 		&i.LastName,
+		&i.UserRole,
 		&i.CreatedAt,
+		&i.DeactivatedOn,
 	)
 	return i, err
 }
 
 const getUserByUuid = `-- name: GetUserByUuid :one
-SELECT id, user_uuid, password_hash, password_uuid, email, first_name, last_name, created_at FROM users
+SELECT id, user_uuid, password_hash, password_uuid, email, first_name, last_name, user_role, created_at, deactivated_on FROM users
 WHERE user_uuid = $1
 `
 
@@ -112,7 +140,119 @@ func (q *Queries) GetUserByUuid(ctx context.Context, userUuid uuid.UUID) (User, 
 		&i.Email,
 		&i.FirstName,
 		&i.LastName,
+		&i.UserRole,
 		&i.CreatedAt,
+		&i.DeactivatedOn,
+	)
+	return i, err
+}
+
+const listUsers = `-- name: ListUsers :many
+SELECT
+    u.user_uuid AS user_uuid,
+    u.email AS email,
+    U.first_name as first_name,
+    U.last_name as last_name,
+    u.user_role AS role,
+    (u.password_uuid IS NOT NULL)::bool AS has_password_set,
+    u.deactivated_on AS deactivated_ts,
+    u.created_at AS created_at
+FROM users u
+WHERE ( u.user_uuid = $1 OR $1 IS NULL )
+ORDER BY u.created_at DESC
+`
+
+type ListUsersRow struct {
+	UserUuid       uuid.UUID  `json:"userUuid"`
+	Email          string     `json:"email"`
+	FirstName      string     `json:"firstName"`
+	LastName       string     `json:"lastName"`
+	Role           UserRoles  `json:"role"`
+	HasPasswordSet bool       `json:"hasPasswordSet"`
+	DeactivatedTs  *time.Time `json:"deactivatedTs"`
+	CreatedAt      time.Time  `json:"createdAt"`
+}
+
+// Lists all users present in the database
+func (q *Queries) ListUsers(ctx context.Context, filterByUserUuid *uuid.UUID) ([]ListUsersRow, error) {
+	rows, err := q.db.Query(ctx, listUsers, filterByUserUuid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ListUsersRow
+	for rows.Next() {
+		var i ListUsersRow
+		if err := rows.Scan(
+			&i.UserUuid,
+			&i.Email,
+			&i.FirstName,
+			&i.LastName,
+			&i.Role,
+			&i.HasPasswordSet,
+			&i.DeactivatedTs,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const removeUserDeactivation = `-- name: RemoveUserDeactivation :exec
+UPDATE users
+SET deactivated_on = NULL
+WHERE id = $1
+`
+
+// Removes the user deactivation
+func (q *Queries) RemoveUserDeactivation(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, removeUserDeactivation, id)
+	return err
+}
+
+const updateUser = `-- name: UpdateUser :one
+
+UPDATE users
+SET first_name = $2,
+    last_name = $3,
+    user_role = $4
+WHERE id = $1
+RETURNING id, user_uuid, password_hash, password_uuid, email, first_name, last_name, user_role, created_at, deactivated_on
+`
+
+type UpdateUserParams struct {
+	ID        int32     `json:"id"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
+	UserRole  UserRoles `json:"userRole"`
+}
+
+// Optionally filter by Log UUID;
+// Update a user with optional parameters
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
+	row := q.db.QueryRow(ctx, updateUser,
+		arg.ID,
+		arg.FirstName,
+		arg.LastName,
+		arg.UserRole,
+	)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.UserUuid,
+		&i.PasswordHash,
+		&i.PasswordUuid,
+		&i.Email,
+		&i.FirstName,
+		&i.LastName,
+		&i.UserRole,
+		&i.CreatedAt,
+		&i.DeactivatedOn,
 	)
 	return i, err
 }

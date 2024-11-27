@@ -29,7 +29,7 @@ func New(c *entities.Config) (entities.BlobStorage, error) {
 	})
 
 	if err != nil {
-		return BlobStorage{}, fmt.Errorf("error creating blob storage instance: %s", err)
+		return BlobStorage{}, fmt.Errorf("error creating blob storage instance: %w", err)
 	}
 
 	log.Debugf("storage endpoint: %s", minioClient.EndpointURL())

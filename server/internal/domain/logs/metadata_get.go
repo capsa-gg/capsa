@@ -5,22 +5,22 @@ import (
 	"encoding/json"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 
 	"github.com/capsa-gg/capsa/server/constants"
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 	"github.com/capsa-gg/capsa/server/internal/util"
 )
 
 // GetMetadataForLog fetches the metadata for a given log.
-func GetMetadataForLog(ctx context.Context, s *interactor.Services, logUUID uuid.UUID) (*entities.LogMetadata, error) { //nolint:funlen,gocyclo // For now this is fine, we might want to abstract the struct conversion later
+func GetMetadataForLog(ctx context.Context, s *interactor.Services, logUUID uuid.UUID) (*bodies.LogMetadata, error) { //nolint:funlen,gocyclo // For now this is fine, we might want to abstract the struct conversion later
 	log := s.GetDomainLogger("logs", "GetMetadataForLog").With("log_uuid", logUUID)
 
 	// Get from database
 	logData, err := s.Database.GetLogByUuid(ctx, logUUID)
 	if err != nil {
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("log_id", logData.ID)
@@ -29,13 +29,13 @@ func GetMetadataForLog(ctx context.Context, s *interactor.Services, logUUID uuid
 	// Get additional log metadata
 	additionalMetadataDD, err := s.Database.GetMetadataForLog(ctx, logData.ID)
 	if err != nil {
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("additional_metadata_count", len(additionalMetadataDD))
 	log.Debug("fetched additional metadata from database")
 
-	additionalMetadata := make([]entities.LogAdditionalMetadata, len(additionalMetadataDD))
+	additionalMetadata := make([]bodies.LogAdditionalMetadata, len(additionalMetadataDD))
 
 	// Convert metadata to return value
 	for i := range additionalMetadataDD {
@@ -43,20 +43,20 @@ func GetMetadataForLog(ctx context.Context, s *interactor.Services, logUUID uuid
 
 		err = json.Unmarshal(additionalMetadataDD[i].Metadata, &additionalMetadata[i].Metadata)
 		if err != nil {
-			return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot extract metadata", err)
+			return nil, domainerror.New(domainerror.Unexpected, "cannot extract metadata", err)
 		}
 	}
 
 	// Get linked logs
 	linkedLogsDB, err := s.Database.GetLinkedLogsForLog(ctx, logData.ID)
 	if err != nil {
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("linked_logs_count", len(linkedLogsDB))
 	log.Debug("fetched linked logs from database")
 
-	linkedLogs := make([]entities.LogLink, len(linkedLogsDB))
+	linkedLogs := make([]bodies.LogLink, len(linkedLogsDB))
 
 	for i := range linkedLogsDB {
 		linkedLogs[i].LinkedLog = linkedLogsDB[i].LinkedLog
@@ -64,15 +64,15 @@ func GetMetadataForLog(ctx context.Context, s *interactor.Services, logUUID uuid
 	}
 
 	// Assemble the log metadata
-	metadata := entities.LogMetadata{
+	metadata := bodies.LogMetadata{
 		AdditionalMetadata: additionalMetadata,
 		Links:              linkedLogs,
 	}
 
 	// Get log data from database
-	rows, err := s.Database.ListAvailableLogs(ctx, pgtype.UUID{Valid: true, Bytes: logUUID})
+	rows, err := s.Database.ListAvailableLogs(ctx, &logUUID)
 	if err != nil {
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	if len(rows) != 1 {

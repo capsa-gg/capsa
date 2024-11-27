@@ -67,6 +67,12 @@ func (h Handlers) UserPasswordComplete(c *gin.Context) {
 		return // Error sent by extractBodyJSON
 	}
 
+	if req == nil {
+		h.sendErrorResponse(c, jsonBodyExtractionError)
+
+		return
+	}
+
 	log = log.With("email", req.ResetToken)
 	log.Debug("attempting to complete password reset flow")
 

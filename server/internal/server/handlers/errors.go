@@ -6,13 +6,17 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
+)
+
+var (
+	jsonBodyExtractionError = domainerror.New(domainerror.Unexpected, "error extracting json body", errors.New("json body extraction yielded nil"))
 )
 
 func (h Handlers) sendErrorResponse(c *gin.Context, err error) {
 	// Domain Errors
-	var domainError entities.DomainError
+	var domainError domainerror.Error
 	if errors.As(err, &domainError) {
 		h.sendDomainError(c, domainError)
 		return
@@ -30,7 +34,7 @@ func (h Handlers) sendErrorResponse(c *gin.Context, err error) {
 	c.JSON(http.StatusInternalServerError, res)
 }
 
-func (h Handlers) sendDomainError(c *gin.Context, domainError entities.DomainError) {
+func (h Handlers) sendDomainError(c *gin.Context, domainError domainerror.Error) {
 	log := h.logger.Named("sendDomainError")
 
 	res := bodies.ErrorResponse{
@@ -43,19 +47,19 @@ func (h Handlers) sendDomainError(c *gin.Context, domainError entities.DomainErr
 	}
 
 	switch domainError.Type {
-	case entities.DomainErrorInvalidArgument:
+	case domainerror.InvalidArgument:
 		c.JSON(http.StatusBadRequest, res)
 		return
-	case entities.DomainErrorNoPermission:
+	case domainerror.NoPermission:
 		c.JSON(http.StatusForbidden, res)
 		return
-	case entities.DomainErrorNotFound:
+	case domainerror.NotFound:
 		c.JSON(http.StatusNotFound, res)
 		return
-	case entities.DomainErrorConflict:
+	case domainerror.Conflict:
 		c.JSON(http.StatusConflict, res)
 		return
-	case entities.DomainErrorUnexpected:
+	case domainerror.Unexpected:
 		log.Errorf("unexpected domain error: %#v", domainError)
 
 		c.JSON(http.StatusInternalServerError, res)

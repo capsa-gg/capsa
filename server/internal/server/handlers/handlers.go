@@ -41,7 +41,7 @@ func extractClientJwtClaimsFromContext(c *gin.Context, log *zap.SugaredLogger) (
 
 // extractUserJwtClaimsFromContext extracts the user claims from the context
 // The boolean is "ok", if this is false, just return the handler, the response has already been sent.
-func extractUserJwtClaimsFromContext(c *gin.Context, log *zap.SugaredLogger) (*token.JwtClaims, uuid.UUID, bool) { // nolint:unused // will be used very soon
+func extractUserJwtClaimsFromContext(c *gin.Context, log *zap.SugaredLogger) (*token.JwtClaims, uuid.UUID, bool) {
 	return extractJwtClaimsFromContext(c, log, constants.GinContextKeyValidatedUser)
 }
 
@@ -71,6 +71,12 @@ func extractJwtClaimsFromContext(c *gin.Context, log *zap.SugaredLogger, context
 	}
 
 	return jwtClaims, logID, true
+}
+
+// getUserUUIDFromURI extracts the "useruuid" from the parameters.
+// If the boolean return argument is false, stop handler execution. The response has already been sent.
+func getUserUUIDFromURI(c *gin.Context) (uuid.UUID, bool) {
+	return getUUIDFromURI(c, "useruuid")
 }
 
 // getLogUUIDFromURI extracts the "loguuid" from the parameters.

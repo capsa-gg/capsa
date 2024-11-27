@@ -10,6 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 
+	"github.com/capsa-gg/capsa/server/constants"
 	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/capsa-gg/capsa/server/internal/infrastructure/token"
 )
@@ -66,8 +67,9 @@ func TestJwtFlow_User_HappyPath(t *testing.T) {
 	sub := "TestSubjectHappyUser"
 	tid := "uuid"
 	name := "TestName"
+	role := constants.UserRoleAdmin
 
-	key, err := tok.GenerateUserJwt(sub, tid, name)
+	key, err := tok.GenerateUserJwt(sub, tid, name, role)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, key)
@@ -79,6 +81,7 @@ func TestJwtFlow_User_HappyPath(t *testing.T) {
 	require.Equal(t, sub, claims.Subject)
 	require.Equal(t, tid, claims.JwtID)
 	require.Equal(t, name, claims.Name)
+	require.Equal(t, role, claims.Role)
 }
 
 func TestJwt_SignedByOtherKey(t *testing.T) {

@@ -43,6 +43,11 @@ type JwtClaims struct {
 	// Name is an additional field added that contains the full name of the person the key is assigned to.
 	// This field is only used for user (log reader) tokens.
 	Name string `json:"name,omitempty"`
+
+	// Role is used for user (log reader) tokens and indicates the user's role.
+	// This can be used to determine whether a user has admin-level permissions or not.
+	// This field should not be used as a single source for permissions, these should be fetched from the database.
+	Role string `json:"roles,omitempty"`
 }
 
 func (c *Claims) jwtClaims() (*JwtClaims, error) {

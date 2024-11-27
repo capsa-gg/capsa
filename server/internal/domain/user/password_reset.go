@@ -2,11 +2,12 @@ package user
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 
 	"github.com/capsa-gg/capsa/server/internal/data/database"
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
@@ -21,26 +22,33 @@ func PasswordResetStart(ctx context.Context, s *interactor.Services, email strin
 	if err != nil {
 		log.Warn("user not found")
 
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("user_id", user.ID).With("user_uuid", user.UserUuid)
 	log.Debug("user found")
 
+	// Don't allow password reset for deactivated users
+	if user.DeactivatedOn != nil {
+		log.Warnf("user tried to reset password, but is deactivated on %s", *user.DeactivatedOn)
+
+		return domainerror.New(domainerror.NotFound, "no active user found", fmt.Errorf("user deactivated on %s", *user.DeactivatedOn))
+	}
+
 	// Init reset flow
 	err = s.Database.InitializeUserPasswordReset(ctx, user.ID)
 	if err != nil {
-		log.Warn("password reset could not be initialized")
+		log.Warnf("password reset could not be initialized: %s", err)
 
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	// Get reset data
 	reset, err := s.Database.GetPasswordResetByUserId(ctx, user.ID)
 	if err != nil {
-		log.Warn("password reset data could not be fetched")
+		log.Warnf("password reset data could not be fetched: %s", err)
 
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	// Send email
@@ -48,7 +56,7 @@ func PasswordResetStart(ctx context.Context, s *interactor.Services, email strin
 	if err != nil {
 		log.Warn("password reset email could not be sent")
 
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	return nil
@@ -65,7 +73,7 @@ func PasswordResetComplete(ctx context.Context, s *interactor.Services, resetTok
 	if err != nil {
 		log.Warn("password reset data could not be fetched")
 
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("user_id", reset.UserID)
@@ -75,7 +83,7 @@ func PasswordResetComplete(ctx context.Context, s *interactor.Services, resetTok
 	if err != nil {
 		log.Warn("user not found")
 
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	log.Debug("user found")
@@ -85,7 +93,7 @@ func PasswordResetComplete(ctx context.Context, s *interactor.Services, resetTok
 	if err != nil {
 		log.Warn("user password hash could not be generated")
 
-		return entities.NewDomainError(entities.DomainErrorUnexpected, "error generating password hash", err)
+		return domainerror.New(domainerror.Unexpected, "error generating password hash", err)
 	}
 
 	// Remove token as it has been used
@@ -93,7 +101,7 @@ func PasswordResetComplete(ctx context.Context, s *interactor.Services, resetTok
 	if err != nil {
 		log.Warn("user password reset could not be removed")
 
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	// Store new password hash, set new password_uuid
@@ -105,7 +113,7 @@ func PasswordResetComplete(ctx context.Context, s *interactor.Services, resetTok
 	if err != nil {
 		log.Warn("user password could not be updated")
 
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	// Send email
@@ -113,7 +121,7 @@ func PasswordResetComplete(ctx context.Context, s *interactor.Services, resetTok
 	if err != nil {
 		log.Warn("password reset email could not be sent")
 
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	return nil

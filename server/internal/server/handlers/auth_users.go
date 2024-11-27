@@ -16,7 +16,7 @@ import (
 // @Produce     json
 // @Param		login_request 	body 	bodies.UserLoginRequest 	true 	"UserLoginRequest"
 // @Description	Allows clients to create a log session and receive a token to send logs with
-// @Success		200		{object}	entities.UserLoginResult
+// @Success		200		{object}	bodies.UserLoginResult
 // @Failure     400		{object}	bodies.ErrorResponse
 // @Failure     401		{object}	bodies.ErrorResponse
 // @Failure     403		{object}	bodies.ErrorResponse
@@ -31,6 +31,12 @@ func (h Handlers) UserLogin(c *gin.Context) {
 	req, err := extractBodyJSON[bodies.UserLoginRequest](c, h.services)
 	if err != nil {
 		return // Error sent by extractBodyJSON
+	}
+
+	if req == nil {
+		h.sendErrorResponse(c, jsonBodyExtractionError)
+
+		return
 	}
 
 	log = log.With("user_email", req.Email)

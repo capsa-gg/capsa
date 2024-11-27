@@ -4,26 +4,25 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/jackc/pgx/v5/pgtype"
-
 	"github.com/capsa-gg/capsa/server/constants"
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 	"github.com/capsa-gg/capsa/server/internal/util"
 )
 
 // GetAllLogsOverview fetches the high-level overview of all available logs.
 // TODO: pagination.
-func GetAllLogsOverview(ctx context.Context, s *interactor.Services) ([]entities.LogOverview, error) {
+func GetAllLogsOverview(ctx context.Context, s *interactor.Services) ([]bodies.LogOverview, error) {
 	log := s.GetDomainLogger("logs", "GetAllLogsOverview")
 
 	// Get from database
-	rows, err := s.Database.ListAvailableLogs(ctx, pgtype.UUID{Valid: false})
+	rows, err := s.Database.ListAvailableLogs(ctx, nil)
 	if err != nil {
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
-	logsAvailable := make([]entities.LogOverview, len(rows))
+	logsAvailable := make([]bodies.LogOverview, len(rows))
 
 	for i := range rows {
 		logLoop := log.With("log_uuid", rows[i].LogUuid)

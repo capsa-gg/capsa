@@ -29,7 +29,7 @@ func New(c *entities.Config, mailer entities.EmailSender) *Emails {
 		Product: hermes.Product{
 			Name:        "Capsa Server",
 			Link:        fmt.Sprintf("%s://%s", c.ServerProtocol, c.WebappHostname), // Note: this assumes that the webapp is running on the same protocol as the server
-			Logo:        fmt.Sprintf("%s/logo-with-by.png", staticFileURLBase),
+			Logo:        fmt.Sprintf("%s/logo-with-by.png", staticFileURLBase),      //nolint:perfsprint // More readable this way
 			Copyright:   fmt.Sprintf("Copyright © %d Capsa. All rights reserved.", time.Now().Year()),
 			TroubleText: "If the button '{ACTION}' does not work, copy and paste the URL below.",
 		},

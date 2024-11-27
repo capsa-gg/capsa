@@ -11,12 +11,12 @@ import (
 
 const (
 	// MaxRequestTimeBeforeLoggingError is the amount in ms requests may take before they are too long and logged by Sentry as taking too long.
-	MaxRequestTimeBeforeLoggingError = 1000
+	MaxRequestTimeBeforeLoggingError = 2000
 )
 
 // GinLogger is Gin middleware to log request metadata.
 // TODO: We probably want error tracking to either Sentry .
-func GinLogger(rootLogger *zap.Logger) gin.HandlerFunc { // nolint:funlen // can't be shorter without increasing cognitive load
+func GinLogger(rootLogger *zap.Logger) gin.HandlerFunc {
 	timeFormat := "02/Jan/2006:15:04:05 -0700"
 	httpLog := rootLogger.Named("HttpLogger")
 
@@ -28,7 +28,7 @@ func GinLogger(rootLogger *zap.Logger) gin.HandlerFunc { // nolint:funlen // can
 		c.Next() // Start handling request
 
 		stop := time.Since(start)
-		latency := int(math.Ceil(float64(stop.Nanoseconds()) / 1000000.0)) // nolint:gomnd // we have divine permission to do this
+		latency := int(math.Ceil(float64(stop.Nanoseconds()) / 1_000_000.0))
 		status := c.Writer.Status()
 
 		// Generate Zap fields
@@ -54,7 +54,7 @@ func GinLogger(rootLogger *zap.Logger) gin.HandlerFunc { // nolint:funlen // can
 		msg := fmt.Sprintf("%d response sent for %s %s", status, method, path)
 
 		// Log server errors
-		if status > 499 { // nolint:gomnd // use for http code limits are ok
+		if status > 499 {
 			httpLog.Error(msg, reqData...)
 
 			return
@@ -70,7 +70,7 @@ func GinLogger(rootLogger *zap.Logger) gin.HandlerFunc { // nolint:funlen // can
 
 		// Log 4xx responses as warnings
 		// Check for < 500 not needed because of the > 499 check and return above
-		if status > 399 { // nolint:gomnd // use for http code limits are ok
+		if status > 399 {
 			httpLog.Warn(msg, reqData...)
 
 			return

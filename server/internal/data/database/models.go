@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 
 	"github.com/capsa-gg/capsa/server/internal/entities"
 )
@@ -57,6 +56,48 @@ func (ns NullLogClientType) Value() (driver.Value, error) {
 	return string(ns.LogClientType), nil
 }
 
+type UserRoles string
+
+const (
+	UserRolesAdmin UserRoles = "Admin"
+	UserRolesUser  UserRoles = "User"
+)
+
+func (e *UserRoles) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = UserRoles(s)
+	case string:
+		*e = UserRoles(s)
+	default:
+		return fmt.Errorf("unsupported scan type for UserRoles: %T", src)
+	}
+	return nil
+}
+
+type NullUserRoles struct {
+	UserRoles UserRoles `json:"userRoles"`
+	Valid     bool      `json:"valid"` // Valid is true if UserRoles is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullUserRoles) Scan(value interface{}) error {
+	if value == nil {
+		ns.UserRoles, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.UserRoles.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullUserRoles) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.UserRoles), nil
+}
+
 type Environment struct {
 	ID        int32     `json:"id"`
 	Title     int32     `json:"title"`
@@ -79,8 +120,8 @@ type LogsChunk struct {
 	Log            int64                     `json:"log"`
 	CreatedOn      time.Time                 `json:"createdOn"`
 	BlobPath       string                    `json:"blobPath"`
-	ChunkStart     pgtype.Timestamp          `json:"chunkStart"`
-	ChunkEnd       pgtype.Timestamp          `json:"chunkEnd"`
+	ChunkStart     *time.Time                `json:"chunkStart"`
+	ChunkEnd       *time.Time                `json:"chunkEnd"`
 	LineCount      int32                     `json:"lineCount"`
 	CategoryCounts entities.LogChunkMetadata `json:"categoryCounts"`
 	SeverityCounts entities.LogChunkMetadata `json:"severityCounts"`
@@ -106,14 +147,16 @@ type Title struct {
 }
 
 type User struct {
-	ID           int32       `json:"id"`
-	UserUuid     uuid.UUID   `json:"userUuid"`
-	PasswordHash *string     `json:"passwordHash"`
-	PasswordUuid pgtype.UUID `json:"passwordUuid"`
-	Email        string      `json:"email"`
-	FirstName    string      `json:"firstName"`
-	LastName     string      `json:"lastName"`
-	CreatedAt    time.Time   `json:"createdAt"`
+	ID            int32      `json:"id"`
+	UserUuid      uuid.UUID  `json:"userUuid"`
+	PasswordHash  *string    `json:"passwordHash"`
+	PasswordUuid  *uuid.UUID `json:"passwordUuid"`
+	Email         string     `json:"email"`
+	FirstName     string     `json:"firstName"`
+	LastName      string     `json:"lastName"`
+	UserRole      UserRoles  `json:"userRole"`
+	CreatedAt     time.Time  `json:"createdAt"`
+	DeactivatedOn *time.Time `json:"deactivatedOn"`
 }
 
 type UsersPasswordReset struct {

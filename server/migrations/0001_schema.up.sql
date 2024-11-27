@@ -1,5 +1,8 @@
 BEGIN;
 
+-- Enum for different users
+CREATE TYPE user_roles AS ENUM ('Admin', 'User');
+
 -- Users table
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -9,7 +12,9 @@ CREATE TABLE users (
     email varchar UNIQUE NOT NULL,
     first_name varchar NOT NULL,
     last_name varchar NOT NULL,
-    created_at timestamp NOT NULL DEFAULT (now())
+    user_role user_roles NOT NULL,
+    created_at timestamp NOT NULL DEFAULT (now()),
+    deactivated_on timestamp
 );
 
 -- Password reset table

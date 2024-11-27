@@ -30,7 +30,12 @@ import (
 // @securitydefinitions.apikey JwtUser
 // @in header
 // @name Authorization
-// @description Header value should be "Bearer UserJwtString"
+// @description Header value should be "Bearer UserJwtString", JwtAdmin also works for this endpoint
+
+// @securitydefinitions.apikey JwtAdmin
+// @in header
+// @name Authorization
+// @description Header value should be "Bearer UserJwtString", this JWT is similar to JwtUser, but contains the "Admin" role
 
 // @host example.com
 // @schemes http https

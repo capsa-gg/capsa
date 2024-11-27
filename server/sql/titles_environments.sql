@@ -1,3 +1,7 @@
+-- name: ListTitles :many
+-- Returns all titles
+SELECT name, created_on FROM titles;
+
 -- name: AddTitle :exec
 -- Inserts new title into database
 INSERT INTO titles (name)
