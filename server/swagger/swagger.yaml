@@ -1,5 +1,28 @@
 basePath: /v1
 definitions:
+  bodies.AddEnvironmentRequest:
+    properties:
+      environment:
+        maxLength: 24
+        minLength: 4
+        type: string
+      title:
+        maxLength: 24
+        minLength: 4
+        type: string
+    required:
+    - environment
+    - title
+    type: object
+  bodies.AddTitleRequest:
+    properties:
+      title:
+        maxLength: 24
+        minLength: 4
+        type: string
+    required:
+    - title
+    type: object
   bodies.ClientLogCreationRequest:
     properties:
       key:
@@ -118,11 +141,18 @@ definitions:
         example: 0.0.1
         type: string
     type: object
-  bodies.TitleEnvironment:
+  bodies.TitleEnvironmentResponse:
     properties:
       environmentKey:
         type: string
       environmentName:
+        type: string
+      title:
+        type: string
+    type: object
+  bodies.TitleResponse:
+    properties:
+      createdOn:
         type: string
       title:
         type: string
@@ -233,6 +263,154 @@ info:
   title: Capsa Server
   version: "1"
 paths:
+  /admin/environments:
+    post:
+      description: Allows admins to add new environments for an existing title
+      parameters:
+      - description: EnvironmentAddRequest
+        in: body
+        name: environment
+        required: true
+        schema:
+          $ref: '#/definitions/bodies.AddEnvironmentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            items:
+              $ref: '#/definitions/bodies.TitleEnvironmentResponse'
+            type: array
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      security:
+      - JwtAdmin: []
+      summary: Add new environment for an existing title
+      tags:
+      - AdminTitleEnvironment
+  /admin/titles:
+    get:
+      description: Allows admins to add list all titles in the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            items:
+              $ref: '#/definitions/bodies.TitleResponse'
+            type: array
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      security:
+      - JwtAdmin: []
+      summary: List all titles
+      tags:
+      - AdminTitleEnvironment
+    post:
+      description: Allows admins to add new titles
+      parameters:
+      - description: TitleAddRequest
+        in: body
+        name: title
+        required: true
+        schema:
+          $ref: '#/definitions/bodies.AddTitleRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            items:
+              $ref: '#/definitions/bodies.TitleResponse'
+            type: array
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      security:
+      - JwtAdmin: []
+      summary: Add new title
+      tags:
+      - AdminTitleEnvironment
   /admin/users:
     get:
       description: Allows admins to fetch all users from the database
@@ -863,7 +1041,7 @@ paths:
               type: string
           schema:
             items:
-              $ref: '#/definitions/bodies.TitleEnvironment'
+              $ref: '#/definitions/bodies.TitleEnvironmentResponse'
             type: array
         "400":
           description: Bad Request

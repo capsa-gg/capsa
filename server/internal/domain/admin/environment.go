@@ -42,7 +42,7 @@ func AddNewEnvironment(ctx context.Context, s *interactor.Services, title, env s
 }
 
 // ListAllTitlesAndEnvironments lists all titles and environments, with the associated keys.
-func ListAllTitlesAndEnvironments(ctx context.Context, s *interactor.Services) ([]bodies.TitleEnvironment, error) {
+func ListAllTitlesAndEnvironments(ctx context.Context, s *interactor.Services) ([]bodies.TitleEnvironmentResponse, error) {
 	log := s.GetDomainLogger("admin", "ListAllTitlesAndEnvironments")
 
 	res, err := s.Database.ListAllEnvironmentsAndTitles(ctx)
@@ -54,7 +54,7 @@ func ListAllTitlesAndEnvironments(ctx context.Context, s *interactor.Services) (
 
 	log.Infof("fetched %d items", len(res))
 
-	titleEnvironments := make([]bodies.TitleEnvironment, len(res))
+	titleEnvironments := make([]bodies.TitleEnvironmentResponse, len(res))
 	for i, te := range res {
 		titleEnvironments[i].Title = te.Title
 		titleEnvironments[i].EnvironmentName = te.Environment

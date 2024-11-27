@@ -62,6 +62,12 @@ func registerRoutes(r *gin.RouterGroup, h *handlers.Handlers, s *interactor.Serv
 	adminRoutes := r.Group("/admin")
 	adminRoutes.Use(middleware.AuthUserMiddleware(s, []constants.UserRole{constants.UserRoleAdmin}))
 	{
+		// Title and environment management
+		adminRoutes.GET("/titles", h.TitlesList)
+		adminRoutes.POST("/titles", h.TitleAdd)
+		adminRoutes.POST("/environments", h.EnvironmentAdd)
+
+		// User management
 		adminRoutes.GET("/users", h.ListAllUsers)
 		adminRoutes.POST("/users", h.CreateUser)
 		adminRoutes.PUT("/users/:useruuid", h.UpdateUser)

@@ -19,6 +19,236 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/admin/environments": {
+            "post": {
+                "security": [
+                    {
+                        "JwtAdmin": []
+                    }
+                ],
+                "description": "Allows admins to add new environments for an existing title",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminTitleEnvironment"
+                ],
+                "summary": "Add new environment for an existing title",
+                "parameters": [
+                    {
+                        "description": "EnvironmentAddRequest",
+                        "name": "environment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bodies.AddEnvironmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/bodies.TitleEnvironmentResponse"
+                            }
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/titles": {
+            "get": {
+                "security": [
+                    {
+                        "JwtAdmin": []
+                    }
+                ],
+                "description": "Allows admins to add list all titles in the database",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminTitleEnvironment"
+                ],
+                "summary": "List all titles",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/bodies.TitleResponse"
+                            }
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "JwtAdmin": []
+                    }
+                ],
+                "description": "Allows admins to add new titles",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AdminTitleEnvironment"
+                ],
+                "summary": "Add new title",
+                "parameters": [
+                    {
+                        "description": "TitleAddRequest",
+                        "name": "title",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bodies.AddTitleRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/bodies.TitleResponse"
+                            }
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/admin/users": {
             "get": {
                 "security": [
@@ -976,7 +1206,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/bodies.TitleEnvironment"
+                                "$ref": "#/definitions/bodies.TitleEnvironmentResponse"
                             }
                         },
                         "headers": {
@@ -1281,6 +1511,38 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "bodies.AddEnvironmentRequest": {
+            "type": "object",
+            "required": [
+                "environment",
+                "title"
+            ],
+            "properties": {
+                "environment": {
+                    "type": "string",
+                    "maxLength": 24,
+                    "minLength": 4
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 24,
+                    "minLength": 4
+                }
+            }
+        },
+        "bodies.AddTitleRequest": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "maxLength": 24,
+                    "minLength": 4
+                }
+            }
+        },
         "bodies.ClientLogCreationRequest": {
             "type": "object",
             "required": [
@@ -1450,13 +1712,24 @@ const docTemplate = `{
                 }
             }
         },
-        "bodies.TitleEnvironment": {
+        "bodies.TitleEnvironmentResponse": {
             "type": "object",
             "properties": {
                 "environmentKey": {
                     "type": "string"
                 },
                 "environmentName": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "bodies.TitleResponse": {
+            "type": "object",
+            "properties": {
+                "createdOn": {
                     "type": "string"
                 },
                 "title": {
