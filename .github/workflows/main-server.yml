@@ -81,9 +81,9 @@ jobs:
           push-to-registry: true
 
       # Slackbot message
-#      - name: Send message via Slack webhook
-#        run: |
-#          curl -X POST \
-#            -H 'Content-type: application/json' \
-#            --data '{"text":"The main branch on GitHub has just received a new commit. The new version will be deployed in a few seconds.\n\n*Commit Message:*\n${{ github.event.head_commit.message }}"}' \
-#            ${{ secrets.SLACK_WEBHOOK }}
+      - name: Send message via Slack webhook
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"text":"The main branch on GitHub has just received a new commit. The new version will be deployed in a few seconds.\n\n*Commit Message:*\n${{ github.event.head_commit.message }}"}' \
+            ${{ secrets.SLACK_WEBHOOK }}
