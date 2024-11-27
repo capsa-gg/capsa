@@ -52,7 +52,7 @@ func TestLogTypeFromString(t *testing.T) {
 				require.NoError(t, err)
 			}
 
-			require.Equal(t, got, tt.wantValue)
+			require.Equal(t, tt.wantValue, got)
 		})
 	}
 }

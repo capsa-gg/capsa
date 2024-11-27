@@ -1,3 +1,13 @@
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  exclude-use-default: false
+  exclude:
+    - ST1000 # "at least one file in a package should have a package comment"
+  exclude-rules:
+    - linters: [ revive ]
+      text: 'should have a package comment'
+
 linters-settings:
   govet:
     shadow: true
@@ -12,6 +22,9 @@ linters-settings:
     lines: 80
   misspell:
     locale: US
+  mnd:
+    ignored-numbers:
+      - ''
   gocritic:
     enabled-tags:
       - diagnostic
@@ -43,6 +56,8 @@ linters-settings:
         deny:
           - pkg: io/ioutil
             desc: "replaced by io and os packages since Go 1.16: https://tip.golang.org/doc/go1.16#ioutil"
+          - pkg: "github.com/jackc/pgx/v5/pgtype"
+            desc: "use stdlib packages instead, which can be set in the sqlc config"
 
 output:
   formats:
@@ -53,11 +68,18 @@ output:
 linters:
   disable-all: false
   enable:
+    - asasalint
     - asciicheck
+    - bidichk
     - bodyclose
+    - decorder
+    - depguard
     - dogsled
     - dupl
     - errcheck
+    - errchkjson
+    - errorlint
+    - exhaustive
     - funlen
     - depguard
     - gochecknoinits
@@ -75,12 +97,24 @@ linters:
     - gosimple
     - govet
     - ineffassign
+    - loggercheck
+    - maintidx
+    - musttag
     - misspell
     - nakedret
+    - nilerr
+    - nilnil
+    - nolintlint
+    - perfsprint
+    - prealloc
+    - predeclared
     - revive
     - rowserrcheck
     - staticcheck
     - stylecheck
+    - testifylint
+    - thelper
+    - tparallel
     - typecheck
     - unconvert
     - unparam

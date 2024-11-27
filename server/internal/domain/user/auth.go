@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
-
 	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
@@ -30,14 +28,14 @@ func Login(ctx context.Context, s *interactor.Services, email, password string) 
 	log.Debug("user found")
 
 	// Don't allow login for deactivated users
-	if user.DeactivatedOn.Valid {
-		log.Warnf("user tried to log in, but is deactivated on %s", user.DeactivatedOn.Time)
+	if user.DeactivatedOn != nil {
+		log.Warnf("user tried to log in, but is deactivated on %s", user.DeactivatedOn)
 
-		return nil, entities.NewDomainError(entities.DomainErrorNotFound, "no active user found", fmt.Errorf("user deactivated on %s", user.DeactivatedOn.Time))
+		return nil, entities.NewDomainError(entities.DomainErrorNotFound, "no active user found", fmt.Errorf("user deactivated on %s", *user.DeactivatedOn))
 	}
 
 	// Check that a user has a password set
-	if user.PasswordHash == nil || !user.PasswordUuid.Valid {
+	if user.PasswordHash == nil || user.PasswordUuid == nil {
 		log.Warnf("user password hash (%#v) or password uuid (%#v) not found", user.PasswordHash, user.PasswordUuid)
 
 		return nil, entities.NewDomainError(entities.DomainErrorNotFound, "user password not set", errors.New("password hash or uuid not valid"))
@@ -60,7 +58,7 @@ func Login(ctx context.Context, s *interactor.Services, email, password string) 
 	log.Debug("user password validation succeeded")
 
 	// Generate JWT
-	jwt, err := s.Token.GenerateUserJwt(user.UserUuid.String(), uuid.UUID(user.PasswordUuid.Bytes).String(), name, string(user.UserRole))
+	jwt, err := s.Token.GenerateUserJwt(user.UserUuid.String(), user.PasswordUuid.String(), name, string(user.UserRole))
 	if err != nil {
 		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot generate jwt for log session", err)
 	}

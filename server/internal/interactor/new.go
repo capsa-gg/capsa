@@ -3,6 +3,7 @@ package interactor
 import (
 	"context"
 	"crypto/rsa"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -40,7 +41,7 @@ func NewServices(c *entities.Config) (*Services, error) { //nolint:gocyclo // Th
 
 	// Validate JWK config options
 	if (c.JwkPrivateKeyPath != "" && c.JwkPrivateKeyBase64 != "") || (c.JwkPrivateKeyPath == "" && c.JwkPrivateKeyBase64 == "") {
-		return nil, fmt.Errorf("either jwk private key path, or base64 should be defined, but not both")
+		return nil, errors.New("either jwk private key path, or base64 should be defined, but not both")
 	}
 
 	// Load JWK key

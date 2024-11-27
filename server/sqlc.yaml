@@ -12,12 +12,27 @@ sql:
         json_tags_case_style: "camel"
         emit_pointers_for_null_types: true
         overrides:
+          # UUID
           - db_type: "uuid"
             go_type:
               import: "github.com/google/uuid"
               type: "UUID"
+          - db_type: "uuid"
+            nullable: true
+            go_type:
+              import: "github.com/google/uuid"
+              type: "UUID"
+              pointer: true
+          # Timestamp
+          - db_type: "pg_catalog.timestamp"
+            nullable: true
+            go_type:
+              import: "time"
+              type: "Time"
+              pointer: true
           - db_type: "pg_catalog.timestamp"
             go_type: "time.Time"
+          # Custom
           - column: "logs_chunks.category_counts"
             go_type:
               import: "github.com/capsa-gg/capsa/server/internal/entities"

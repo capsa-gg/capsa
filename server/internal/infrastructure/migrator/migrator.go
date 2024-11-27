@@ -30,7 +30,7 @@ func New(dbConn *sql.DB, dbName string) func(Direction) error {
 	return func(direction Direction) error {
 		// Direction check
 		if direction != UpAll && direction != DownAll {
-			return fmt.Errorf("migration direction should be 'UpAll' or 'DownAll'")
+			return errors.New("migration direction should be 'UpAll' or 'DownAll'")
 		}
 
 		driver, err := pgx.WithInstance(dbConn, &pgx.Config{})

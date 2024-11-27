@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 
 	"github.com/capsa-gg/capsa/server/constants"
 	"github.com/capsa-gg/capsa/server/internal/entities"
@@ -70,7 +69,7 @@ func GetMetadataForLog(ctx context.Context, s *interactor.Services, logUUID uuid
 	}
 
 	// Get log data from database
-	rows, err := s.Database.ListAvailableLogs(ctx, pgtype.UUID{Valid: true, Bytes: logUUID})
+	rows, err := s.Database.ListAvailableLogs(ctx, &logUUID)
 	if err != nil {
 		return nil, entities.NewDomainErrorFromDatabaseError(err)
 	}

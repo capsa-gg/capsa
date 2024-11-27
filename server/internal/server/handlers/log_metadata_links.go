@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -33,6 +34,12 @@ func (h Handlers) LogMetadataSave(c *gin.Context) {
 	req, err := extractBodyJSON[bodies.LogMetadataSaveRequest](c, h.services)
 	if err != nil {
 		return // Error sent by extractBodyJSON
+	}
+
+	if req == nil {
+		h.sendErrorResponse(c, errors.New("cannot extract body json from request"))
+
+		return
 	}
 
 	log.Debug("body extracted")

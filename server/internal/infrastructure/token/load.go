@@ -5,16 +5,22 @@ import (
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/pem"
+	"errors"
 	"fmt"
 	"os"
 )
 
 const blockTypeRsaPrivateKey = "RSA PRIVATE KEY"
 
+var (
+	// ErrorPemPrivateKeyDecoding indicates that the decoding of the private-key containing PEM block failed.
+	ErrorPemPrivateKeyDecoding = errors.New("failed to decode PEM block containing private key")
+)
+
 // LoadPrivateKeyFromPath reads the private key from a file and returns a rsa.PrivateKey struct.
 func LoadPrivateKeyFromPath(path string) (*rsa.PrivateKey, error) {
 	// Read the file
-	keyBytes, err := os.ReadFile(path)
+	keyBytes, err := os.ReadFile(path) //nolint:gosec // "G304: Potential file inclusion via variable", this path is set in the config.yml and should never contain user input
 	if err != nil {
 		return nil, fmt.Errorf("failed to read private key file: %w", err)
 	}
@@ -22,7 +28,7 @@ func LoadPrivateKeyFromPath(path string) (*rsa.PrivateKey, error) {
 	// Decode the PEM block
 	block, _ := pem.Decode(keyBytes)
 	if block == nil || block.Type != blockTypeRsaPrivateKey {
-		return nil, fmt.Errorf("failed to decode PEM block containing private key")
+		return nil, ErrorPemPrivateKeyDecoding
 	}
 
 	// Parse the private key
@@ -44,7 +50,7 @@ func LoadPrivateKeyFromBase64String(b64 string) (*rsa.PrivateKey, error) {
 	// Decode the PEM block
 	block, _ := pem.Decode(keyBytes)
 	if block == nil || block.Type != blockTypeRsaPrivateKey {
-		return nil, fmt.Errorf("failed to decode PEM block containing private key")
+		return nil, ErrorPemPrivateKeyDecoding
 	}
 
 	// Parse the private key

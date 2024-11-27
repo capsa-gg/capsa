@@ -41,7 +41,7 @@ func extractClientJwtClaimsFromContext(c *gin.Context, log *zap.SugaredLogger) (
 
 // extractUserJwtClaimsFromContext extracts the user claims from the context
 // The boolean is "ok", if this is false, just return the handler, the response has already been sent.
-func extractUserJwtClaimsFromContext(c *gin.Context, log *zap.SugaredLogger) (*token.JwtClaims, uuid.UUID, bool) { // nolint:unused // will be used very soon
+func extractUserJwtClaimsFromContext(c *gin.Context, log *zap.SugaredLogger) (*token.JwtClaims, uuid.UUID, bool) { //nolint:unused // will be used very soon
 	return extractJwtClaimsFromContext(c, log, constants.GinContextKeyValidatedUser)
 }
 

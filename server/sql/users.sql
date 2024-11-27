@@ -28,6 +28,16 @@ UPDATE users
 SET password_hash = $1, password_uuid = uuid_generate_v4()
 WHERE id = $2;
 
+SELECT
+    u.user_uuid AS user_uuid,
+    u.email AS email,
+    U.first_name as first_name,
+    U.last_name as last_name,
+    u.user_role AS role,
+    u.deactivated_on AS deactivated_ts,
+    u.created_at AS created_at
+FROM users u;
+
 -- name: GetUserByID :one
 SELECT * FROM users
 WHERE id = $1;

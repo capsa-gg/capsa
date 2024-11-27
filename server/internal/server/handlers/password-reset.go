@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -65,6 +66,12 @@ func (h Handlers) UserPasswordComplete(c *gin.Context) {
 	req, err := extractBodyJSON[bodies.UserPasswordResetCompleteRequest](c, h.services)
 	if err != nil {
 		return // Error sent by extractBodyJSON
+	}
+
+	if req == nil {
+		h.sendErrorResponse(c, errors.New("cannot extract body json from request"))
+
+		return
 	}
 
 	log = log.With("email", req.ResetToken)

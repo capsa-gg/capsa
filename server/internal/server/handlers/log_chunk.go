@@ -118,7 +118,7 @@ func decodeGzipBody(c *gin.Context) ([]byte, error) {
 		return nil, entities.NewDomainError(entities.DomainErrorInvalidArgument, "cannot decompress request body", err)
 	}
 
-	defer reader.Close()
+	defer reader.Close() //nolint:errcheck // Best effort is fine here
 
 	logContents, err := io.ReadAll(reader)
 	if err != nil {

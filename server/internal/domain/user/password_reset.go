@@ -29,10 +29,10 @@ func PasswordResetStart(ctx context.Context, s *interactor.Services, email strin
 	log.Debug("user found")
 
 	// Don't allow password reset for deactivated users
-	if user.DeactivatedOn.Valid {
-		log.Warnf("user tried to reset password, but is deactivated on %s", user.DeactivatedOn.Time)
+	if user.DeactivatedOn != nil {
+		log.Warnf("user tried to reset password, but is deactivated on %s", *user.DeactivatedOn)
 
-		return entities.NewDomainError(entities.DomainErrorNotFound, "no active user found", fmt.Errorf("user deactivated on %s", user.DeactivatedOn.Time))
+		return entities.NewDomainError(entities.DomainErrorNotFound, "no active user found", fmt.Errorf("user deactivated on %s", *user.DeactivatedOn))
 	}
 
 	// Init reset flow

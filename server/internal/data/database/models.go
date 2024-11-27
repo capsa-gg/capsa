@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 
 	"github.com/capsa-gg/capsa/server/internal/entities"
 )
@@ -121,8 +120,8 @@ type LogsChunk struct {
 	Log            int64                     `json:"log"`
 	CreatedOn      time.Time                 `json:"createdOn"`
 	BlobPath       string                    `json:"blobPath"`
-	ChunkStart     pgtype.Timestamp          `json:"chunkStart"`
-	ChunkEnd       pgtype.Timestamp          `json:"chunkEnd"`
+	ChunkStart     *time.Time                `json:"chunkStart"`
+	ChunkEnd       *time.Time                `json:"chunkEnd"`
 	LineCount      int32                     `json:"lineCount"`
 	CategoryCounts entities.LogChunkMetadata `json:"categoryCounts"`
 	SeverityCounts entities.LogChunkMetadata `json:"severityCounts"`
@@ -148,16 +147,16 @@ type Title struct {
 }
 
 type User struct {
-	ID            int32            `json:"id"`
-	UserUuid      uuid.UUID        `json:"userUuid"`
-	PasswordHash  *string          `json:"passwordHash"`
-	PasswordUuid  pgtype.UUID      `json:"passwordUuid"`
-	Email         string           `json:"email"`
-	FirstName     string           `json:"firstName"`
-	LastName      string           `json:"lastName"`
-	UserRole      UserRoles        `json:"userRole"`
-	CreatedAt     time.Time        `json:"createdAt"`
-	DeactivatedOn pgtype.Timestamp `json:"deactivatedOn"`
+	ID            int32      `json:"id"`
+	UserUuid      uuid.UUID  `json:"userUuid"`
+	PasswordHash  *string    `json:"passwordHash"`
+	PasswordUuid  *uuid.UUID `json:"passwordUuid"`
+	Email         string     `json:"email"`
+	FirstName     string     `json:"firstName"`
+	LastName      string     `json:"lastName"`
+	UserRole      UserRoles  `json:"userRole"`
+	CreatedAt     time.Time  `json:"createdAt"`
+	DeactivatedOn *time.Time `json:"deactivatedOn"`
 }
 
 type UsersPasswordReset struct {

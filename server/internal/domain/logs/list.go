@@ -4,8 +4,6 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/jackc/pgx/v5/pgtype"
-
 	"github.com/capsa-gg/capsa/server/constants"
 	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
@@ -18,7 +16,7 @@ func GetAllLogsOverview(ctx context.Context, s *interactor.Services) ([]entities
 	log := s.GetDomainLogger("logs", "GetAllLogsOverview")
 
 	// Get from database
-	rows, err := s.Database.ListAvailableLogs(ctx, pgtype.UUID{Valid: false})
+	rows, err := s.Database.ListAvailableLogs(ctx, nil)
 	if err != nil {
 		return nil, entities.NewDomainErrorFromDatabaseError(err)
 	}

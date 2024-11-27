@@ -24,9 +24,9 @@ func (h Handlers) Jwks(c *gin.Context) {
 	c.Header("content-type", "application/json")
 
 	// Manually writing JSON for compatibility with the []byte from pubKey
-	c.Writer.WriteString(`{"keys":[`) //nolint:errcheck // This is fine
-	c.Writer.Write(pubKey)            //nolint:errcheck // This is fine
-	c.Writer.WriteString(`]}`)        //nolint:errcheck // This is fine
+	c.Writer.WriteString(`{"keys":[`) //nolint:errcheck,gosec // This is fine
+	c.Writer.Write(pubKey)            //nolint:errcheck,gosec // This is fine
+	c.Writer.WriteString(`]}`)        //nolint:errcheck,gosec // This is fine
 
 	c.Status(http.StatusOK)
 }

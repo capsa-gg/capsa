@@ -27,7 +27,7 @@ func StreamUnfilteredLogChunks(ctx context.Context, s *interactor.Services, logI
 	}
 
 	// Loop over log, and stream chunks
-	for i, c := range chunks { //nolint:gocritic // 144 bytes, for now this is fine
+	for i, c := range chunks {
 		logLoop := log.With("i_chunk", i, "blob_path", c.BlobPath, "created_on", c.CreatedOn)
 
 		chunkText, err := s.LogChunks.GetChunk(c.BlobPath)
@@ -68,7 +68,7 @@ func StreamFilteredLogChunks(ctx context.Context, s *interactor.Services, logID 
 	lineCounter := 0 // Line counts start at 1, but we increment when we find a \n from 0 to 1
 
 	// Loop over log, and stream chunks
-	for i, c := range chunks { //nolint:gocritic // 144 bytes, for now this is fine
+	for i, c := range chunks {
 		logLoop := log.With("i_chunk", i, "blob_path", c.BlobPath, "created_on", c.CreatedOn)
 
 		shouldStreamChunk := filters.shouldStreamChunk(logChunkMetadata{

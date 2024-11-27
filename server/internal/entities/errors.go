@@ -71,12 +71,16 @@ func NewDomainErrorFromDatabaseError(err error) DomainError {
 		return NewDomainError(DomainErrorUnexpected, "unexpected error", err)
 	}
 
+	if pqErr == nil {
+		return NewDomainError(DomainErrorUnexpected, "unexpected error", fmt.Errorf("pgErr is nil: %w", pqErr))
+	}
+
 	formatDetails := fmt.Errorf("%s (code %s, message %s)", pqErr.Detail, pqErr.Code, pqErr.Message)
 
 	// Note: for finding error codes, see: https://www.postgresql.org/docs/11/errcodes-appendix.html or https://github.com/lib/pq/blob/master/error.go#L78
 	switch pqErr.Code {
 	case "23505": // unique_violation
-		detail := fmt.Sprintf("Data unique violation: %s", pqErr.Detail)
+		detail := "Data unique violation: " + pqErr.Detail
 
 		return DomainError{
 			Type:     DomainErrorConflict,

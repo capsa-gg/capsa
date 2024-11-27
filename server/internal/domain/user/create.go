@@ -2,7 +2,7 @@ package user
 
 import (
 	"context"
-	"fmt"
+	"errors"
 
 	"github.com/capsa-gg/capsa/server/constants"
 	"github.com/capsa-gg/capsa/server/internal/entities"
@@ -68,7 +68,7 @@ func AddNewUser(ctx context.Context, s *interactor.Services, email, firstName, l
 // With development mode disabled, this function returns an error.
 func AddNewUserWithPassword(s *interactor.Services, email, firstName, lastName, password string) (*uuid.UUID, error) {
 	if !s.Config.IsDevMode {
-		return nil, fmt.Errorf("adding a user with a password set is only available in development mode")
+		return nil, errors.New("adding a user with a password set is only available in development mode")
 	}
 
 	log := s.GetDomainLogger("user", "AddNewUser").

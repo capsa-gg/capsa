@@ -77,7 +77,7 @@ func createValidationError(err error) error {
 	}
 
 	// Build array with incorrect error fields and create error string
-	var incorrectFields []string
+	incorrectFields := make([]string, 0, len(validationErrors))
 	for _, e := range validationErrors {
 		incorrectFields = append(incorrectFields, fmt.Sprintf("%s (%s)", e.Field(), e.Tag()))
 	}

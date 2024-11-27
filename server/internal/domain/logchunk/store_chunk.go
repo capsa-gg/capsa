@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 
 	"github.com/capsa-gg/capsa/server/internal/data/database"
 	"github.com/capsa-gg/capsa/server/internal/entities"
@@ -61,8 +60,8 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 		Log:            logInfo.ID,
 		BlobPath:       fileName,
 		LineCount:      chunkMetadata.LineCount,
-		ChunkStart:     pgtype.Timestamp{Time: chunkMetadata.Start, Valid: true},
-		ChunkEnd:       pgtype.Timestamp{Time: chunkMetadata.End, Valid: true},
+		ChunkStart:     &chunkMetadata.Start,
+		ChunkEnd:       &chunkMetadata.End,
 		CategoryCounts: chunkMetadata.CategoriesCount,
 		SeverityCounts: chunkMetadata.SeveritiesCount,
 	}

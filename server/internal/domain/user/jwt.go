@@ -58,10 +58,10 @@ func ValidateUserJwt(ctx context.Context, s *interactor.Services, tok string, al
 	log.Debug("user found in database")
 
 	// Fail validation for deactivated users
-	if user.DeactivatedOn.Valid {
-		log.Warnf("user for jwt is is deactivated on %s", user.DeactivatedOn.Time)
+	if user.DeactivatedOn != nil {
+		log.Warnf("user for jwt is is deactivated on %s", *user.DeactivatedOn)
 
-		return nil, entities.NewDomainError(entities.DomainErrorNoPermission, "user is deactivated", fmt.Errorf("user deactivated on %s", user.DeactivatedOn.Time))
+		return nil, entities.NewDomainError(entities.DomainErrorNoPermission, "user is deactivated", fmt.Errorf("user deactivated on %s", *user.DeactivatedOn))
 	}
 
 	role, err := constants.UserRoleFromString(string(user.UserRole))
@@ -78,7 +78,7 @@ func ValidateUserJwt(ctx context.Context, s *interactor.Services, tok string, al
 		return nil, entities.NewDomainError(entities.DomainErrorNoPermission, "user role is not allowed to access this", fmt.Errorf("user role '%s' not in the allowed list '%#v'", role, allowedRoles))
 	}
 
-	userPassUUID := uuid.UUID(user.PasswordUuid.Bytes).String()
+	userPassUUID := user.PasswordUuid.String()
 
 	// If a user has changed their password, don't succeed the validation
 	if claims.JwtID != userPassUUID {

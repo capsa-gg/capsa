@@ -14,6 +14,7 @@ bootstrap: ## Installs Go packages and sets defaults
 	go install github.com/jstemmer/go-junit-report@latest
 	go install github.com/t-yuki/gocover-cobertura@latest
 	go install github.com/swaggo/swag/cmd/swag@latest
+	go install go.uber.org/nilaway/cmd/nilaway@latest
 
 .PHONY: build
 build: ## Runs the Golang build for production on Linux
@@ -47,6 +48,8 @@ fmt: ## Code style formatting and linting check for the project
 	golint ./...
 	@echo "Checking linting:"
 	golangci-lint run --sort-results
+	nilaway -include-pkgs="github.com/capsa-gg/capsa/server" ./...
+
 
 
 .PHONY: docs
@@ -62,6 +65,7 @@ ci: ## Runs the CI tasks
 	go vet ./...
 	golint ./...
 	goimports -e -d -local github.com/capsa-gg/capsa/server .
+	nilaway -include-pkgs="github.com/capsa-gg/capsa/server" ./...
 	@echo "Running tests with coverage"
 	go test -coverprofile=coverage_raw.txt -covermode count -v 2>&1 ./... | go-junit-report -set-exit-code > junit.xml
 	@echo "Removing packages from coverage report that don't require testing"
