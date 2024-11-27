@@ -8,7 +8,7 @@ import (
 
 	"github.com/capsa-gg/capsa/server/constants"
 	"github.com/capsa-gg/capsa/server/internal/domain/user"
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
 
@@ -86,7 +86,7 @@ func (h Handlers) CreateUser(c *gin.Context) {
 	}
 
 	if newUserUUID == nil {
-		h.sendErrorResponse(c, entities.NewDomainError(entities.DomainErrorUnexpected, "no new user uuid", errors.New("newUserUUID is nil")))
+		h.sendErrorResponse(c, domainerror.New(domainerror.Unexpected, "no new user uuid", errors.New("newUserUUID is nil")))
 
 		return
 	}
@@ -130,7 +130,7 @@ func (h Handlers) DeactivateUser(c *gin.Context) { //nolint:dupl // Unique enoug
 	}
 
 	if userUUID == userJwtUUID {
-		h.sendErrorResponse(c, entities.NewDomainError(entities.DomainErrorNoPermission, "cannot change activation of your own user", errors.New("changing activation status of own user is not allowed")))
+		h.sendErrorResponse(c, domainerror.New(domainerror.NoPermission, "cannot change activation of your own user", errors.New("changing activation status of own user is not allowed")))
 
 		return
 	}
@@ -183,7 +183,7 @@ func (h Handlers) ReactivateUser(c *gin.Context) { //nolint:dupl // Unique enoug
 	}
 
 	if userUUID == userJwtUUID {
-		h.sendErrorResponse(c, entities.NewDomainError(entities.DomainErrorNoPermission, "cannot change activation of your own user", errors.New("changing activation status of own user is not allowed")))
+		h.sendErrorResponse(c, domainerror.New(domainerror.NoPermission, "cannot change activation of your own user", errors.New("changing activation status of own user is not allowed")))
 
 		return
 	}
@@ -245,14 +245,14 @@ func (h Handlers) UpdateUser(c *gin.Context) {
 	}
 
 	if req == nil {
-		h.sendErrorResponse(c, entities.NewDomainError(entities.DomainErrorUnexpected, "nil arrgument", errors.New("userInfo is nil")))
+		h.sendErrorResponse(c, domainerror.New(domainerror.Unexpected, "nil arrgument", errors.New("userInfo is nil")))
 
 		return
 	}
 
 	if userUUID == userJwtUUID {
 		if req.Role != constants.UserRoleAdmin { // User must be an admin to reach this endpoint
-			h.sendErrorResponse(c, entities.NewDomainError(entities.DomainErrorInvalidArgument, "cannot change your own role", errors.New("changing role of own user is not allowed")))
+			h.sendErrorResponse(c, domainerror.New(domainerror.InvalidArgument, "cannot change your own role", errors.New("changing role of own user is not allowed")))
 
 			return
 		}

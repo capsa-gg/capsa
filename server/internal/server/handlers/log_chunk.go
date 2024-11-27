@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/capsa-gg/capsa/server/internal/domain/logchunk"
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
 
@@ -108,21 +108,21 @@ func (h Handlers) LogStoreChunk(c *gin.Context) {
 func decodeGzipBody(c *gin.Context) ([]byte, error) {
 	gzipContents, err := io.ReadAll(c.Request.Body)
 	if err != nil {
-		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot extract request body", err)
+		return nil, domainerror.New(domainerror.Unexpected, "cannot extract request body", err)
 	}
 
 	buf := bytes.NewBuffer(gzipContents)
 
 	reader, err := gzip.NewReader(buf)
 	if err != nil {
-		return nil, entities.NewDomainError(entities.DomainErrorInvalidArgument, "cannot decompress request body", err)
+		return nil, domainerror.New(domainerror.InvalidArgument, "cannot decompress request body", err)
 	}
 
 	defer reader.Close() //nolint:errcheck // Best effort is fine here
 
 	logContents, err := io.ReadAll(reader)
 	if err != nil {
-		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot read decompressed log data", err)
+		return nil, domainerror.New(domainerror.Unexpected, "cannot read decompressed log data", err)
 	}
 
 	return logContents, nil

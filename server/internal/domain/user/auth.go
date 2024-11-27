@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
@@ -22,7 +22,7 @@ func Login(ctx context.Context, s *interactor.Services, email, password string) 
 	if err != nil {
 		log.Warn("user not found")
 
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("user_uuid", user.UserUuid)
@@ -32,14 +32,14 @@ func Login(ctx context.Context, s *interactor.Services, email, password string) 
 	if user.DeactivatedOn != nil {
 		log.Warnf("user tried to log in, but is deactivated on %s", user.DeactivatedOn)
 
-		return nil, entities.NewDomainError(entities.DomainErrorNotFound, "no active user found", fmt.Errorf("user deactivated on %s", *user.DeactivatedOn))
+		return nil, domainerror.New(domainerror.NotFound, "no active user found", fmt.Errorf("user deactivated on %s", *user.DeactivatedOn))
 	}
 
 	// Check that a user has a password set
 	if user.PasswordHash == nil || user.PasswordUuid == nil {
 		log.Warnf("user password hash (%#v) or password uuid (%#v) not found", user.PasswordHash, user.PasswordUuid)
 
-		return nil, entities.NewDomainError(entities.DomainErrorNotFound, "user password not set", errors.New("password hash or uuid not valid"))
+		return nil, domainerror.New(domainerror.NotFound, "user password not set", errors.New("password hash or uuid not valid"))
 	}
 
 	name := user.FirstName + " " + user.LastName
@@ -53,7 +53,7 @@ func Login(ctx context.Context, s *interactor.Services, email, password string) 
 	if err != nil {
 		log.Warnf("error validating user password hash: %s", err)
 
-		return nil, entities.NewDomainError(entities.DomainErrorNoPermission, "password validation failed", err)
+		return nil, domainerror.New(domainerror.NoPermission, "password validation failed", err)
 	}
 
 	log.Debug("user password validation succeeded")
@@ -61,7 +61,7 @@ func Login(ctx context.Context, s *interactor.Services, email, password string) 
 	// Generate JWT
 	jwt, err := s.Token.GenerateUserJwt(user.UserUuid.String(), user.PasswordUuid.String(), name, string(user.UserRole))
 	if err != nil {
-		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot generate jwt for log session", err)
+		return nil, domainerror.New(domainerror.Unexpected, "cannot generate jwt for log session", err)
 	}
 
 	log.Debug("token generated")
@@ -69,7 +69,7 @@ func Login(ctx context.Context, s *interactor.Services, email, password string) 
 	// Get JWT claims
 	jwtClaims, err := s.Token.ValidateJwt(jwt)
 	if err != nil {
-		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot get jwt claims for user token", err)
+		return nil, domainerror.New(domainerror.Unexpected, "cannot get jwt claims for user token", err)
 	}
 
 	log.Debug("token parsed")
@@ -77,7 +77,7 @@ func Login(ctx context.Context, s *interactor.Services, email, password string) 
 	// Send email notification about login
 	err = s.Emails.SendLoginSuccessNotification(user.Email, user.FirstName)
 	if err != nil {
-		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "login confirmation email could not be sent", err)
+		return nil, domainerror.New(domainerror.Unexpected, "login confirmation email could not be sent", err)
 	}
 
 	// Assemble information

@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/capsa-gg/capsa/server/internal/domain/logchunk"
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 )
 
 const (
@@ -69,7 +69,7 @@ func (h Handlers) StreamLogChunks(c *gin.Context) {
 	// NOTE: this logic is usually done in the domain logic, but due to the streaming later in the handler, it's done here
 	logInfo, err := h.services.Database.GetLogByUuid(c, logUUID)
 	if err != nil {
-		h.sendErrorResponse(c, entities.NewDomainErrorFromDatabaseError(err))
+		h.sendErrorResponse(c, domainerror.NewFromDatabaseError(err))
 
 		return
 	}

@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/capsa-gg/capsa/server/internal/data/database"
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
@@ -18,7 +18,7 @@ func SaveLogMetadata(ctx context.Context, s *interactor.Services, logUUID uuid.U
 	// Get log
 	logInfo, err := s.Database.GetLogByUuid(ctx, logUUID)
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("log_id", logInfo.ID)
@@ -49,7 +49,7 @@ func storeLogMetadata(s *interactor.Services, logID int64, metadata map[string]a
 	// Convert map to JSON
 	jsonData, err := json.Marshal(metadata)
 	if err != nil {
-		return entities.NewDomainError(entities.DomainErrorUnexpected, "cannot convert metadata to json", err)
+		return domainerror.New(domainerror.Unexpected, "cannot convert metadata to json", err)
 	}
 
 	// Store metadata
@@ -59,7 +59,7 @@ func storeLogMetadata(s *interactor.Services, logID int64, metadata map[string]a
 	})
 
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	return nil

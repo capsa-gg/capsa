@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/capsa-gg/capsa/server/constants"
-	"github.com/capsa-gg/capsa/server/internal/entities"
-
 	"github.com/google/uuid"
+
+	"github.com/capsa-gg/capsa/server/constants"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 
 	"github.com/capsa-gg/capsa/server/internal/infrastructure/token"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
@@ -23,7 +23,7 @@ func ValidateUserJwt(ctx context.Context, s *interactor.Services, tok string, al
 	// Check validity for JWT
 	claims, err := s.Token.ValidateJwt(tok)
 	if err != nil {
-		return nil, entities.NewDomainError(entities.DomainErrorInvalidArgument, "token validation failed", err)
+		return nil, domainerror.New(domainerror.InvalidArgument, "token validation failed", err)
 	}
 
 	log = log.With("jwt_aud", claims.Audience, "jwt_sub", claims.Subject)
@@ -33,14 +33,14 @@ func ValidateUserJwt(ctx context.Context, s *interactor.Services, tok string, al
 	if claims.Audience != token.AudienceUser {
 		message := fmt.Sprintf("token audience required is %s, but token contains %s", token.AudienceUser, claims.Audience)
 
-		return nil, entities.NewDomainError(entities.DomainErrorNoPermission, message, token.ErrorJwtInvalidAudience)
+		return nil, domainerror.New(domainerror.NoPermission, message, token.ErrorJwtInvalidAudience)
 	}
 
 	log.Debug("audience claim is correct")
 
 	userUUID, err := uuid.Parse(claims.Subject)
 	if err != nil {
-		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot parse subject claim to uuid", err)
+		return nil, domainerror.New(domainerror.Unexpected, "cannot parse subject claim to uuid", err)
 	}
 
 	log = log.With("user_uuid", userUUID)
@@ -51,7 +51,7 @@ func ValidateUserJwt(ctx context.Context, s *interactor.Services, tok string, al
 	if err != nil {
 		log.Warnf("cannot get log by uuid %s: %s", userUUID, err)
 
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("user_id", user.ID)
@@ -61,21 +61,21 @@ func ValidateUserJwt(ctx context.Context, s *interactor.Services, tok string, al
 	if user.DeactivatedOn != nil {
 		log.Warnf("user for jwt is is deactivated on %s", *user.DeactivatedOn)
 
-		return nil, entities.NewDomainError(entities.DomainErrorNoPermission, "user is deactivated", fmt.Errorf("user deactivated on %s", *user.DeactivatedOn))
+		return nil, domainerror.New(domainerror.NoPermission, "user is deactivated", fmt.Errorf("user deactivated on %s", *user.DeactivatedOn))
 	}
 
 	role, err := constants.UserRoleFromString(string(user.UserRole))
 	if err != nil {
 		log.Errorf("user role %s cannot be converted", user.UserUuid)
 
-		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot extract user role to type", err)
+		return nil, domainerror.New(domainerror.Unexpected, "cannot extract user role to type", err)
 	}
 
 	// Check user role, see if it is in the allowed list
 	if !slices.Contains(allowedRoles, role) {
 		log.Infof("user role '%s' not in the allowed list '%#v'", role, allowedRoles)
 
-		return nil, entities.NewDomainError(entities.DomainErrorNoPermission, "user role is not allowed to access this", fmt.Errorf("user role '%s' not in the allowed list '%#v'", role, allowedRoles))
+		return nil, domainerror.New(domainerror.NoPermission, "user role is not allowed to access this", fmt.Errorf("user role '%s' not in the allowed list '%#v'", role, allowedRoles))
 	}
 
 	userPassUUID := user.PasswordUuid.String()
@@ -84,7 +84,7 @@ func ValidateUserJwt(ctx context.Context, s *interactor.Services, tok string, al
 	if claims.JwtID != userPassUUID {
 		log.Warnf("jwtid (%s) and password uuid (%s) do not match", claims.JwtID, userPassUUID)
 
-		return nil, entities.NewDomainError(entities.DomainErrorNoPermission, "token id does not match expected value", token.ErrorJwtIncorrectJwtID)
+		return nil, domainerror.New(domainerror.NoPermission, "token id does not match expected value", token.ErrorJwtIncorrectJwtID)
 	}
 
 	log.Debug("jwt validation succeeded")

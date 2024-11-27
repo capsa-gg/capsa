@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
-	"github.com/capsa-gg/capsa/server/constants"
-	"github.com/capsa-gg/capsa/server/internal/entities"
-
 	"github.com/google/uuid"
+
+	"github.com/capsa-gg/capsa/server/constants"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 
 	"github.com/capsa-gg/capsa/server/internal/data/database"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
@@ -31,26 +31,26 @@ func AddNewUser(ctx context.Context, s *interactor.Services, email, firstName, l
 	log.Info("user added to database")
 
 	if err != nil {
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	user, err := s.Database.GetUserByUuid(ctx, userUUID)
 	if err != nil {
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("user_id", user.ID)
 
 	err = s.Database.InitializeUserPasswordReset(ctx, user.ID)
 	if err != nil {
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log.Debug("password flow initialized")
 
 	reset, err := s.Database.GetPasswordResetByUserId(ctx, user.ID)
 	if err != nil {
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("reset_code", reset.ResetToken.String())
@@ -58,7 +58,7 @@ func AddNewUser(ctx context.Context, s *interactor.Services, email, firstName, l
 
 	err = s.Emails.SendAccountSetPassword(user.Email, user.FirstName, reset.ResetToken.String())
 	if err != nil {
-		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "error sending password set email to user", err)
+		return nil, domainerror.New(domainerror.Unexpected, "error sending password set email to user", err)
 	}
 
 	log.Infof("user added and email sent")
@@ -82,7 +82,7 @@ func AddNewUserWithPassword(s *interactor.Services, email, firstName, lastName, 
 
 	passHash, err := s.Passhash.PlainTextToHash(password)
 	if err != nil {
-		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot generate password hash", err)
+		return nil, domainerror.New(domainerror.Unexpected, "cannot generate password hash", err)
 	}
 
 	userUUID, err := s.Database.AddUserWithPassHash(ctx, database.AddUserWithPassHashParams{
@@ -95,7 +95,7 @@ func AddNewUserWithPassword(s *interactor.Services, email, firstName, lastName, 
 	if err != nil {
 		log.Warnf("cannot add user: %s", err)
 
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("user_uuid", userUUID)

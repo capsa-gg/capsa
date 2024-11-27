@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/capsa-gg/capsa/server/constants"
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 	"github.com/capsa-gg/capsa/server/internal/util"
@@ -19,7 +19,7 @@ func GetAllLogsOverview(ctx context.Context, s *interactor.Services) ([]bodies.L
 	// Get from database
 	rows, err := s.Database.ListAvailableLogs(ctx, nil)
 	if err != nil {
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	logsAvailable := make([]bodies.LogOverview, len(rows))

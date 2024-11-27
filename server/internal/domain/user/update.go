@@ -9,7 +9,7 @@ import (
 
 	"github.com/capsa-gg/capsa/server/constants"
 	"github.com/capsa-gg/capsa/server/internal/data/database"
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
@@ -21,13 +21,13 @@ func UpdateUser(ctx context.Context, s *interactor.Services, userUUID uuid.UUID,
 	log.Debugf("starting update user")
 
 	if userInfo == nil {
-		return entities.NewDomainError(entities.DomainErrorUnexpected, "nil arrgument", errors.New("userInfo is nil"))
+		return domainerror.New(domainerror.Unexpected, "nil arrgument", errors.New("userInfo is nil"))
 	}
 
 	// Get user that needs to be updated
 	user, err := s.Database.GetUserByUuid(ctx, userUUID)
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("user_id", user.ID)
@@ -36,7 +36,7 @@ func UpdateUser(ctx context.Context, s *interactor.Services, userUUID uuid.UUID,
 	// Convert to user role
 	role, err := constants.UserRoleFromString(userInfo.Role)
 	if err != nil {
-		return entities.NewDomainError(entities.DomainErrorInvalidArgument, "invalid role", fmt.Errorf("invalid role: %s", userInfo.Role))
+		return domainerror.New(domainerror.InvalidArgument, "invalid role", fmt.Errorf("invalid role: %s", userInfo.Role))
 	}
 
 	_, err = s.Database.UpdateUser(ctx, database.UpdateUserParams{
@@ -46,7 +46,7 @@ func UpdateUser(ctx context.Context, s *interactor.Services, userUUID uuid.UUID,
 		UserRole:  database.UserRoles(role),
 	})
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	log.Info("user updated")

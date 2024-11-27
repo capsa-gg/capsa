@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/capsa-gg/capsa/server/internal/data/database"
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
@@ -19,7 +19,7 @@ func AddNewEnvironment(ctx context.Context, s *interactor.Services, title, env s
 	if err != nil {
 		log.Warnf("cannot get title: %s", err)
 
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("title_id", titleInfo.ID)
@@ -33,7 +33,7 @@ func AddNewEnvironment(ctx context.Context, s *interactor.Services, title, env s
 	if err != nil {
 		log.Warnf("cannot add environment: %s", err)
 
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	log.Info("environment added")
@@ -49,7 +49,7 @@ func ListAllTitlesAndEnvironments(ctx context.Context, s *interactor.Services) (
 	if err != nil {
 		log.Warnf("cannot get titles and environments: %s", err)
 
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log.Infof("fetched %d items", len(res))

@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 
 	"github.com/google/uuid"
@@ -25,7 +25,7 @@ func CreateNewLogSession(ctx context.Context, s *interactor.Services, envKey uui
 	if err != nil {
 		log.Warnf("cannot get environment: %s", err)
 
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("env_name", env.Name, "env_title", env.Title)
@@ -41,7 +41,7 @@ func CreateNewLogSession(ctx context.Context, s *interactor.Services, envKey uui
 	if err != nil {
 		log.Warnf("cannot create new log session: %s", err)
 
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("session_key", sesKey)
@@ -50,7 +50,7 @@ func CreateNewLogSession(ctx context.Context, s *interactor.Services, envKey uui
 	// Generate JWT
 	jwt, err := s.Token.GenerateClientJwt(sesKey.String())
 	if err != nil {
-		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot generate jwt for log session", err)
+		return nil, domainerror.New(domainerror.Unexpected, "cannot generate jwt for log session", err)
 	}
 
 	log.Debug("token generated")
@@ -58,7 +58,7 @@ func CreateNewLogSession(ctx context.Context, s *interactor.Services, envKey uui
 	// Get JWT claims
 	jwtClaims, err := s.Token.ValidateJwt(jwt)
 	if err != nil {
-		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot get jwt claims for log session token", err)
+		return nil, domainerror.New(domainerror.Unexpected, "cannot get jwt claims for log session token", err)
 	}
 
 	log.Debug("token parsed")

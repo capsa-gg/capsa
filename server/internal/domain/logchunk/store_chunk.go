@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/capsa-gg/capsa/server/internal/data/database"
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
@@ -21,7 +21,7 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 	// Get log from database
 	logInfo, err := s.Database.GetLogByUuid(ctx, logUUID)
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.
@@ -34,7 +34,7 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 	// Store log in storage
 	fileName, err := s.LogChunks.SaveChunk(logData)
 	if err != nil {
-		return entities.NewDomainError(entities.DomainErrorUnexpected, "cannot store chunk in storage", err)
+		return domainerror.New(domainerror.Unexpected, "cannot store chunk in storage", err)
 	}
 
 	chunkMetadata, unprocessedLines := extractMetadataFromChunk(log, logData)
@@ -69,7 +69,7 @@ func StoreLogChunk(s *interactor.Services, logUUID uuid.UUID, logData []byte) er
 	// Store log chunk metadata in database
 	err = s.Database.AddLogChunk(ctx, addLogChunkParams)
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	log.Info("log chunk processed")

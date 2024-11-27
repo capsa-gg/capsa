@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
@@ -18,7 +18,7 @@ func DeactivateUser(ctx context.Context, s *interactor.Services, userUUID uuid.U
 	// Get user that needs to be deleted
 	user, err := s.Database.GetUserByUuid(ctx, userUUID)
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("user_id", user.ID)
@@ -27,13 +27,13 @@ func DeactivateUser(ctx context.Context, s *interactor.Services, userUUID uuid.U
 	// Delete outstanding password resets
 	err = s.Database.DeletePasswordResetForUser(ctx, user.ID)
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	// Mark as deleted
 	err = s.Database.DeactivateUser(ctx, user.ID)
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	log.Info("user deactivated")
@@ -50,7 +50,7 @@ func ReactivateUser(ctx context.Context, s *interactor.Services, userUUID uuid.U
 	// Get user that needs to be deleted
 	user, err := s.Database.GetUserByUuid(ctx, userUUID)
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	log = log.With("user_id", user.ID)
@@ -59,7 +59,7 @@ func ReactivateUser(ctx context.Context, s *interactor.Services, userUUID uuid.U
 	// Remove deactivation
 	err = s.Database.RemoveUserDeactivation(ctx, user.ID)
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	// Init reset flow
@@ -67,7 +67,7 @@ func ReactivateUser(ctx context.Context, s *interactor.Services, userUUID uuid.U
 	if err != nil {
 		log.Warnf("password reset could not be initialized: %s", err)
 
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	// Get reset data
@@ -75,7 +75,7 @@ func ReactivateUser(ctx context.Context, s *interactor.Services, userUUID uuid.U
 	if err != nil {
 		log.Warnf("password reset data could not be fetched: %s", err)
 
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	// Send email
@@ -83,7 +83,7 @@ func ReactivateUser(ctx context.Context, s *interactor.Services, userUUID uuid.U
 	if err != nil {
 		log.Warnf("password reset email could not be sent: %s", err)
 
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	return nil

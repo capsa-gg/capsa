@@ -8,7 +8,7 @@ import (
 
 	"github.com/capsa-gg/capsa/server/constants"
 	"github.com/capsa-gg/capsa/server/internal/data/database"
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
@@ -22,7 +22,7 @@ func ListAllUsers(ctx context.Context, s *interactor.Services) ([]bodies.UserInf
 	// Get users
 	usersDB, err := s.Database.ListUsers(ctx, nil)
 	if err != nil {
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	users := make([]bodies.UserInfoResponse, 0, len(usersDB))
@@ -50,13 +50,13 @@ func GetUserByUUID(ctx context.Context, s *interactor.Services, userUUID uuid.UU
 	// Get users
 	usersDB, err := s.Database.ListUsers(ctx, &userUUID)
 	if err != nil {
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	if len(usersDB) != 1 {
 		log.With("len_usersdb", len(usersDB)).Error("unexpected users length")
 
-		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "database error fetching user", errors.New("unexpected usersdb length"))
+		return nil, domainerror.New(domainerror.Unexpected, "database error fetching user", errors.New("unexpected usersdb length"))
 	}
 
 	userDB := usersDB[0]
@@ -72,7 +72,7 @@ func GetUserByUUID(ctx context.Context, s *interactor.Services, userUUID uuid.UU
 func dbUserToDomainUser(userDB *database.ListUsersRow) (bodies.UserInfoResponse, error) {
 	userRole, err := constants.UserRoleFromString(string(userDB.Role))
 	if err != nil {
-		return bodies.UserInfoResponse{}, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot convert user role to string", err)
+		return bodies.UserInfoResponse{}, domainerror.New(domainerror.Unexpected, "cannot convert user role to string", err)
 	}
 
 	user := bodies.UserInfoResponse{

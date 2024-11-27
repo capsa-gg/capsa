@@ -3,8 +3,7 @@ package admin
 import (
 	"context"
 
-	"github.com/capsa-gg/capsa/server/internal/entities"
-
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
@@ -18,7 +17,7 @@ func AddNewTitle(ctx context.Context, s *interactor.Services, title string) erro
 	if err != nil {
 		log.Warnf("cannot add title: %s", err)
 
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return domainerror.NewFromDatabaseError(err)
 	}
 
 	log.Info("title added")

@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/infrastructure/token"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
@@ -20,7 +20,7 @@ func ValidateClientJwt(ctx context.Context, s *interactor.Services, tok string) 
 	// Validate claims
 	claims, err := s.Token.ValidateJwt(tok)
 	if err != nil {
-		return nil, entities.NewDomainError(entities.DomainErrorInvalidArgument, "token validation failed", err)
+		return nil, domainerror.New(domainerror.InvalidArgument, "token validation failed", err)
 	}
 
 	log = log.With("jwt_aud", claims.Audience, "jwt_sub", claims.Subject)
@@ -30,14 +30,14 @@ func ValidateClientJwt(ctx context.Context, s *interactor.Services, tok string) 
 	if claims.Audience != token.AudienceClient {
 		message := fmt.Sprintf("token audience required is %s, but token contains %s", token.AudienceClient, claims.Audience)
 
-		return nil, entities.NewDomainError(entities.DomainErrorNoPermission, message, token.ErrorJwtInvalidAudience)
+		return nil, domainerror.New(domainerror.NoPermission, message, token.ErrorJwtInvalidAudience)
 	}
 
 	log.Debug("token is valid and audience claim is correct")
 
 	logUUID, err := uuid.Parse(claims.Subject)
 	if err != nil {
-		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "cannot parse subject claim to uuid", err)
+		return nil, domainerror.New(domainerror.Unexpected, "cannot parse subject claim to uuid", err)
 	}
 
 	log = log.With("log_uuid", logUUID)
@@ -48,7 +48,7 @@ func ValidateClientJwt(ctx context.Context, s *interactor.Services, tok string) 
 	if err != nil {
 		log.Warnf("cannot get log by uuid %s: %s", logUUID, err)
 
-		return nil, entities.NewDomainErrorFromDatabaseError(err)
+		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	log.With("environment", ses.Environment).Info("log found in database")
