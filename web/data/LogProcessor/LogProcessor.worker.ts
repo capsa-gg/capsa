@@ -1,7 +1,7 @@
 "use client";
 
-import type { LogFilters, LogMode, WorkerCommandMessage, WorkerPostMessage } from "./LogProcessor.types";
 import logSeverities from "@/types/logSeverities";
+import type { LogFilters, LogMode, WorkerCommandMessage, WorkerPostMessage } from "./LogProcessor.types";
 
 let abortController: AbortController | null = null;
 
@@ -9,10 +9,11 @@ self.addEventListener("message", async (event: MessageEvent<WorkerCommandMessage
     const { type, payload } = event.data;
 
     switch (type) {
-        case "START_FETCHING_LOG":
+        case "START_FETCHING_LOG": {
             const reqUrl = generateLogUrlWithParams(payload.logUrlBase, payload.filters);
             await fetchLog(reqUrl, payload.jwt);
             break;
+        }
         case "STOP_FETCHING_LOG":
             if (abortController) {
                 abortController.abort();
@@ -75,7 +76,7 @@ async function fetchLog(reqUrl: URL, jwt: string): Promise<void> {
 
                     break;
                 }
-                case "SingleFiltered":
+                case "SingleFiltered": {
                     const [chunkText, lineNumbers] = await processFilteredChunk(chunk);
                     fullLog += chunkText;
                     absoluteLineNumbers = [...absoluteLineNumbers, ...lineNumbers];
@@ -87,6 +88,7 @@ async function fetchLog(reqUrl: URL, jwt: string): Promise<void> {
                     self.postMessage(updateMessage);
 
                     break;
+                }
                 default:
                     throw new Error(`log mode ${logMode} not supported`);
             }
@@ -108,9 +110,12 @@ async function processFilteredChunk(chunk: string): Promise<[string, number[]]> 
 
     const regex = /\{(\d+)}(.*)/g;
 
+    // biome-ignore lint/suspicious/noImplicitAnyLet: this is fine here
     let match;
+
+    // biome-ignore lint/suspicious/noAssignInExpressions: this is preferred
     while ((match = regex.exec(chunk)) !== null) {
-        absoluteLineNumbers.push(parseInt(match[1], 10));
+        absoluteLineNumbers.push(Number.parseInt(match[1], 10));
         cleanedLines.push(match[2]);
     }
 

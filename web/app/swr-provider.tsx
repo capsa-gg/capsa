@@ -1,8 +1,9 @@
 "use client";
 
-import React, { ReactNode } from "react";
-import { SWRConfig } from "swr";
 import { useErrors } from "@/context/ErrorContext";
+import type React from "react";
+import type { ReactNode } from "react";
+import { SWRConfig } from "swr";
 
 export const SWRProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const errors = useErrors();

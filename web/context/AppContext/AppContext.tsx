@@ -1,8 +1,9 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { Env, getEnv } from "@/data/env";
-import { AppContextData } from "@/context/AppContext/AppContext.types";
+import type { AppContextData } from "@/context/AppContext/AppContext.types";
+import { type Env, getEnv } from "@/data/env";
+import type React from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 export const AppContext = createContext<AppContextData>({ env: null });
 

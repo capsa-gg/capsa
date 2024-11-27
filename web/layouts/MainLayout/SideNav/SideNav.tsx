@@ -1,15 +1,14 @@
 "use client";
 
-import React from "react";
-import { usePathname } from "next/navigation";
-import Image from "next/image";
-import { Box, Drawer, List, Tooltip, Typography } from "@mui/material";
-import { grey } from "@mui/material/colors";
-import { sideNavItemsData, sideNavWidthPx } from "@/layouts/MainLayout/SideNav/SideNav.data";
-import { SideNavItem } from "@/layouts/MainLayout/SideNav/SideNav.components";
-import version from "@/version";
 import { useAppContext } from "@/context/AppContext/AppContext";
 import useUser from "@/context/UserContext";
+import { SideNavItem } from "@/layouts/MainLayout/SideNav/SideNav.components";
+import { sideNavItemsData, sideNavWidthPx } from "@/layouts/MainLayout/SideNav/SideNav.data";
+import version from "@/version";
+import { Box, Drawer, List, Tooltip, Typography } from "@mui/material";
+import { grey } from "@mui/material/colors";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 // TODO: Add styling
 const SideNav = () => {

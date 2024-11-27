@@ -1,14 +1,14 @@
-import * as React from "react";
-import { Divider, Drawer, Typography } from "@mui/material";
-import Box from "@mui/material/Box";
 import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
-import { Stack } from "@mui/system";
 import {
     ExcludedCategoriesFilters,
     FilterButtons,
     IncludedCategoriesFilters,
     SeveritiesFilters,
 } from "@/views/SingleLogView/LogLineFilterDrawer/LogLineFilterDrawer.components";
+import { Divider, Drawer, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import { Stack } from "@mui/system";
+import type * as React from "react";
 
 const LogLineFilterDrawer: React.FC = () => {
     const {

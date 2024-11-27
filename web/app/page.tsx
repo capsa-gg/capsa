@@ -1,11 +1,10 @@
 "use client";
 
-import React from "react";
-import { Alert, AlertTitle, Box, Typography } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useGetAllEnvironments } from "@/api/hooks";
 import Spinner from "@/components/Spinner";
-import { EnvironmentResponseItem } from "@/types/api/environments";
+import type { EnvironmentResponseItem } from "@/types/api/environments";
+import { Alert, AlertTitle, Box, Typography } from "@mui/material";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 
 const columns: GridColDef<EnvironmentResponseItem>[] = [
     { field: "title", headerName: "Title", flex: 1 },
@@ -16,7 +15,6 @@ const columns: GridColDef<EnvironmentResponseItem>[] = [
 const Home = () => {
     const { data, error, isLoading } = useGetAllEnvironments();
 
-    // eslint-disable-next-line react/no-unstable-nested-components
     const Environments = () => {
         if (error) {
             return (

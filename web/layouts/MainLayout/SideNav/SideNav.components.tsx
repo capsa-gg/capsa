@@ -1,7 +1,7 @@
-import React from "react";
+import type { SideNavItemProps } from "@/layouts/MainLayout/SideNav/SideNav.types";
 import { ListItem, ListItemButton, ListItemText } from "@mui/material";
 import Link from "next/link";
-import { SideNavItemProps } from "@/layouts/MainLayout/SideNav/SideNav.types";
+import type React from "react";
 
 // TODO: Include showing active item
 // TODO: Styling

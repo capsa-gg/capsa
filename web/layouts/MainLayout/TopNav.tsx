@@ -1,13 +1,12 @@
 "use client";
 
-import React from "react";
-import AppBar from "@mui/material/AppBar";
-import { Box, Button, Toolbar, Typography } from "@mui/material";
-import { grey } from "@mui/material/colors";
+import useUser from "@/context/UserContext";
 import { removeJwtCookie } from "@/data/jwt/cookiesClient";
 import { removeJwtFromLocalStorage } from "@/data/jwt/localStorage";
+import { Box, Button, Toolbar, Typography } from "@mui/material";
+import AppBar from "@mui/material/AppBar";
+import { grey } from "@mui/material/colors";
 import { useRouter } from "next/navigation";
-import useUser from "@/context/UserContext";
 
 export const topNavSidePaddingPx = 20;
 
@@ -28,7 +27,7 @@ const TopNav = () => {
         <AppBar
             position="static"
             sx={{
-                paddingRight: `40px`,
+                paddingRight: "40px",
                 background: "transparent",
                 boxShadow: "none",
             }}

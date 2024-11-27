@@ -1,14 +1,14 @@
 "use client";
 
-import React from "react";
-import { useRouter } from "next/navigation";
-import { Alert, AlertTitle, Box, Link, Typography } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import Spinner from "@/components/Spinner";
 import { useGetAllLogs } from "@/api/hooks";
-import { LogOverviewItem } from "@/types/api/logs";
 import ColoredSeverities from "@/components/ColoredSeverities";
+import Spinner from "@/components/Spinner";
+import type { LogOverviewItem } from "@/types/api/logs";
 import { formatDate } from "@/util/formatDate";
+import { Alert, AlertTitle, Box, Link, Typography } from "@mui/material";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import { useRouter } from "next/navigation";
+import type React from "react";
 
 const columns: GridColDef<LogOverviewItem>[] = [
     { field: "id", headerName: "ID", maxWidth: 300, flex: 4, renderCell: row => <LogLink id={row.row.id} /> },
@@ -56,7 +56,6 @@ const columns: GridColDef<LogOverviewItem>[] = [
 const LogsOverviewPage = () => {
     const { data, error, isLoading } = useGetAllLogs();
 
-    // eslint-disable-next-line react/no-unstable-nested-components
     const LogsOverview = () => {
         if (error) {
             return (
@@ -101,7 +100,6 @@ const LogLink: React.FC<{ id: string }> = ({ id }) => {
     const router = useRouter();
 
     return (
-        // eslint-disable-next-line jsx-a11y/anchor-is-valid
         <Link sx={{ cursor: "pointer" }} onClick={() => router.push(`/logs/${id}`)}>
             {id}
         </Link>

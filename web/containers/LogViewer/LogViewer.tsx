@@ -1,5 +1,5 @@
-import * as React from "react";
 import { Editor } from "@monaco-editor/react";
+import type * as React from "react";
 import { initializeMonaco, monacoOptions } from "./LogViewer.settings";
 
 const LogViewer: React.FC<LogViewerProps> = ({ data, absoluteLineNumbers }) => {

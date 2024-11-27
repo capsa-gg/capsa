@@ -1,11 +1,11 @@
 "use client";
 
-import { FilterState, FilterStateSchema } from "@/context/SingleLogContext/SingleLogContext.types";
+import { type FilterState, FilterStateSchema } from "@/context/SingleLogContext/SingleLogContext.types";
 
 const localStorageKey = "capsa-single-log-filter-state-v1";
 
 export const getSingleLogFilterStateFromLocalStorage = (): FilterState | null => {
-    if (typeof localStorage == "undefined") {
+    if (typeof localStorage === "undefined") {
         return null;
     }
 

@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
 import SingleLogView from "@/views/SingleLogView/SingleLogView";
+import React from "react";
 
 const SingleLog: React.FC<SingleLogProps> = ({ params }) => {
     const paramsUse = React.use(params);

@@ -1,4 +1,4 @@
-import { Env } from "@/data/env";
+import type { Env } from "@/data/env";
 
 export interface AppContextData {
     env: Env | null;

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { ApplicationError } from "@/types/api/error";
+import type { ApplicationError } from "@/types/api/error";
+import type React from "react";
+import { type ReactNode, createContext, useContext, useState } from "react";
 
 interface ErrorContextType {
     errors: ApplicationError[];

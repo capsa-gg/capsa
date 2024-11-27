@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import type { LogMetadata } from "@/types/api/logs";
+import { formatDate } from "@/util/formatDate";
+import { Paper } from "@mui/material";
 import Box from "@mui/material/Box";
 import { Stack, styled } from "@mui/system";
-import { Badge, Divider, IconButton, Paper } from "@mui/material";
-import { LogMetadata } from "@/types/api/logs";
-import { formatDate } from "@/util/formatDate";
+import type React from "react";
 
 const MetadataItem = styled(Paper)(({ theme }) => ({
     // @ts-ignore

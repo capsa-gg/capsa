@@ -1,22 +1,25 @@
 "use client";
 
-import z, { ZodSchema } from "zod";
-import ApiError, { ErrorResponseSchema } from "@/types/api/error";
-import { getJwtFromLocalStorage } from "@/data/jwt/localStorage";
 import { getEnv } from "@/data/env";
+import { getJwtFromLocalStorage } from "@/data/jwt/localStorage";
+import type ApiError from "@/types/api/error";
+import { ErrorResponseSchema } from "@/types/api/error";
+import type z from "zod";
+import type { ZodSchema } from "zod";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: desired here
 class BaseUrl {
     private static _baseUrl?: string;
 
     public static async getBaseUrl(): Promise<string> {
-        if (this._baseUrl) return this._baseUrl;
+        if (BaseUrl._baseUrl) return BaseUrl._baseUrl;
 
         const env = await getEnv();
         if (!env || !env.serverUrl) {
             throw new Error("cannot get server url");
         }
 
-        this._baseUrl = env.serverUrl;
+        BaseUrl._baseUrl = env.serverUrl;
         return env.serverUrl;
     }
 }
@@ -122,25 +125,23 @@ export const call = async <TReq, TResSchema extends ZodSchema>(
                 const jwtData = getJwtFromLocalStorage();
                 const jwt = jwtData?.token;
                 return await callWithResponse(method, path, resZodSchema, body, jwt);
-            } else {
-                return await callWithResponse(method, path, resZodSchema, body);
             }
+            return await callWithResponse(method, path, resZodSchema, body);
         }
 
         if (authenticate) {
             const jwtData = getJwtFromLocalStorage();
             const jwt = jwtData?.token;
             return await callWithoutResponse(method, path, body, jwt);
-        } else {
-            return await callWithoutResponse(method, path, body);
         }
+        return await callWithoutResponse(method, path, body);
     } catch (e) {
         console.error(e);
         return formatUnexpectedErrorResponse(path, e);
     }
 };
 
-export const formatUnexpectedErrorResponse = (path: string, e: any): ApiResponseError => {
+export const formatUnexpectedErrorResponse = (path: string, e: unknown): ApiResponseError => {
     const error: ApiError = {
         title: `Request to endpoint ${path} failed`,
         severity: "error",

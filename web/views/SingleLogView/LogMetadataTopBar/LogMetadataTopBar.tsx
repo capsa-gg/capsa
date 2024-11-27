@@ -1,11 +1,10 @@
-import React from "react";
-import { Alert, AlertTitle, Badge, Divider, IconButton, Typography } from "@mui/material";
-import { Stack } from "@mui/system";
-import Box from "@mui/material/Box";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { LogMetadataList } from "@/views/SingleLogView/LogMetadataTopBar/LogMetadataTopBar.components";
 import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
-import CopyUrlButton from "@/components/CopyUrlButton";
+import { LogMetadataList } from "@/views/SingleLogView/LogMetadataTopBar/LogMetadataTopBar.components";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { Alert, AlertTitle, Badge, Divider, IconButton, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import { Stack } from "@mui/system";
+import type React from "react";
 
 const LogMetadataTopBar: React.FC = () => {
     const {

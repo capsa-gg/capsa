@@ -56,8 +56,8 @@ jobs:
         run: npm run build
       - name: Jest tests
         run: npm run test
-      - name: Lint Next
-        run: npm run lint
+      - name: Lint
+        run: npm run check:ci
 
       # DigitalOcean
       - name: Install doctl

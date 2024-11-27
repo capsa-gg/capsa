@@ -1,10 +1,10 @@
 "use client";
 
 import { jwtStorageKey } from "@/data/jwt/jwtData";
-import { UserJwtData, UserJwtDataSchema } from "@/types/api/auth";
+import { type UserJwtData, UserJwtDataSchema } from "@/types/api/auth";
 
 export const getJwtFromLocalStorage = (): UserJwtData | null => {
-    if (typeof localStorage == "undefined") {
+    if (typeof localStorage === "undefined") {
         return null;
     }
 

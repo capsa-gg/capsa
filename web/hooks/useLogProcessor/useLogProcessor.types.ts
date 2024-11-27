@@ -1,4 +1,4 @@
-import { FilterState } from "@/context/SingleLogContext/SingleLogContext.types";
+import type { FilterState } from "@/context/SingleLogContext/SingleLogContext.types";
 
 export type UseLogProcessorHook = () => UseLogProcessor;
 

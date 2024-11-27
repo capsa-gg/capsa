@@ -1,5 +1,5 @@
-import * as jose from "jose";
 import { type JwkJwt, type JwkResponse, JwkResponseSchema } from "@/types/api/jwk-jwt";
+import * as jose from "jose";
 
 const tokenId = "capsa-server-jwk";
 const algorithm = "RS256";
@@ -9,13 +9,13 @@ const expectedIssuer = "capsa-server";
 
 // Class used to cache values
 // Webapp needs to be restarted if the key changes
+// biome-ignore lint/complexity/noStaticOnlyClass: this is preferred
 export default class JwtValidator {
     private static _jwk: JwkJwt | null = null;
-    private static _pubKey: string | null = null;
 
     // Can throw errors
     private static async getJwk(): Promise<JwkJwt> {
-        if (this._jwk) return this._jwk;
+        if (JwtValidator._jwk) return JwtValidator._jwk;
 
         const jwkEndpoint = `${process.env.SERVER_URL}/${jwkUri}`;
         console.log("jwkEndpoint", jwkEndpoint);
@@ -31,12 +31,12 @@ export default class JwtValidator {
             throw new Error("jwk not found");
         }
 
-        this._jwk = jwk;
+        JwtValidator._jwk = jwk;
         return jwk;
     }
 
     public static async validateJwt(jwt: string): Promise<boolean> {
-        const jwk = await this.getJwk();
+        const jwk = await JwtValidator.getJwk();
 
         try {
             // Throws if validation fails

@@ -1,14 +1,20 @@
 "use client";
 
 import {
-    ApiResponse,
+    type ApiResponse,
     call,
     formatUnexpectedErrorResponse,
     getRequestUrl,
     returnErrorResponseData,
 } from "@/api/apibase";
-import { LoginRequest, UserJwtData, UserJwtDataSchema, UserPasswordResetConfirmation } from "@/types/api/auth";
+import {
+    type LoginRequest,
+    type UserJwtData,
+    UserJwtDataSchema,
+    type UserPasswordResetConfirmation,
+} from "@/types/api/auth";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: desired here
 export class UserAuth {
     public static async Login(req: LoginRequest): Promise<ApiResponse<UserJwtData>> {
         return await call("POST", "/user/auth/login", UserJwtDataSchema, false, req);
