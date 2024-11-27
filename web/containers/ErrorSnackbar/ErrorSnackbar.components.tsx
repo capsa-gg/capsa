@@ -1,6 +1,7 @@
+import type { ApplicationError } from "@/types/api/error";
 import { Alert, AlertTitle, Snackbar, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { ApplicationError } from "@/types/api/error";
+import type React from "react";
+import { useState } from "react";
 
 export const ErrorSnackbarItem: React.FC<{ err: ApplicationError }> = ({ err }) => {
     const [open, setOpen] = useState(true);

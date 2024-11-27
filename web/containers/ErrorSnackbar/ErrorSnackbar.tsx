@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useErrors } from "@/context/ErrorContext";
 import { ErrorSnackbarItem } from "@/containers/ErrorSnackbar/ErrorSnackbar.components";
+import { useErrors } from "@/context/ErrorContext";
+import type React from "react";
 
 const ErrorSnackbar: React.FC = () => {
     const { errors } = useErrors();

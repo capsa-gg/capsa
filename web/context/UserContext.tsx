@@ -2,10 +2,10 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
-import { ApplicationError } from "@/types/api/error";
-import { UserJwtData } from "@/types/api/auth";
 import { getJwtFromLocalStorage } from "@/data/jwt/localStorage";
+import type { UserJwtData } from "@/types/api/auth";
+import type React from "react";
+import { type ReactNode, createContext, useContext, useState } from "react";
 
 export type UserInfo = { isLoggedIn: true; user: UserJwtData } | { isLoggedIn: false; user: null };
 

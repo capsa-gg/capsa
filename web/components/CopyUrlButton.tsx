@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { Button, Tooltip } from "@mui/material";
 import { Check, ContentCopy } from "@mui/icons-material";
+import { Button, Tooltip } from "@mui/material";
+import { useState } from "react";
 
 const CopyUrlButton = () => {
     const [hasCopied, setHasCopied] = useState(false);

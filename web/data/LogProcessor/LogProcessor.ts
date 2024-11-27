@@ -1,8 +1,8 @@
 "use client";
 
-import { LogFilters, LogMode, WorkerCommandMessage, WorkerPostMessage } from "./LogProcessor.types";
 import { getRequestUrl } from "@/api/apibase";
 import { getJwtFromLocalStorage } from "@/data/jwt/localStorage";
+import type { LogFilters, LogMode, WorkerCommandMessage, WorkerPostMessage } from "./LogProcessor.types";
 
 type LogContentsUpdatedCallback = (fullLog: string, absoluteLineNumbers: number[] | null) => void;
 type LogModeReceivedCallback = (logMode: LogMode | null) => void;
@@ -28,7 +28,7 @@ export default class LogProcessor {
 
             switch (type) {
                 case "LOG_CONTENTS_UPDATED":
-                    console.log(`[LogProcessor]: LOG_CONTENTS_UPDATED`);
+                    console.log("[LogProcessor]: LOG_CONTENTS_UPDATED");
                     if (this.logContentsUpdatedCallback) {
                         this.logContentsUpdatedCallback(payload.fullLog, payload.lineNumbers);
                     }
@@ -46,7 +46,7 @@ export default class LogProcessor {
                     }
                     break;
                 case "LOG_FETCHING_DONE":
-                    console.log(`[LogProcessor]: LOG_FETCHING_DONE`);
+                    console.log("[LogProcessor]: LOG_FETCHING_DONE");
                     if (this.doneCallback) {
                         this.doneCallback();
                     }

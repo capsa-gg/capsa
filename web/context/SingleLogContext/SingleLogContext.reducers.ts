@@ -1,6 +1,6 @@
-import logSeverities from "@/types/logSeverities";
-import { FilterAction, FilterState } from "@/context/SingleLogContext/SingleLogContext.types";
 import { getSingleLogFilterStateFromLocalStorage } from "@/context/SingleLogContext/SingleLogContext.storage";
+import type { FilterAction, FilterState } from "@/context/SingleLogContext/SingleLogContext.types";
+import logSeverities from "@/types/logSeverities";
 
 export const filterReducer = (state: FilterState, action: FilterAction) => {
     switch (action.type) {
@@ -29,7 +29,7 @@ export const filterReducer = (state: FilterState, action: FilterAction) => {
             const category = action.category;
             return {
                 ...state,
-                includedCategories: state.includedCategories.filter(cat => cat != category),
+                includedCategories: state.includedCategories.filter(cat => cat !== category),
             };
         }
         case "INCLUDED_CATEGORY_CLEAR": {
@@ -49,7 +49,7 @@ export const filterReducer = (state: FilterState, action: FilterAction) => {
             const category = action.category;
             return {
                 ...state,
-                excludedCategories: state.includedCategories.filter(cat => cat != category),
+                excludedCategories: state.includedCategories.filter(cat => cat !== category),
             };
         }
         case "EXCLUDED_CATEGORY_CLEAR": {
@@ -70,6 +70,7 @@ export const getFilterReducerLocalInitialState = (): FilterState => {
 };
 
 export const defaultFilterReducerState: FilterState = {
+    // biome-ignore lint/performance/noAccumulatingSpread: ok here
     severities: logSeverities.reduce((acc, sev) => ({ ...acc, [sev]: true }), {}),
     includedCategories: [],
     excludedCategories: [],

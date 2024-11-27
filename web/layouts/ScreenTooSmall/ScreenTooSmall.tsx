@@ -1,5 +1,5 @@
-import React from "react";
 import { Container, Typography } from "@mui/material";
+import type React from "react";
 
 const ScreenTooSmall: React.FC = () => (
     <Container maxWidth="sm" sx={{ marginTop: 24 }}>

@@ -1,20 +1,21 @@
 "use client";
 
-import React, { createContext, useCallback, useContext, useEffect, useReducer, useState } from "react";
-import {
-    SingleLogContextProviderProps,
-    SingleLogContextData,
-    FilterState,
-} from "@/context/SingleLogContext/SingleLogContext.types";
 import { useGetSingleLogMetadata } from "@/api/hooks";
-import useLogProcessor from "@/hooks/useLogProcessor/useLogProcessor";
 import {
     defaultFilterReducerState,
     filterReducer,
     getFilterReducerLocalInitialState,
 } from "@/context/SingleLogContext/SingleLogContext.reducers";
 import { setSingleLogFilterStateInLocalStorage } from "@/context/SingleLogContext/SingleLogContext.storage";
-import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import type {
+    FilterState,
+    SingleLogContextData,
+    SingleLogContextProviderProps,
+} from "@/context/SingleLogContext/SingleLogContext.types";
+import useLogProcessor from "@/hooks/useLogProcessor/useLogProcessor";
+import { type ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import type React from "react";
+import { createContext, useContext, useEffect, useReducer, useState } from "react";
 
 const searchParamIncludedSeverities = "included_severities";
 const searchParamIncludedCategories = "included_categories";
@@ -46,6 +47,7 @@ export const SingleLogContextProvider: React.FC<SingleLogContextProviderProps> =
     };
 
     // Start loading logs with the initial filter state on load
+    // biome-ignore lint/correctness/useExhaustiveDependencies: fine here, for now
     useEffect(() => {
         saveFilters();
     }, []);
@@ -84,8 +86,10 @@ const getInitialFilterState = (searchParams: ReadonlyURLSearchParams): FilterSta
 
     if (severityParam) {
         const enabledSeverities = severityParam.split(",");
+
         filterStateFromUrl.severities = Object.keys(defaultFilterReducerState.severities).reduce(
             (acc, sev) => ({
+                // biome-ignore lint/performance/noAccumulatingSpread: this is fine here
                 ...acc,
                 [sev]: enabledSeverities.includes(sev),
             }),

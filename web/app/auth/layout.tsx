@@ -1,5 +1,6 @@
-import React, { ReactNode } from "react";
-import { Container, Box, Typography, Paper } from "@mui/material";
+import { Box, Container, Paper, Typography } from "@mui/material";
+import type React from "react";
+import type { ReactNode } from "react";
 
 interface AuthLayoutProps {
     children: ReactNode;

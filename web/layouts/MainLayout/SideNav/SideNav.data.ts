@@ -1,4 +1,4 @@
-import { SideNavItemProps } from "@/layouts/MainLayout/SideNav/SideNav.types";
+import type { SideNavItemProps } from "@/layouts/MainLayout/SideNav/SideNav.types";
 
 export const sideNavWidthPx = 200;
 

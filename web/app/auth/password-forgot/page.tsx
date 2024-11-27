@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import { TextField, Button, Link, Box, Typography } from "@mui/material";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { useUserPasswordResetRequest } from "@/api/hooks";
 import { yupAuthValidation } from "@/types/api/validation";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Box, Button, Link, TextField, Typography } from "@mui/material";
+import type React from "react";
+import { useState } from "react";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import * as yup from "yup";
 
 interface FormInputPasswordForgot {
     email: string;

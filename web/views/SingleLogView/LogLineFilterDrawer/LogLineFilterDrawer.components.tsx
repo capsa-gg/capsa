@@ -1,6 +1,4 @@
-import * as React from "react";
 import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
-import Box from "@mui/material/Box";
 import {
     Autocomplete,
     Button,
@@ -10,7 +8,12 @@ import {
     ToggleButtonGroup,
     Typography,
 } from "@mui/material";
-import { AutocompleteChangeDetails, AutocompleteChangeReason } from "@mui/material/useAutocomplete/useAutocomplete";
+import Box from "@mui/material/Box";
+import type {
+    AutocompleteChangeDetails,
+    AutocompleteChangeReason,
+} from "@mui/material/useAutocomplete/useAutocomplete";
+import type * as React from "react";
 
 export const SeveritiesFilters: React.FC = () => {
     const {

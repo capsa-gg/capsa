@@ -1,13 +1,14 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
-import { TextField, Button, Link, Box, Typography } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { useUserPasswordResetComplete } from "@/api/hooks";
 import { yupAuthValidation } from "@/types/api/validation";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Box, Button, Link, TextField, Typography } from "@mui/material";
+import { useRouter, useSearchParams } from "next/navigation";
+import type React from "react";
+import { Suspense, useEffect, useState } from "react";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import * as yup from "yup";
 
 interface FormInputPasswordReset {
     resetToken: string;

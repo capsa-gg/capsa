@@ -1,6 +1,6 @@
-import { filterReducer, defaultFilterReducerState } from "./SingleLogContext.reducers";
-import { FilterAction, FilterState } from "@/context/SingleLogContext/SingleLogContext.types";
+import type { FilterAction, FilterState } from "@/context/SingleLogContext/SingleLogContext.types";
 import logSeverities from "@/types/logSeverities";
+import { defaultFilterReducerState, filterReducer } from "./SingleLogContext.reducers";
 
 describe("filterReducer", () => {
     let initialState: FilterState;

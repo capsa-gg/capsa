@@ -1,9 +1,10 @@
-import React, { Dispatch, Reducer, SetStateAction } from "react";
+import type { UseLogProcessor } from "@/hooks/useLogProcessor/useLogProcessor.types";
+import type { ApplicationError } from "@/types/api/error";
+import type { LogMetadata } from "@/types/api/logs";
+import type React from "react";
+import type { Dispatch, SetStateAction } from "react";
+import type { SWRResponse } from "swr";
 import { z } from "zod";
-import { SWRResponse } from "swr";
-import { ApplicationError } from "@/types/api/error";
-import { LogMetadata } from "@/types/api/logs";
-import { UseLogProcessor } from "@/hooks/useLogProcessor/useLogProcessor.types";
 
 export interface SingleLogContextProviderProps {
     logUUID: string;

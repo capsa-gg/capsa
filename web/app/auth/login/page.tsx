@@ -1,16 +1,17 @@
 "use client";
 
-import React, { Suspense, useEffect } from "react";
-import { TextField, Button, Link, Box } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { useUserLogin } from "@/api/hooks";
+import useUser from "@/context/UserContext";
 import { removeJwtCookie, setJwtCookie } from "@/data/jwt/cookiesClient";
 import { removeJwtFromLocalStorage, setJwtInLocalStorage } from "@/data/jwt/localStorage";
 import { yupAuthValidation } from "@/types/api/validation";
-import useUser from "@/context/UserContext";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Box, Button, Link, TextField } from "@mui/material";
+import { useRouter, useSearchParams } from "next/navigation";
+import type React from "react";
+import { Suspense, useEffect } from "react";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import * as yup from "yup";
 
 interface FormInputLogin {
     email: string;
@@ -38,18 +39,19 @@ const LoginPage: React.FC = () => {
         mode: "onChange",
     });
 
-    /* eslint-disable react-hooks/exhaustive-deps */
     // TODO: callback functions
 
     // Remove jwt info if this page is reached
+    // biome-ignore lint/correctness/useExhaustiveDependencies: fine here, for now
     useEffect(() => {
         if (redirectUrl) {
             removeJwtCookie();
             removeJwtFromLocalStorage();
         }
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     // When we have the response, set values, redirect
+    // biome-ignore lint/correctness/useExhaustiveDependencies: fine here, for now
     useEffect(() => {
         if (!error && data) {
             setJwtCookie(data);
@@ -62,7 +64,7 @@ const LoginPage: React.FC = () => {
                 router.refresh();
             }
         }
-    }, [data]);
+    }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const onSubmit: SubmitHandler<FormInputLogin> = formData => {
         trigger(formData);

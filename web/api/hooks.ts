@@ -5,15 +5,15 @@
 // This will need s proper rewrite of the internals while keeping the hook type signatues the same, so I will add a
 // TODO: do this properly
 
-import { ApiResponse } from "@/api/apibase";
-import useSWR, { SWRResponse } from "swr";
-import useSWRMutation, { type SWRMutationResponse } from "swr/mutation";
-import { ApplicationError } from "@/types/api/error";
-import { UserAuth } from "@/api/userauth";
+import type { ApiResponse } from "@/api/apibase";
 import { Environments } from "@/api/environments";
-import { ListAllEnvironmentsResponse } from "@/types/api/environments";
-import { LogMetadata, LogOverviewResponse } from "@/types/api/logs";
 import { Logs } from "@/api/logs";
+import { UserAuth } from "@/api/userauth";
+import type { ListAllEnvironmentsResponse } from "@/types/api/environments";
+import { ApplicationError } from "@/types/api/error";
+import type { LogMetadata, LogOverviewResponse } from "@/types/api/logs";
+import useSWR, { type SWRResponse } from "swr";
+import useSWRMutation, { type SWRMutationResponse } from "swr/mutation";
 
 type ApiCallFunc<Req, Res> = (req: Req) => Promise<ApiResponse<Res>>;
 

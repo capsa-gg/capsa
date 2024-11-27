@@ -1,5 +1,5 @@
-import * as Monaco from "monaco-editor";
 import LogsColors from "@/styles/LogsColors";
+import type * as Monaco from "monaco-editor";
 
 export const monacoOptions: Monaco.editor.IStandaloneEditorConstructionOptions = {
     readOnly: true,

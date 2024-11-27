@@ -15,7 +15,7 @@ indent_size = 8
 [{go.mod,go.sum,*.go,.gitmodules}]
 indent_style = tab
 
-[*.{yml,yaml,tpl,json}]
+[*.{yml,yaml,tpl,json,jsonc}]
 indent_size = 2
 
 [*.{bat,ps1,cmd}]
