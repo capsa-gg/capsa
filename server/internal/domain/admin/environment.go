@@ -6,6 +6,7 @@ import (
 	"github.com/capsa-gg/capsa/server/internal/data/database"
 	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
 
 // AddNewEnvironment adds a new environment to the database for a given title.
@@ -41,7 +42,7 @@ func AddNewEnvironment(ctx context.Context, s *interactor.Services, title, env s
 }
 
 // ListAllTitlesAndEnvironments lists all titles and environments, with the associated keys.
-func ListAllTitlesAndEnvironments(ctx context.Context, s *interactor.Services) ([]entities.TitleEnvironment, error) {
+func ListAllTitlesAndEnvironments(ctx context.Context, s *interactor.Services) ([]bodies.TitleEnvironment, error) {
 	log := s.GetDomainLogger("admin", "ListAllTitlesAndEnvironments")
 
 	res, err := s.Database.ListAllEnvironmentsAndTitles(ctx)
@@ -53,7 +54,7 @@ func ListAllTitlesAndEnvironments(ctx context.Context, s *interactor.Services) (
 
 	log.Infof("fetched %d items", len(res))
 
-	titleEnvironments := make([]entities.TitleEnvironment, len(res))
+	titleEnvironments := make([]bodies.TitleEnvironment, len(res))
 	for i, te := range res {
 		titleEnvironments[i].Title = te.Title
 		titleEnvironments[i].EnvironmentName = te.Environment

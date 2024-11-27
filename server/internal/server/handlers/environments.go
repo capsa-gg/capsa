@@ -14,7 +14,8 @@ import (
 // @Produce    	json
 // @Description	Allows users to fetch all available environments from the database
 // @Security	JwtUser
-// @Success		200		{array}		entities.TitleEnvironment
+// @Security	JwtAdmin
+// @Success		200		{array}		bodies.TitleEnvironment
 // @Failure     400		{object}	bodies.ErrorResponse
 // @Failure     404		{object}	bodies.ErrorResponse
 // @Failure     500		{object}	bodies.ErrorResponse

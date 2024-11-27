@@ -43,6 +43,34 @@ definitions:
           This field is only sent in development mode.
         type: string
     type: object
+  bodies.LogAdditionalMetadata:
+    properties:
+      metadata:
+        additionalProperties: {}
+        type: object
+      savedOn:
+        type: string
+    type: object
+  bodies.LogLink:
+    properties:
+      description:
+        type: string
+      linkedLog:
+        type: string
+    type: object
+  bodies.LogMetadata:
+    properties:
+      additionalMetadata:
+        items:
+          $ref: '#/definitions/bodies.LogAdditionalMetadata'
+        type: array
+      linkedLogs:
+        items:
+          $ref: '#/definitions/bodies.LogLink'
+        type: array
+      logData:
+        $ref: '#/definitions/bodies.LogOverview'
+    type: object
   bodies.LogMetadataSaveRequest:
     properties:
       additional_metadata:
@@ -53,71 +81,7 @@ definitions:
           type: string
         type: object
     type: object
-  bodies.StatusResponse:
-    properties:
-      code:
-        example: 200
-        type: integer
-      message:
-        example: ok
-        type: string
-      version:
-        example: 0.0.1
-        type: string
-    type: object
-  bodies.UserLoginRequest:
-    properties:
-      email:
-        type: string
-      password:
-        maxLength: 64
-        minLength: 12
-        type: string
-    required:
-    - email
-    - password
-    type: object
-  bodies.UserPasswordResetCompleteRequest:
-    properties:
-      password:
-        maxLength: 64
-        minLength: 12
-        type: string
-      resetToken:
-        type: string
-    required:
-    - password
-    - resetToken
-    type: object
-  entities.LogAdditionalMetadata:
-    properties:
-      metadata:
-        additionalProperties: {}
-        type: object
-      savedOn:
-        type: string
-    type: object
-  entities.LogLink:
-    properties:
-      description:
-        type: string
-      linkedLog:
-        type: string
-    type: object
-  entities.LogMetadata:
-    properties:
-      additionalMetadata:
-        items:
-          $ref: '#/definitions/entities.LogAdditionalMetadata'
-        type: array
-      linkedLogs:
-        items:
-          $ref: '#/definitions/entities.LogLink'
-        type: array
-      logData:
-        $ref: '#/definitions/entities.LogOverview'
-    type: object
-  entities.LogOverview:
+  bodies.LogOverview:
     properties:
       categoriesCounts:
         additionalProperties:
@@ -142,7 +106,19 @@ definitions:
       tsLastLine:
         type: string
     type: object
-  entities.TitleEnvironment:
+  bodies.StatusResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      message:
+        example: ok
+        type: string
+      version:
+        example: 0.0.1
+        type: string
+    type: object
+  bodies.TitleEnvironment:
     properties:
       environmentKey:
         type: string
@@ -151,7 +127,57 @@ definitions:
       title:
         type: string
     type: object
-  entities.UserLoginResult:
+  bodies.UserCreateRequest:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      role:
+        description: Conversion to UserRole happens in handler
+        enum:
+        - User
+        - Admin
+        type: string
+    required:
+    - email
+    - firstName
+    - lastName
+    type: object
+  bodies.UserInfoResponse:
+    properties:
+      createdAt:
+        type: string
+      deactivatedTs:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      hasPasswordSet:
+        type: boolean
+      lastName:
+        type: string
+      role:
+        type: string
+      userUuid:
+        type: string
+    type: object
+  bodies.UserLoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 64
+        minLength: 12
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  bodies.UserLoginResult:
     properties:
       email:
         type: string
@@ -168,6 +194,34 @@ definitions:
       userUUID:
         type: string
     type: object
+  bodies.UserPasswordResetCompleteRequest:
+    properties:
+      password:
+        maxLength: 64
+        minLength: 12
+        type: string
+      resetToken:
+        type: string
+    required:
+    - password
+    - resetToken
+    type: object
+  bodies.UserUpdateRequest:
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      role:
+        description: Conversion to UserRole happens in domain
+        enum:
+        - User
+        - Admin
+        type: string
+    required:
+    - firstName
+    - lastName
+    type: object
 host: example.com
 info:
   contact:
@@ -179,6 +233,235 @@ info:
   title: Capsa Server
   version: "1"
 paths:
+  /admin/users:
+    get:
+      description: Allows admins to fetch all users from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            items:
+              $ref: '#/definitions/bodies.UserInfoResponse'
+            type: array
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      security:
+      - JwtAdmin: []
+      summary: List all users
+      tags:
+      - AdminUsers
+    post:
+      description: Allows admins to create a new user
+      parameters:
+      - description: UserCreateRequest
+        in: body
+        name: userinfo
+        required: true
+        schema:
+          $ref: '#/definitions/bodies.UserCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.UserInfoResponse'
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      security:
+      - JwtAdmin: []
+      summary: Creates a new user
+      tags:
+      - AdminUsers
+  /admin/users/{useruuid}:
+    put:
+      description: Allows admins to update a user
+      parameters:
+      - description: UserUpdateRequest
+        in: body
+        name: userinfo
+        required: true
+        schema:
+          $ref: '#/definitions/bodies.UserUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.UserInfoResponse'
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      security:
+      - JwtAdmin: []
+      summary: Update a user's info in the database
+      tags:
+      - AdminUsers
+  /admin/users/{useruuid}/activation:
+    delete:
+      description: Allows admins to deactivate a user
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.UserInfoResponse'
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      security:
+      - JwtAdmin: []
+      summary: Deactivate a user's account
+      tags:
+      - AdminUsers
+    post:
+      description: Allows admins to reactivate a deactivated user
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.UserInfoResponse'
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      security:
+      - JwtAdmin: []
+      summary: Reactivate a deactivated user's account
+      tags:
+      - AdminUsers
   /client/auth:
     post:
       consumes:
@@ -417,7 +700,7 @@ paths:
               description: Current Capsa Server version
               type: string
           schema:
-            $ref: '#/definitions/entities.UserLoginResult'
+            $ref: '#/definitions/bodies.UserLoginResult'
         "400":
           description: Bad Request
           headers:
@@ -580,7 +863,7 @@ paths:
               type: string
           schema:
             items:
-              $ref: '#/definitions/entities.TitleEnvironment'
+              $ref: '#/definitions/bodies.TitleEnvironment'
             type: array
         "400":
           description: Bad Request
@@ -608,6 +891,7 @@ paths:
             $ref: '#/definitions/bodies.ErrorResponse'
       security:
       - JwtUser: []
+      - JwtAdmin: []
       summary: Environment listing
       tags:
       - UserEnvironments
@@ -625,7 +909,7 @@ paths:
               type: string
           schema:
             items:
-              $ref: '#/definitions/entities.LogOverview'
+              $ref: '#/definitions/bodies.LogOverview'
             type: array
         "400":
           description: Bad Request
@@ -653,6 +937,7 @@ paths:
             $ref: '#/definitions/bodies.ErrorResponse'
       security:
       - JwtUser: []
+      - JwtAdmin: []
       summary: Log listing
       tags:
       - UserLogs
@@ -731,6 +1016,7 @@ paths:
             $ref: '#/definitions/bodies.ErrorResponse'
       security:
       - JwtUser: []
+      - JwtAdmin: []
       summary: Log chunk storage
       tags:
       - UserLogs
@@ -747,7 +1033,7 @@ paths:
               description: Current Capsa Server version
               type: string
           schema:
-            $ref: '#/definitions/entities.LogMetadata'
+            $ref: '#/definitions/bodies.LogMetadata'
         "400":
           description: Bad Request
           headers:
@@ -774,6 +1060,7 @@ paths:
             $ref: '#/definitions/bodies.ErrorResponse'
       security:
       - JwtUser: []
+      - JwtAdmin: []
       summary: Log metadata
       tags:
       - UserLogs
@@ -781,13 +1068,20 @@ schemes:
 - http
 - https
 securityDefinitions:
+  JwtAdmin:
+    description: Header value should be "Bearer UserJwtString", this JWT is similar
+      to JwtUser, but contains the "Admin" role
+    in: header
+    name: Authorization
+    type: apiKey
   JwtClient:
     description: Header value should be "Bearer ClientJwtString"
     in: header
     name: Authorization
     type: apiKey
   JwtUser:
-    description: Header value should be "Bearer UserJwtString"
+    description: Header value should be "Bearer UserJwtString", JwtAdmin also works
+      for this endpoint
     in: header
     name: Authorization
     type: apiKey

@@ -1,4 +1,4 @@
-package entities
+package bodies
 
 import (
 	"time"
@@ -7,13 +7,6 @@ import (
 
 	"github.com/capsa-gg/capsa/server/constants"
 )
-
-// TitleEnvironment contains the data about an environment in a given title.
-type TitleEnvironment struct {
-	Title           string    `json:"title"`
-	EnvironmentName string    `json:"environmentName"`
-	EnvironmentKey  uuid.UUID `json:"environmentKey"`
-}
 
 // LogOverview contains the data for log stored log.
 type LogOverview struct {

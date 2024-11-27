@@ -14,7 +14,8 @@ import (
 // @Produce    	json
 // @Description	Allows users to fetch available logs from the database
 // @Security	JwtUser
-// @Success		200		{array}		entities.LogOverview
+// @Security	JwtAdmin
+// @Success		200		{array}		bodies.LogOverview
 // @Failure     400		{object}	bodies.ErrorResponse
 // @Failure     404		{object}	bodies.ErrorResponse
 // @Failure     500		{object}	bodies.ErrorResponse
@@ -41,7 +42,8 @@ func (h Handlers) LogsList(c *gin.Context) {
 // @Produce    	json
 // @Description	Allows users to fetch metadata for a log
 // @Security	JwtUser
-// @Success		200		{object}	entities.LogMetadata
+// @Security	JwtAdmin
+// @Success		200		{object}	bodies.LogMetadata
 // @Failure     400		{object}	bodies.ErrorResponse
 // @Failure     404		{object}	bodies.ErrorResponse
 // @Failure     500		{object}	bodies.ErrorResponse

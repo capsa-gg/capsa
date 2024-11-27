@@ -14,40 +14,43 @@ import (
 )
 
 // AddNewUser adds a new user and initializes the flow to set their password.
-func AddNewUser(ctx context.Context, s *interactor.Services, email, firstName, lastName string, role constants.UserRole) error {
+func AddNewUser(ctx context.Context, s *interactor.Services, email, firstName, lastName string, role constants.UserRole) (*uuid.UUID, error) {
 	log := s.GetDomainLogger("user", "AddNewUser").
 		With("email", email, "first_name", firstName, "last_name", lastName)
 
 	log.Debugf("attempting to add new user")
 
-	err := s.Database.AddUser(ctx, database.AddUserParams{
+	userUUID, err := s.Database.AddUser(ctx, database.AddUserParams{
 		Email:     email,
 		FirstName: firstName,
 		LastName:  lastName,
 		UserRole:  database.UserRoles(role),
 	})
 
+	log = log.With("user_uuid", userUUID)
+	log.Info("user added to database")
+
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return nil, entities.NewDomainErrorFromDatabaseError(err)
 	}
 
-	user, err := s.Database.GetUserByEmail(ctx, email)
+	user, err := s.Database.GetUserByUuid(ctx, userUUID)
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return nil, entities.NewDomainErrorFromDatabaseError(err)
 	}
 
 	log = log.With("user_id", user.ID)
 
 	err = s.Database.InitializeUserPasswordReset(ctx, user.ID)
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return nil, entities.NewDomainErrorFromDatabaseError(err)
 	}
 
 	log.Debug("password flow initialized")
 
 	reset, err := s.Database.GetPasswordResetByUserId(ctx, user.ID)
 	if err != nil {
-		return entities.NewDomainErrorFromDatabaseError(err)
+		return nil, entities.NewDomainErrorFromDatabaseError(err)
 	}
 
 	log = log.With("reset_code", reset.ResetToken.String())
@@ -55,12 +58,12 @@ func AddNewUser(ctx context.Context, s *interactor.Services, email, firstName, l
 
 	err = s.Emails.SendAccountSetPassword(user.Email, user.FirstName, reset.ResetToken.String())
 	if err != nil {
-		return entities.NewDomainError(entities.DomainErrorUnexpected, "error sending password set email to user", err)
+		return nil, entities.NewDomainError(entities.DomainErrorUnexpected, "error sending password set email to user", err)
 	}
 
 	log.Infof("user added and email sent")
 
-	return nil
+	return &userUUID, nil
 }
 
 // AddNewUserWithPassword adds a new user with a password set.

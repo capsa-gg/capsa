@@ -55,7 +55,7 @@ var userAddCmd = &cobra.Command{
 		}
 
 		if userAddPassword == "" {
-			err := user.AddNewUser(context.Background(), s, userAddEmail, userAddFirstName, userAddLastName, role)
+			_, err := user.AddNewUser(context.Background(), s, userAddEmail, userAddFirstName, userAddLastName, role)
 			if err != nil {
 				log.Fatalf("error adding new user: %s", err)
 			}

@@ -8,10 +8,11 @@ import (
 
 	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
+	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
 
 // Login validates a user's password and returns the login result if everything is valid.
-func Login(ctx context.Context, s *interactor.Services, email, password string) (*entities.UserLoginResult, error) { //nolint:funlen // This is fine
+func Login(ctx context.Context, s *interactor.Services, email, password string) (*bodies.UserLoginResult, error) { //nolint:funlen // This is fine
 	log := s.GetDomainLogger("user", "CreateNewLogSession").With("email", email)
 
 	log.Debug("attempting to log in user")
@@ -80,7 +81,7 @@ func Login(ctx context.Context, s *interactor.Services, email, password string) 
 	}
 
 	// Assemble information
-	logSession := entities.UserLoginResult{
+	logSession := bodies.UserLoginResult{
 		Token:       jwt,
 		FirstName:   user.FirstName,
 		LastName:    user.LastName,

@@ -26,6 +26,7 @@ const (
 // @Param		excluded_categories	query	string 		false 		"Excluded log categories, will be ignored if included_categories is set, optional"
 // @Description	Allows users to stream all uploaded chunks for a given log id. If no query parameters are set, the whole log will be fetched.
 // @Security	JwtUser
+// @Security	JwtAdmin
 // @Success		200		{string}	string 							"Log chunk stream"
 // @Failure     400		{object}	bodies.ErrorResponse
 // @Failure     404		{object}	bodies.ErrorResponse

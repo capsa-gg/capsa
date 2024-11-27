@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 
 	"github.com/google/uuid"
 
@@ -14,7 +15,7 @@ import (
 )
 
 // CreateNewLogSession registers a new log session, returning the data about the created log.
-func CreateNewLogSession(ctx context.Context, s *interactor.Services, envKey uuid.UUID, platform string, logType constants.LogType) (*entities.LogCreatedResult, error) {
+func CreateNewLogSession(ctx context.Context, s *interactor.Services, envKey uuid.UUID, platform string, logType constants.LogType) (*bodies.LogCreatedResult, error) {
 	log := s.GetDomainLogger("logs", "CreateNewLogSession").With("env_key", envKey, "log_type", logType)
 
 	log.Debug("attempting to register a new log session")
@@ -63,7 +64,7 @@ func CreateNewLogSession(ctx context.Context, s *interactor.Services, envKey uui
 	log.Debug("token parsed")
 
 	// Assemble information
-	logSession := entities.LogCreatedResult{
+	logSession := bodies.LogCreatedResult{
 		UUID:        sesKey,
 		ClientJWT:   jwt,
 		TokenExpiry: time.Unix(jwtClaims.Expiry, 0),

@@ -10,6 +10,10 @@ import (
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
 
+var (
+	jsonBodyExtractionError = entities.NewDomainError(entities.DomainErrorUnexpected, "error extracting json body", errors.New("json body extraction yielded nil"))
+)
+
 func (h Handlers) sendErrorResponse(c *gin.Context, err error) {
 	// Domain Errors
 	var domainError entities.DomainError

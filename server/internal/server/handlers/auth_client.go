@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 
@@ -37,7 +36,7 @@ func (h Handlers) ClientAuth(c *gin.Context) {
 	}
 
 	if req == nil {
-		h.sendErrorResponse(c, errors.New("cannot extract body json from request"))
+		h.sendErrorResponse(c, jsonBodyExtractionError)
 
 		return
 	}

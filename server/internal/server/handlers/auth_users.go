@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +16,7 @@ import (
 // @Produce     json
 // @Param		login_request 	body 	bodies.UserLoginRequest 	true 	"UserLoginRequest"
 // @Description	Allows clients to create a log session and receive a token to send logs with
-// @Success		200		{object}	entities.UserLoginResult
+// @Success		200		{object}	bodies.UserLoginResult
 // @Failure     400		{object}	bodies.ErrorResponse
 // @Failure     401		{object}	bodies.ErrorResponse
 // @Failure     403		{object}	bodies.ErrorResponse
@@ -35,7 +34,7 @@ func (h Handlers) UserLogin(c *gin.Context) {
 	}
 
 	if req == nil {
-		h.sendErrorResponse(c, errors.New("cannot extract body json from request"))
+		h.sendErrorResponse(c, jsonBodyExtractionError)
 
 		return
 	}
