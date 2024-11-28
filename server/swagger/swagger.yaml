@@ -4,11 +4,11 @@ definitions:
     properties:
       environment:
         maxLength: 24
-        minLength: 4
+        minLength: 3
         type: string
       title:
         maxLength: 24
-        minLength: 4
+        minLength: 3
         type: string
     required:
     - environment
@@ -18,7 +18,7 @@ definitions:
     properties:
       title:
         maxLength: 24
-        minLength: 4
+        minLength: 3
         type: string
     required:
     - title

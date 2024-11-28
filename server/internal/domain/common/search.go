@@ -11,7 +11,7 @@ import (
 
 const searchLimit = 1000
 
-// PerformSearch performs a database search
+// PerformSearch performs a database search.
 func PerformSearch(ctx context.Context, s *interactor.Services, searchTerm string) (*bodies.SearchResults, error) {
 	log := s.GetDomainLogger("common", "PerformSearch").With("search_term", searchTerm)
 

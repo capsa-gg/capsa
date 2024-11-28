@@ -2,9 +2,10 @@
 
 // Note(lucianonooijen): this file contains a lot of overly complex gibberish
 // There must be a better way to make swr work nicely together with custom fetching functions, but for now this works
-// This will need s proper rewrite of the internals while keeping the hook type signatues the same, so I will add a
+// This will need s proper rewrite of the internals while keeping the hook type signatures the same, so I will add a
 // TODO: do this properly
 
+import { Admin } from "@/api/admin";
 import type { ApiResponse } from "@/api/apibase";
 import { Environments } from "@/api/environments";
 import { Logs } from "@/api/logs";
@@ -14,6 +15,7 @@ import type { ListAllEnvironmentsResponse } from "@/types/api/environments";
 import { ApplicationError } from "@/types/api/error";
 import type { LogMetadata, LogOverviewResponse } from "@/types/api/logs";
 import type { SearchResults } from "@/types/api/search";
+import type { ListAllTitlesResponse } from "@/types/api/titleenvironment";
 import useSWR, { type SWRResponse } from "swr";
 import useSWRMutation, { type SWRMutationResponse } from "swr/mutation";
 
@@ -78,6 +80,11 @@ export const useUserPasswordResetComplete = apiCallToSwrMutation("passwordreset"
 
 // Search
 export const useSearch = apiCallToSwrWithIdArg<SearchResults>("search", MiscApiCalls.Search);
+
+// Admin
+export const useGetAllTitles = apiCallToSwrPlain<ListAllTitlesResponse>("listalltitles", Admin.ListAllTitles);
+export const useAddTitle = apiCallToSwrMutation("addtitle", Admin.AddTitle);
+export const useAddEnvironment = apiCallToSwrMutation("addenvironment", Admin.AddEnvironment);
 
 // Environments
 export const useGetAllEnvironments = apiCallToSwrPlain<ListAllEnvironmentsResponse>(

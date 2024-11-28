@@ -1600,12 +1600,12 @@ const docTemplate = `{
                 "environment": {
                     "type": "string",
                     "maxLength": 24,
-                    "minLength": 4
+                    "minLength": 3
                 },
                 "title": {
                     "type": "string",
                     "maxLength": 24,
-                    "minLength": 4
+                    "minLength": 3
                 }
             }
         },
@@ -1618,7 +1618,7 @@ const docTemplate = `{
                 "title": {
                     "type": "string",
                     "maxLength": 24,
-                    "minLength": 4
+                    "minLength": 3
                 }
             }
         },
