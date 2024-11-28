@@ -1508,6 +1508,85 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/search": {
+            "get": {
+                "security": [
+                    {
+                        "JwtUser": []
+                    },
+                    {
+                        "JwtAdmin": []
+                    }
+                ],
+                "description": "Allows users to search for resources that contain the search query as a substring",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserSearch"
+                ],
+                "summary": "Search for resources",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "SearchTerm",
+                        "name": "search",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.SearchResults"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bodies.ErrorResponse"
+                        },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1692,6 +1771,34 @@ const docTemplate = `{
                 },
                 "tsLastLine": {
                     "type": "string"
+                }
+            }
+        },
+        "bodies.SearchResult": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "string"
+                },
+                "match": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "bodies.SearchResults": {
+            "type": "object",
+            "properties": {
+                "hasMore": {
+                    "type": "boolean"
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/bodies.SearchResult"
+                    }
                 }
             }
         },
