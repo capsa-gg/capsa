@@ -1,13 +1,16 @@
 import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
 import { LogMetadataList } from "@/views/SingleLogView/LogMetadataTopBar/LogMetadataTopBar.components";
+import DataObjectIcon from "@mui/icons-material/DataObject";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { Alert, AlertTitle, Badge, Divider, IconButton, Typography } from "@mui/material";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import { Alert, AlertTitle, Badge, Divider, IconButton, Tooltip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { Stack } from "@mui/system";
 import type React from "react";
 
 const LogMetadataTopBar: React.FC = () => {
     const {
+        viewMode: [viewMode, setViewMode],
         drawerState: [drawerOpen, setDrawerOpen],
         metadata: { error, isLoading, data },
     } = useSingleLogContext();
@@ -43,9 +46,24 @@ const LogMetadataTopBar: React.FC = () => {
             <LogMetadataList logMetadata={data} />
             <Box>
                 <Badge color="primary">
-                    <IconButton onClick={() => setDrawerOpen(true)}>
-                        <FilterAltIcon />
-                    </IconButton>
+                    <Tooltip title="Switch view mode between log and metadata">
+                        {viewMode === "Log" ? (
+                            <IconButton onClick={() => setViewMode("Metadata")}>
+                                <DataObjectIcon />
+                            </IconButton>
+                        ) : (
+                            <IconButton onClick={() => setViewMode("Log")}>
+                                <MenuBookIcon />
+                            </IconButton>
+                        )}
+                    </Tooltip>
+                </Badge>
+                <Badge color="primary">
+                    <Tooltip title="Open log line filters">
+                        <IconButton onClick={() => setDrawerOpen(true)}>
+                            <FilterAltIcon />
+                        </IconButton>
+                    </Tooltip>
                 </Badge>
             </Box>
         </Stack>
