@@ -6,7 +6,8 @@ type SearchResults struct {
 }
 
 type SearchResult struct {
-	Type    string `json:"type"`
-	Match   string `json:"match"`
-	Details string `json:"details"`
+	Type        string `json:"type"`
+	Match       string `json:"match"`
+	Description string `json:"description"`
+	Details     string `json:"details"`
 }

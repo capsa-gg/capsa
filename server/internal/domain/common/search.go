@@ -40,9 +40,10 @@ func PerformSearch(ctx context.Context, s *interactor.Services, searchTerm strin
 
 		match := matches[i]
 		result.Results = append(result.Results, bodies.SearchResult{
-			Type:    match.TableName,
-			Match:   match.Identifier,
-			Details: match.Details,
+			Type:        match.TableName,
+			Match:       match.Identifier,
+			Description: match.Description,
+			Details:     match.Details,
 		})
 	}
 

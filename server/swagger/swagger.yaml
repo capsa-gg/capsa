@@ -131,6 +131,8 @@ definitions:
     type: object
   bodies.SearchResult:
     properties:
+      description:
+        type: string
       details:
         type: string
       match:

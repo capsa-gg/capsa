@@ -1777,6 +1777,9 @@ const docTemplate = `{
         "bodies.SearchResult": {
             "type": "object",
             "properties": {
+                "description": {
+                    "type": "string"
+                },
                 "details": {
                     "type": "string"
                 },

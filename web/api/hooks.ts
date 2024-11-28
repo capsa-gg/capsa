@@ -8,10 +8,12 @@
 import type { ApiResponse } from "@/api/apibase";
 import { Environments } from "@/api/environments";
 import { Logs } from "@/api/logs";
+import { MiscApiCalls } from "@/api/misc";
 import { UserAuth } from "@/api/userauth";
 import type { ListAllEnvironmentsResponse } from "@/types/api/environments";
 import { ApplicationError } from "@/types/api/error";
 import type { LogMetadata, LogOverviewResponse } from "@/types/api/logs";
+import type { SearchResults } from "@/types/api/search";
 import useSWR, { type SWRResponse } from "swr";
 import useSWRMutation, { type SWRMutationResponse } from "swr/mutation";
 
@@ -73,6 +75,9 @@ const apiCallToSwrWithIdArg = <Res>(
 export const useUserLogin = apiCallToSwrMutation("userlogin", UserAuth.Login);
 export const useUserPasswordResetRequest = apiCallToSwrMutation("passwordforgot", UserAuth.PasswordResetStart);
 export const useUserPasswordResetComplete = apiCallToSwrMutation("passwordreset", UserAuth.PasswordResetComplete);
+
+// Search
+export const useSearch = apiCallToSwrWithIdArg<SearchResults>("search", MiscApiCalls.Search);
 
 // Environments
 export const useGetAllEnvironments = apiCallToSwrPlain<ListAllEnvironmentsResponse>(
