@@ -1,4 +1,5 @@
-import LogsColors from "@/styles/LogsColors";
+import useUser from "@/context/UserContext";
+import { type LogsColors, getModeLogColors } from "@/styles/LogsColors";
 import logSeverities from "@/types/logSeverities";
 import { Tooltip, Typography } from "@mui/material";
 import type * as React from "react";
@@ -12,7 +13,14 @@ const ColoredSeverities: React.FC<{ severities: Record<string, number> }> = ({ s
 export default ColoredSeverities;
 
 const Severity: React.FC<{ severity: string; count: number }> = ({ severity, count }) => {
-    const color = severityColor(severity);
+    const {
+        preferences: {
+            preferences: { darkMode },
+        },
+    } = useUser();
+
+    const colorScheme = getModeLogColors(darkMode);
+    const color = severityColor(colorScheme, severity);
 
     return (
         <Tooltip title={severity}>
@@ -23,22 +31,22 @@ const Severity: React.FC<{ severity: string; count: number }> = ({ severity, cou
     );
 };
 
-export const severityColor = (sev: string): string => {
+export const severityColor = (colors: LogsColors, sev: string): string => {
     switch (sev) {
         case "Fatal":
-            return "#000";
+            return colors.Fatal;
         case "Error":
-            return LogsColors.Error;
+            return colors.Error;
         case "Warning":
-            return LogsColors.Warning;
+            return colors.Warning;
         case "Log":
         case "Display":
-            return "#4b4";
+            return colors.Info;
         case "Verbose":
-            return LogsColors.Verbose;
+            return colors.Verbose;
         case "VeryVerbose":
-            return LogsColors.VeryVerbose;
+            return colors.VeryVerbose;
         default:
-            return LogsColors.Contents;
+            return colors.Contents;
     }
 };

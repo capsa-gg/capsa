@@ -1,4 +1,17 @@
-enum LogsColors {
+export enum LogsColorsLightMode {
+    Timestamp = "#888888",
+    Category = "#555555",
+    Contents = "#333333",
+
+    Fatal = "#a80000",
+    Error = "#f13434",
+    Warning = "#ef7300",
+    Info = "#e5be10",
+    Verbose = "#527311",
+    VeryVerbose = "#1e3877",
+}
+
+export enum LogsColorsDarkMode {
     Timestamp = "#555555",
     Category = "#888888",
     Contents = "#cccccc",
@@ -11,4 +24,7 @@ enum LogsColors {
     VeryVerbose = "#3E4E74",
 }
 
-export default LogsColors;
+export type LogsColors = typeof LogsColorsLightMode | typeof LogsColorsDarkMode;
+
+export const getModeLogColors = (darkMode: boolean): LogsColors =>
+    darkMode ? LogsColorsDarkMode : LogsColorsLightMode;

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -47,6 +48,17 @@ func (h Handlers) sendDomainError(c *gin.Context, domainError domainerror.Error)
 	}
 
 	switch domainError.Type {
+	case domainerror.NoModifications:
+		if h.services.Config.IsDevMode { // In dev mode, add details to header
+			details, err := json.Marshal(res)
+			if err == nil {
+				c.Header("X-Capsa-Error", string(details))
+			}
+		}
+
+		c.Status(http.StatusNotModified)
+
+		return
 	case domainerror.InvalidArgument:
 		c.JSON(http.StatusBadRequest, res)
 		return

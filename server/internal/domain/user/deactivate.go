@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
 
@@ -24,13 +25,20 @@ func DeactivateUser(ctx context.Context, s *interactor.Services, userUUID uuid.U
 	log = log.With("user_id", user.ID)
 	log.Debug("user retrieved")
 
+	// Handle case where user is already deactivated
+	if user.DeactivatedOn != nil {
+		log.With("deactivated_on", *user.DeactivatedOn).Info("user already deactivated")
+
+		return domainerror.New(domainerror.NoModifications, "user already deactivated", errors.New("user already deactivated"))
+	}
+
 	// Delete outstanding password resets
 	err = s.Database.DeletePasswordResetForUser(ctx, user.ID)
 	if err != nil {
 		return domainerror.NewFromDatabaseError(err)
 	}
 
-	// Mark as deleted
+	// Mark as deactivated
 	err = s.Database.DeactivateUser(ctx, user.ID)
 	if err != nil {
 		return domainerror.NewFromDatabaseError(err)
@@ -55,6 +63,13 @@ func ReactivateUser(ctx context.Context, s *interactor.Services, userUUID uuid.U
 
 	log = log.With("user_id", user.ID)
 	log.Debug("user retrieved")
+
+	// Handle case where user is already deactivated
+	if user.DeactivatedOn == nil {
+		log.Info("user already activated")
+
+		return domainerror.New(domainerror.NoModifications, "user already activated", errors.New("user already activated"))
+	}
 
 	// Remove deactivation
 	err = s.Database.RemoveUserDeactivation(ctx, user.ID)

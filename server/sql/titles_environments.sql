@@ -43,4 +43,5 @@ SELECT
     e.name AS environment,
     e.key AS environment_key
 FROM environments e
-JOIN titles t ON e.title = t.id;
+JOIN titles t ON e.title = t.id
+ORDER BY e.created_on DESC;

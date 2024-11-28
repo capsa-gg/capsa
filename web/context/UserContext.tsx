@@ -1,8 +1,8 @@
-// FIXME: write
-
 "use client";
 
 import { getJwtFromLocalStorage } from "@/data/jwt/localStorage";
+import useUserPreferences from "@/hooks/useUserPreferences/useUserPreferences";
+import type { UseUserPreferences } from "@/hooks/useUserPreferences/useUserPreferences.types";
 import type { UserJwtData } from "@/types/api/auth";
 import type React from "react";
 import { type ReactNode, createContext, useContext, useState } from "react";
@@ -12,16 +12,22 @@ export type UserInfo = { isLoggedIn: true; user: UserJwtData } | { isLoggedIn: f
 interface UserContextType {
     reloadInfoFromLocalStorage: () => void;
     userInfo: UserInfo;
+    preferences: UseUserPreferences;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+    const preferences = useUserPreferences();
     const [userInfo, setUserInfo] = useState<UserInfo>(getUserInfo());
 
     const reloadInfoFromLocalStorage = () => setUserInfo(getUserInfo());
 
-    return <UserContext.Provider value={{ reloadInfoFromLocalStorage, userInfo }}>{children}</UserContext.Provider>;
+    return (
+        <UserContext.Provider value={{ reloadInfoFromLocalStorage, userInfo, preferences }}>
+            {children}
+        </UserContext.Provider>
+    );
 };
 
 const useUser = (): UserContextType => {

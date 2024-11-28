@@ -4,11 +4,11 @@ definitions:
     properties:
       environment:
         maxLength: 24
-        minLength: 4
+        minLength: 3
         type: string
       title:
         maxLength: 24
-        minLength: 4
+        minLength: 3
         type: string
     required:
     - environment
@@ -18,7 +18,7 @@ definitions:
     properties:
       title:
         maxLength: 24
-        minLength: 4
+        minLength: 3
         type: string
     required:
     - title
@@ -128,6 +128,26 @@ definitions:
         type: string
       tsLastLine:
         type: string
+    type: object
+  bodies.SearchResult:
+    properties:
+      description:
+        type: string
+      details:
+        type: string
+      match:
+        type: string
+      type:
+        type: string
+    type: object
+  bodies.SearchResults:
+    properties:
+      hasMore:
+        type: boolean
+      results:
+        items:
+          $ref: '#/definitions/bodies.SearchResult'
+        type: array
     type: object
   bodies.StatusResponse:
     properties:
@@ -569,6 +589,12 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/bodies.UserInfoResponse'
+        "304":
+          description: Not Modified
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
         "400":
           description: Bad Request
           headers:
@@ -611,6 +637,12 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/bodies.UserInfoResponse'
+        "304":
+          description: Returned when a user is already deactivated
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
         "400":
           description: Bad Request
           headers:
@@ -1242,6 +1274,57 @@ paths:
       summary: Log metadata
       tags:
       - UserLogs
+  /user/search:
+    get:
+      description: Allows users to search for resources that contain the search query
+        as a substring
+      parameters:
+      - description: SearchTerm
+        in: query
+        name: search
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.SearchResults'
+        "400":
+          description: Bad Request
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "404":
+          description: Not Found
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
+          schema:
+            $ref: '#/definitions/bodies.ErrorResponse'
+      security:
+      - JwtUser: []
+      - JwtAdmin: []
+      summary: Search for resources
+      tags:
+      - UserSearch
 schemes:
 - http
 - https

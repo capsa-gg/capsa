@@ -5,6 +5,7 @@
     <file url="file://$PROJECT_DIR$/server/migrations/0001_schema.up.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/server/sql/logs.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/server/sql/logs_list.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/server/sql/search.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/server/sql/titles_environments.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/server/sql/users.sql" dialect="PostgreSQL" />
     <file url="PROJECT" dialect="PostgreSQL" />

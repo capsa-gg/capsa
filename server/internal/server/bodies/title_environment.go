@@ -21,11 +21,11 @@ type TitleEnvironmentResponse struct {
 
 // AddTitleRequest contains the information to add a new title.
 type AddTitleRequest struct {
-	TitleName string `json:"title" validate:"required,ascii,min=4,max=24"`
+	TitleName string `json:"title" validate:"required,ascii,min=3,max=24"`
 }
 
 // AddEnvironmentRequest contains the information to add a new environment for a title.
 type AddEnvironmentRequest struct {
-	TitleName       string `json:"title" validate:"required,ascii,min=4,max=24"`
-	EnvironmentName string `json:"environment" validate:"required,ascii,min=4,max=24"`
+	TitleName       string `json:"title" validate:"required,ascii,min=3,max=24"`
+	EnvironmentName string `json:"environment" validate:"required,ascii,min=3,max=24"`
 }
