@@ -11,7 +11,10 @@ export interface SingleLogContextProviderProps {
     children: React.ReactNode;
 }
 
+export type SingleLogViewMode = "Log" | "Metadata";
+
 export interface SingleLogContextData {
+    viewMode: [SingleLogViewMode, Dispatch<SetStateAction<SingleLogViewMode>>];
     drawerState: [boolean, Dispatch<SetStateAction<boolean>>];
     metadata: SWRResponse<LogMetadata, ApplicationError, null>;
     logProcessor: UseLogProcessor;

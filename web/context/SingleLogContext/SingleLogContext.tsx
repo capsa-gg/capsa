@@ -11,6 +11,7 @@ import type {
     FilterState,
     SingleLogContextData,
     SingleLogContextProviderProps,
+    SingleLogViewMode,
 } from "@/context/SingleLogContext/SingleLogContext.types";
 import useLogProcessor from "@/hooks/useLogProcessor/useLogProcessor";
 import { type ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -29,6 +30,7 @@ export const SingleLogContextProvider: React.FC<SingleLogContextProviderProps> =
     const router = useRouter();
     const pathname = usePathname();
     const drawerState = useState(false);
+    const viewMode = useState<SingleLogViewMode>("Log");
     const filters = useReducer(filterReducer, null, () => getInitialFilterState(searchParams));
     const metadata = useGetSingleLogMetadata(logUUID);
     const logProcessor = useLogProcessor();
@@ -54,6 +56,7 @@ export const SingleLogContextProvider: React.FC<SingleLogContextProviderProps> =
 
     const context: SingleLogContextData = {
         drawerState,
+        viewMode,
         metadata,
         logProcessor,
         filters,
