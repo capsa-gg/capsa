@@ -19,6 +19,9 @@ const SideNav = () => {
     const appContext = useAppContext();
     const {
         userInfo: { isLoggedIn, user },
+        preferences: {
+            preferences: { darkMode },
+        },
     } = useUser();
     const pathname = usePathname();
 
@@ -47,6 +50,14 @@ const SideNav = () => {
             />
         ));
 
+    const LogoLightMode = () => (
+        <Image src={require("../../../public/logo-without-by.png")} alt="Capsa Logo" width={100} height={40} />
+    );
+
+    const LogoDarkMode = () => (
+        <Image src={require("../../../public/logo-without-by-darkmode.png")} alt="Capsa Logo" width={100} height={40} />
+    );
+
     return (
         <Drawer variant="permanent" open={true}>
             <Box
@@ -67,12 +78,7 @@ const SideNav = () => {
                             marginBottom: "24px",
                         }}
                     >
-                        <Image
-                            src={require("../../../public/logo-without-by.png")}
-                            alt="Capsa Logo"
-                            width={100}
-                            height={40}
-                        />
+                        {darkMode ? <LogoDarkMode /> : <LogoLightMode />}
                     </Box>
                     <SideNavListItemsUsers />
                 </List>

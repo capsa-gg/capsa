@@ -61,7 +61,7 @@ const SearchField = () => {
     return (
         <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", alignItems: "center" }}>
             <TextField
-                label="Search (enter to submit)"
+                label="Search"
                 variant="outlined"
                 size="small"
                 value={query}

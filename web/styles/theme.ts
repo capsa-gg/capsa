@@ -1,7 +1,7 @@
 "use client";
 
 import { amber, green } from "@mui/material/colors";
-import { createTheme } from "@mui/material/styles";
+import { type Theme, createTheme } from "@mui/material/styles";
 import { Roboto } from "next/font/google";
 
 const roboto = Roboto({
@@ -10,9 +10,9 @@ const roboto = Roboto({
     display: "swap",
 });
 
-const theme = createTheme({
+const themeLight = createTheme({
     palette: {
-        mode: "light", // TODO: Add dark mode support, https://mui.com/material-ui/customization/dark-mode/
+        mode: "light",
         primary: {
             main: green[300],
         },
@@ -28,4 +28,28 @@ const theme = createTheme({
     },
 });
 
-export default theme;
+const themeDark = createTheme({
+    palette: {
+        mode: "dark",
+        primary: {
+            main: green[300],
+        },
+        secondary: {
+            main: amber[200],
+        },
+        background: {
+            default: "#222",
+        },
+    },
+    typography: {
+        fontFamily: roboto.style.fontFamily,
+    },
+    components: {
+        MuiDrawer: { styleOverrides: { paper: { backgroundColor: "#282626" } } },
+        MuiPaper: { styleOverrides: { root: { backgroundColor: "#282626" } } },
+    },
+});
+
+const getTheme = (darkMode: boolean): Theme => (darkMode ? themeDark : themeLight);
+
+export default getTheme;

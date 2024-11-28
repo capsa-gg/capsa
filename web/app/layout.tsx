@@ -3,13 +3,12 @@ import ErrorSnackbar from "@/containers/ErrorSnackbar/ErrorSnackbar";
 import { ErrorProvider } from "@/context/ErrorContext";
 import MainLayout from "@/layouts/MainLayout/MainLayout";
 import ScreenTooSmall from "@/layouts/ScreenTooSmall/ScreenTooSmall";
-import theme from "@/styles/theme";
-import { ThemeProvider } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import CssBaseline from "@mui/material/CssBaseline";
 import type { Metadata } from "next";
 import type React from "react";
 import "./globals.css";
+import ThemeProviderWithMode from "@/app/ThemeProviderWithMode";
 import { AppContextProvider } from "@/context/AppContext/AppContext";
 import { UserProvider } from "@/context/UserContext";
 
@@ -24,9 +23,9 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
     <html lang="en">
         <body>
             <AppRouterCacheProvider>
-                <ThemeProvider theme={theme}>
-                    <AppContextProvider>
-                        <UserProvider>
+                <AppContextProvider>
+                    <UserProvider>
+                        <ThemeProviderWithMode>
                             <ErrorProvider>
                                 <SWRProvider>
                                     <CssBaseline />
@@ -39,9 +38,9 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
                                     </div>
                                 </SWRProvider>
                             </ErrorProvider>
-                        </UserProvider>
-                    </AppContextProvider>
-                </ThemeProvider>
+                        </ThemeProviderWithMode>
+                    </UserProvider>
+                </AppContextProvider>
             </AppRouterCacheProvider>
         </body>
     </html>
