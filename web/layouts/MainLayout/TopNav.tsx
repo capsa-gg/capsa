@@ -3,10 +3,10 @@
 import useUser from "@/context/UserContext";
 import { removeJwtCookie } from "@/data/jwt/cookiesClient";
 import { removeJwtFromLocalStorage } from "@/data/jwt/localStorage";
-import { Box, Button, Toolbar, Typography } from "@mui/material";
+import { Box, Button, TextField, Toolbar } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
-import { grey } from "@mui/material/colors";
 import { useRouter } from "next/navigation";
+import { type ChangeEvent, type FormEvent, useState } from "react";
 
 export const topNavSidePaddingPx = 20;
 
@@ -21,8 +21,6 @@ const TopNav = () => {
         router.refresh();
     };
 
-    const userText = isLoggedIn ? `Welcome, ${user?.firstName}` : "Not logged in";
-
     return (
         <AppBar
             position="static"
@@ -34,7 +32,7 @@ const TopNav = () => {
         >
             <Toolbar sx={{ justifyContent: "space-between" }} disableGutters>
                 <Box>
-                    <Typography color={grey[900]}>{userText}</Typography>
+                    <SearchField />
                 </Box>
                 <Box>
                     <Button variant="outlined" size="small" disabled={!isLoggedIn} onClick={signOut}>
@@ -47,3 +45,29 @@ const TopNav = () => {
 };
 
 export default TopNav;
+
+const SearchField = () => {
+    const [query, setQuery] = useState("");
+    const router = useRouter();
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setQuery(event.target.value);
+    };
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (query) {
+            router.push(`/search?query=${encodeURIComponent(query)}`);
+        }
+    };
+    return (
+        <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", alignItems: "center" }}>
+            <TextField
+                label="Search (enter to submit)"
+                variant="outlined"
+                size="small"
+                value={query}
+                onChange={handleInputChange}
+                sx={{ marginRight: 1 }}
+            />
+        </Box>
+    );
+};

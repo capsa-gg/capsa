@@ -27,6 +27,7 @@ const Home = () => {
         if (isLoading) {
             return <Spinner />;
         }
+
         if (!data) {
             return (
                 <Alert severity="warning">
