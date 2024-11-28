@@ -19,6 +19,24 @@ ingress:
         path:
           prefix: /
 region: ams
+jobs:
+  - image:
+      registry: capsa-gg
+      registry_type: GHCR
+      repository: capsa-server
+      tag: latest # REPLACEME with the latest tag
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    kind: PRE_DEPLOY
+    name: db-migrations
+    run_command: ./capsa db migrate -d up
+    envs:
+      - key: API_PORT
+        scope: RUN_AND_BUILD_TIME
+        value: "5000"
+      - key: API_HOSTNAME
+        scope: RUN_AND_BUILD_TIME
+        value: localhost
 services:
   - name: api
     instance_count: 1
@@ -32,6 +50,13 @@ services:
       tag: latest # REPLACEME with the latest tag
     health_check:
       http_path: /v1/status
+    envs:
+      - key: API_PORT
+        scope: RUN_AND_BUILD_TIME
+        value: ${_self.PRIVATE_PORT}
+      - key: API_HOSTNAME
+        scope: RUN_AND_BUILD_TIME
+        value: ${_self.PUBLIC_URL}
     alerts:
       - operator: GREATER_THAN
         rule: CPU_UTILIZATION
@@ -45,71 +70,65 @@ services:
         rule: RESTART_COUNT
         value: 2
         window: FIVE_MINUTES
-    envs:
-      - key: DEVELOPMENT
-        scope: RUN_TIME
-        value: "false"
-      - key: API_PORT
-        scope: RUN_AND_BUILD_TIME
-        value: ${_self.PRIVATE_PORT}
-      - key: JWK_PRIVATE_KEY_BASE64
-        scope: RUN_AND_BUILD_TIME
-        value: |-
-          <REPLACEME>
-      - key: API_PROTOCOL
-        scope: RUN_AND_BUILD_TIME
-        value: https
-      - key: API_HOSTNAME
-        scope: RUN_AND_BUILD_TIME
-        value: ${_self.PUBLIC_URL}
-      - key: WEBAPP_HOSTNAME
-        scope: RUN_AND_BUILD_TIME
-        value: web.demo.capsa.gg # REPLACEME
-      - key: DB_HOST
-        scope: RUN_AND_BUILD_TIME
-        value: ${psql.HOSTNAME}
-      - key: DB_USER
-        scope: RUN_AND_BUILD_TIME
-        value: ${psql.USERNAME}
-      - key: DB_PASS
-        scope: RUN_AND_BUILD_TIME
-        value: ${psql.PASSWORD}
-      - key: DB_PORT
-        scope: RUN_AND_BUILD_TIME
-        value: ${psql.PORT}
-      - key: DB_NAME
-        scope: RUN_AND_BUILD_TIME
-        value: ${psql.DATABASE}
-      - key: DB_SSL
-        scope: RUN_AND_BUILD_TIME
-        value: "true"
-      - key: EMAIL_SENDER_NAME
-        scope: RUN_AND_BUILD_TIME
-        value: Capsa
-      - key: EMAIL_SENDER_EMAIL
-        scope: RUN_AND_BUILD_TIME
-        value: <REPLACEME>
-      - key: BREVO_API_KEY
-        scope: RUN_AND_BUILD_TIME
-        value: <REPLACEME>
-      - key: BLOBSTORAGE_ENDPOINT
-        scope: RUN_AND_BUILD_TIME
-        value: https://ams3.digitaloceanspaces.com # REPLACEME
-      - key: BLOBSTORAGE_REGION
-        scope: RUN_AND_BUILD_TIME
-        value: ams3 # REPLACEME
-      - key: BLOBSTORAGE_KEY
-        scope: RUN_AND_BUILD_TIME
-        value: <REPLACEME>
-      - key: BLOBSTORAGE_SECRET
-        scope: RUN_AND_BUILD_TIME
-        value: <REPLACEME>
-      - key: BLOBSTORAGE_BUCKET
-        scope: RUN_AND_BUILD_TIME
-        value: <REPLACEME>
-      - key: LOG_RETENTION_DAYS
-        scope: RUN_AND_BUILD_TIME
-        value: "30"
-      - key: LOG_MAX_DURATION_HOURS
-        scope: RUN_AND_BUILD_TIME
-        value: "48"
+envs:
+  - key: DEVELOPMENT
+    scope: RUN_TIME
+    value: "false"
+  - key: JWK_PRIVATE_KEY_BASE64
+    scope: RUN_AND_BUILD_TIME
+    value: |-
+      <REPLACEME>
+  - key: API_PROTOCOL
+    scope: RUN_AND_BUILD_TIME
+    value: https
+  - key: WEBAPP_HOSTNAME
+    scope: RUN_AND_BUILD_TIME
+    value: web.demo.capsa.gg # REPLACEME
+  - key: DB_HOST
+    scope: RUN_AND_BUILD_TIME
+    value: ${psql.HOSTNAME}
+  - key: DB_USER
+    scope: RUN_AND_BUILD_TIME
+    value: ${psql.USERNAME}
+  - key: DB_PASS
+    scope: RUN_AND_BUILD_TIME
+    value: ${psql.PASSWORD}
+  - key: DB_PORT
+    scope: RUN_AND_BUILD_TIME
+    value: ${psql.PORT}
+  - key: DB_NAME
+    scope: RUN_AND_BUILD_TIME
+    value: ${psql.DATABASE}
+  - key: DB_SSL
+    scope: RUN_AND_BUILD_TIME
+    value: "true"
+  - key: EMAIL_SENDER_NAME
+    scope: RUN_AND_BUILD_TIME
+    value: Capsa
+  - key: EMAIL_SENDER_EMAIL
+    scope: RUN_AND_BUILD_TIME
+    value: <REPLACEME>
+  - key: BREVO_API_KEY
+    scope: RUN_AND_BUILD_TIME
+    value: <REPLACEME>
+  - key: BLOBSTORAGE_ENDPOINT
+    scope: RUN_AND_BUILD_TIME
+    value: https://ams3.digitaloceanspaces.com # REPLACEME
+  - key: BLOBSTORAGE_REGION
+    scope: RUN_AND_BUILD_TIME
+    value: ams3 # REPLACEME
+  - key: BLOBSTORAGE_KEY
+    scope: RUN_AND_BUILD_TIME
+    value: <REPLACEME>
+  - key: BLOBSTORAGE_SECRET
+    scope: RUN_AND_BUILD_TIME
+    value: <REPLACEME>
+  - key: BLOBSTORAGE_BUCKET
+    scope: RUN_AND_BUILD_TIME
+    value: <REPLACEME>
+  - key: LOG_RETENTION_DAYS
+    scope: RUN_AND_BUILD_TIME
+    value: "30"
+  - key: LOG_MAX_DURATION_HOURS
+    scope: RUN_AND_BUILD_TIME
+    value: "48"
