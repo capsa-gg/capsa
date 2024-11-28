@@ -14,7 +14,6 @@ import { grey } from "@mui/material/colors";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-// TODO: Add styling
 const SideNav = () => {
     const appContext = useAppContext();
     const {
@@ -74,8 +73,15 @@ const SideNav = () => {
                         sx={{
                             display: "flex",
                             justifyContent: "center",
-                            marginTop: "6px",
+                            marginTop: "-8px", // Remove top margin from List
                             marginBottom: "24px",
+                            padding: "16px",
+                            width: "100%",
+                            backgroundColor: "rgb(72,55,0, 0.06)",
+                            // For dark mode
+                            ...(darkMode && {
+                                backgroundColor: "rgba(255,222,190,0.03)",
+                            }),
                         }}
                     >
                         {darkMode ? <LogoDarkMode /> : <LogoLightMode />}

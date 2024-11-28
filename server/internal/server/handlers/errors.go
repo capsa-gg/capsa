@@ -55,7 +55,9 @@ func (h Handlers) sendDomainError(c *gin.Context, domainError domainerror.Error)
 				c.Header("X-Capsa-Error", string(details))
 			}
 		}
+
 		c.Status(http.StatusNotModified)
+
 		return
 	case domainerror.InvalidArgument:
 		c.JSON(http.StatusBadRequest, res)

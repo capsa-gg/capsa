@@ -9,13 +9,19 @@ import { Admin } from "@/api/admin";
 import type { ApiResponse } from "@/api/apibase";
 import { Environments } from "@/api/environments";
 import { Logs } from "@/api/logs";
-import { MiscApiCalls } from "@/api/misc";
+import { Search } from "@/api/search";
 import { UserAuth } from "@/api/userauth";
 import type { ListAllEnvironmentsResponse } from "@/types/api/environments";
 import { ApplicationError } from "@/types/api/error";
 import type { LogMetadata, LogOverviewResponse } from "@/types/api/logs";
 import type { SearchResults } from "@/types/api/search";
-import type { ListAllTitlesResponse } from "@/types/api/titleenvironment";
+import type {
+    AddEnvironmentRequest,
+    AddTitleRequest,
+    AddTitleResponse,
+    ListAllTitlesResponse,
+} from "@/types/api/titleenvironment";
+import type { ListAllUsersResponse } from "@/types/api/users";
 import useSWR, { type SWRResponse } from "swr";
 import useSWRMutation, { type SWRMutationResponse } from "swr/mutation";
 
@@ -79,12 +85,16 @@ export const useUserPasswordResetRequest = apiCallToSwrMutation("passwordforgot"
 export const useUserPasswordResetComplete = apiCallToSwrMutation("passwordreset", UserAuth.PasswordResetComplete);
 
 // Search
-export const useSearch = apiCallToSwrWithIdArg<SearchResults>("search", MiscApiCalls.Search);
+export const useSearch = apiCallToSwrWithIdArg<SearchResults>("search", Search.Search);
 
 // Admin
 export const useGetAllTitles = apiCallToSwrPlain<ListAllTitlesResponse>("listalltitles", Admin.ListAllTitles);
-export const useAddTitle = apiCallToSwrMutation("addtitle", Admin.AddTitle);
-export const useAddEnvironment = apiCallToSwrMutation("addenvironment", Admin.AddEnvironment);
+export const useAddTitle = apiCallToSwrMutation<AddTitleRequest, AddTitleResponse>("addtitle", Admin.AddTitle);
+export const useAddEnvironment = apiCallToSwrMutation<AddEnvironmentRequest, ListAllEnvironmentsResponse>(
+    "addenvironment",
+    Admin.AddEnvironment,
+);
+export const useGetAllUsers = apiCallToSwrPlain<ListAllUsersResponse>("admingetallusers", Admin.GetAllUsers);
 
 // Environments
 export const useGetAllEnvironments = apiCallToSwrPlain<ListAllEnvironmentsResponse>(
