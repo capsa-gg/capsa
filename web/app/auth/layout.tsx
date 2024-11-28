@@ -31,7 +31,6 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => (
                 elevation={3}
                 sx={{
                     padding: 4,
-                    bgcolor: "white",
                     borderRadius: 2,
                     width: "100%",
                 }}

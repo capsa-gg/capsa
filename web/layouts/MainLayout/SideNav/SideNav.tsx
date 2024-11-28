@@ -57,6 +57,8 @@ const SideNav = () => {
         <Image src={require("../../../public/logo-without-by-darkmode.png")} alt="Capsa Logo" width={100} height={40} />
     );
 
+    const WelcomeText = () => (user ? <>Welcome, {user?.firstName}</> : <>Not logged in</>);
+
     return (
         <Drawer variant="permanent" open={true}>
             <Box
@@ -93,7 +95,7 @@ const SideNav = () => {
                     <SideNavListItemsAdmin />
                     <Divider sx={{ mt: 1, mb: 3 }} />
                     <Tooltip
-                        title={`User ID: ${user?.userUUID ?? "Loading..."}`}
+                        title={`User ID: ${user?.userUUID ?? "loading..."} | Role: ${user?.role ?? "loading..."}`}
                         placement="top"
                         suppressHydrationWarning
                     >
@@ -105,7 +107,7 @@ const SideNav = () => {
                             marginBottom={1}
                             sx={{ width: "100%" }}
                         >
-                            Welcome {user?.firstName} ({user?.role})
+                            <WelcomeText />
                         </Typography>
                     </Tooltip>
                     <Tooltip
