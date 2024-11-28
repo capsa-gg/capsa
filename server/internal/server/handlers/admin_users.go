@@ -111,6 +111,7 @@ func (h Handlers) CreateUser(c *gin.Context) {
 // @Description	Allows admins to deactivate a user
 // @Security	JwtAdmin
 // @Success		201		{object}	bodies.UserInfoResponse
+// @Failure 	304													"User already deactivated"
 // @Failure     400		{object}	bodies.ErrorResponse
 // @Failure     404		{object}	bodies.ErrorResponse
 // @Failure     500		{object}	bodies.ErrorResponse
@@ -164,6 +165,7 @@ func (h Handlers) DeactivateUser(c *gin.Context) { //nolint:dupl // Unique enoug
 // @Description	Allows admins to reactivate a deactivated user
 // @Security	JwtAdmin
 // @Success		201		{object}	bodies.UserInfoResponse
+// @Failure 	304													"User already activated"
 // @Failure     400		{object}	bodies.ErrorResponse
 // @Failure     404		{object}	bodies.ErrorResponse
 // @Failure     500		{object}	bodies.ErrorResponse

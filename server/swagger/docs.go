@@ -501,6 +501,15 @@ const docTemplate = `{
                             }
                         }
                     },
+                    "304": {
+                        "description": "Returned when a user is already deactivated",
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -559,6 +568,15 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/bodies.UserInfoResponse"
                         },
+                        "headers": {
+                            "X-Capsa-Server-Version": {
+                                "type": "string",
+                                "description": "Current Capsa Server version"
+                            }
+                        }
+                    },
+                    "304": {
+                        "description": "Not Modified",
                         "headers": {
                             "X-Capsa-Server-Version": {
                                 "type": "string",

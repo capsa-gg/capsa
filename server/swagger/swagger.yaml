@@ -589,6 +589,12 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/bodies.UserInfoResponse'
+        "304":
+          description: Not Modified
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
         "400":
           description: Bad Request
           headers:
@@ -631,6 +637,12 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/bodies.UserInfoResponse'
+        "304":
+          description: Returned when a user is already deactivated
+          headers:
+            X-Capsa-Server-Version:
+              description: Current Capsa Server version
+              type: string
         "400":
           description: Bad Request
           headers:
