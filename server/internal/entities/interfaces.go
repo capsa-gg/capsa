@@ -12,6 +12,8 @@ type EmailSender interface {
 type BlobStorage interface {
 	// DownloadFile retrieves the file contents for a given path.
 	DownloadFile(path string) ([]byte, error)
-	// UploadFile stores the contents on a given path
+	// UploadFile stores the contents on a given path.
 	UploadFile(path string, contents []byte) error
+	// DeleteFile deletes a file from blob storage.
+	DeleteFile(path string) error
 }

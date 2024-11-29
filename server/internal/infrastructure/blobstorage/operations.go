@@ -53,3 +53,21 @@ func (bs BlobStorage) UploadFile(path string, contents []byte) error {
 
 	return nil
 }
+
+// DeleteFile deletes a file from blob storage.
+func (bs BlobStorage) DeleteFile(path string) error {
+	ctx := context.TODO()
+	log := bs.logger.Named("DeleteFile").With("path", path)
+
+	err := bs.storageClient.RemoveObject(ctx, bs.bucket, path, minio.RemoveObjectOptions{
+		ForceDelete: true,
+	})
+
+	if err != nil {
+		return fmt.Errorf("error deleting object: %w", err)
+	}
+
+	log.Info("file deleted")
+
+	return nil
+}
