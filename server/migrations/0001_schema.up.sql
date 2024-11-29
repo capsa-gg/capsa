@@ -58,7 +58,7 @@ CREATE TABLE logs (
 -- Logs chunks table
 CREATE TABLE logs_chunks (
     chunk SERIAL PRIMARY KEY,
-    log bigint NOT NULL REFERENCES logs(id),
+    log bigint NOT NULL REFERENCES logs(id) ON DELETE CASCADE,
     created_on timestamp NOT NULL DEFAULT now(),
     blob_path varchar UNIQUE NOT NULL,
     chunk_start timestamp,
@@ -73,7 +73,7 @@ CREATE TABLE logs_chunks (
 
 -- Logs metadata table
 CREATE TABLE logs_metadata (
-    log bigint NOT NULL REFERENCES logs(id),
+    log bigint NOT NULL REFERENCES logs(id) ON DELETE CASCADE,
     saved_on timestamp NOT NULL DEFAULT now(),
     metadata jsonb NOT NULL,
 
@@ -82,8 +82,8 @@ CREATE TABLE logs_metadata (
 
 -- Log links table
 CREATE TABLE logs_links (
-    source bigint NOT NULL REFERENCES logs(id),
-    link bigint NOT NULL REFERENCES logs(id),
+    source bigint NOT NULL REFERENCES logs(id) ON DELETE CASCADE,
+    link bigint NOT NULL REFERENCES logs(id) ON DELETE CASCADE,
     created_on timestamp NOT NULL DEFAULT now(),
     description varchar NOT NULL,
 

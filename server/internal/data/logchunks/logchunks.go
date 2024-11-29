@@ -78,3 +78,8 @@ func (ls *LogChunks) GetChunk(chunkPath string) ([]byte, error) {
 
 	return chunk, nil
 }
+
+// DeleteChunk deletes a chunk with a given path.
+func (ls *LogChunks) DeleteChunk(chunkPath string) error {
+	return ls.blobStorage.DeleteFile(chunkPath)
+}

@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/capsa-gg/capsa/server/internal/infrastructure/recurringjobs"
 	"github.com/capsa-gg/capsa/server/internal/server"
 )
 
@@ -18,6 +19,15 @@ var serverStartCmd = &cobra.Command{
 		s := getAndValidateServicesInteractor()
 		log := getCmdLogger(s.Config, "server")
 
+		log.Info("initializing recurring job instance")
+
+		jobrunner, err := recurringjobs.New(s.Config, s)
+		if err != nil {
+			log.Fatalf("error initializing recurring jobs: %s", err)
+		}
+
+		jobrunner.Start()
+
 		log.Info("initializing server instance")
 
 		svr, err := server.New(s)
@@ -28,6 +38,8 @@ var serverStartCmd = &cobra.Command{
 		if err := svr.Start(); err != nil {
 			log.Fatalf("server errored: %s", err)
 		}
+
+		jobrunner.Stop()
 	},
 }
 
