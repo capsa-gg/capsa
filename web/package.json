@@ -37,7 +37,7 @@
     "@mui/material": "^6.1.9",
     "@mui/material-nextjs": "^6.1.9",
     "@mui/system": "^6.1.9",
-    "@mui/x-data-grid": "^7.22.3",
+    "@mui/x-data-grid": "^7.23.0",
     "@types/jest": "^29.5.14",
     "jose": "^5.9.6",
     "js-cookie": "^3.0.5",
