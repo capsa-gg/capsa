@@ -13,7 +13,7 @@ const ErrorFallback: React.FC<FallbackProps> = ({ error, resetErrorBoundary }) =
             elevation={3}
             sx={{
                 p: 3,
-                maxWidth: 600,
+                maxWidth: 960,
                 mx: "auto",
                 mt: 4,
             }}

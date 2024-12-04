@@ -1,5 +1,8 @@
+"use client";
+
 import { useAddEnvironment, useGetAllEnvironments, useGetAllTitles } from "@/api/hooks";
 import Spinner from "@/components/Spinner";
+import { useNotificationsContext } from "@/context/NotificationsContext/NotificationsContext";
 import { yupTitleEnvValidation } from "@/types/api/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Alert, AlertTitle, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
@@ -19,6 +22,7 @@ const validationSchemaAddEnvironment = yup.object({
 });
 
 export const AddEnvironmentForm: React.FC<{ addedTitle: string }> = ({ addedTitle }) => {
+    const { addNotification } = useNotificationsContext();
     const { mutate } = useGetAllEnvironments();
     const { data, isLoading, error } = useGetAllTitles();
     const { trigger, isMutating } = useAddEnvironment();
@@ -43,9 +47,16 @@ export const AddEnvironmentForm: React.FC<{ addedTitle: string }> = ({ addedTitl
     }, [addedTitle, setValue]);
 
     const onSubmit: SubmitHandler<AddEnvironmentForm> = formData => {
+        const env = formData.environment; // resets, so copy value here
         trigger(formData).then(() => {
             resetField("environment");
-            mutate();
+            mutate().then(() =>
+                addNotification({
+                    severity: "success",
+                    title: "Environment added",
+                    message: `The environment ${env} for title ${formData.title} has been added successfully`,
+                }),
+            );
         });
     };
 

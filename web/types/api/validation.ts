@@ -14,7 +14,6 @@ export const yupTitleEnvValidation = {
         .required("Title is required"),
     environment: yup
         .string()
-        .oneOf(["Admin", "User"])
         .min(3, "Minimum of 3 characters")
         .matches(/^[a-zA-Z0-9]+$/, "Only alphanumeric characters are allowed")
         .required("Environment is required"),

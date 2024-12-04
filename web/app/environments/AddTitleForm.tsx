@@ -1,4 +1,7 @@
+"use client";
+
 import { useAddTitle, useGetAllTitles } from "@/api/hooks";
+import { useNotificationsContext } from "@/context/NotificationsContext/NotificationsContext";
 import { yupTitleEnvValidation } from "@/types/api/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, TextField } from "@mui/material";
@@ -16,6 +19,7 @@ const validationSchemaAddTitle = yup.object({
 });
 
 export const AddTitle: React.FC<AddTitleProps> = ({ onTitleAdded }) => {
+    const { addNotification } = useNotificationsContext();
     const { trigger, isMutating } = useAddTitle();
     const { mutate } = useGetAllTitles();
 
@@ -35,6 +39,11 @@ export const AddTitle: React.FC<AddTitleProps> = ({ onTitleAdded }) => {
         trigger(formData)
             .then(() => {
                 resetField("title");
+                addNotification({
+                    severity: "success",
+                    title: "Title added",
+                    message: `The title ${formData.title} has been added successfully`,
+                });
             })
             .finally(() => mutate().then(() => onTitleAdded(title)));
     };

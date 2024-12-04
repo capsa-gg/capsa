@@ -1,12 +1,15 @@
 "use client";
 
-import { useErrors } from "@/context/ErrorContext";
+import { useNotificationsContext } from "@/context/NotificationsContext/NotificationsContext";
+import type { ApplicationError } from "@/types/api/error";
 import type React from "react";
 import type { ReactNode } from "react";
 import { SWRConfig } from "swr";
 
 export const SWRProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const errors = useErrors();
+    const notifications = useNotificationsContext();
 
-    return <SWRConfig value={{ onError: error => errors.addError(error) }}>{children}</SWRConfig>;
+    const onError = (error: ApplicationError) => notifications.addError(error);
+
+    return <SWRConfig value={{ onError }}>{children}</SWRConfig>;
 };
