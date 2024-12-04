@@ -19,6 +19,8 @@ self.addEventListener("message", async (event: MessageEvent<WorkerCommandMessage
                 abortController.abort();
             }
             break;
+        default:
+            break;
     }
 });
 

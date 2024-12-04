@@ -15,7 +15,7 @@ const Errors = () => {
             {errors
                 .filter(e => !!e)
                 .map(e => (
-                    <Alert key={e?.name} severity={"error"}>
+                    <Alert key={e?.name} severity="error">
                         <AlertTitle>{e.name}</AlertTitle>
                         {e.message}
                     </Alert>

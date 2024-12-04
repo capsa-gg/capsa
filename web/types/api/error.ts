@@ -8,6 +8,7 @@ export const ErrorResponseSchema = z.object({
     details: z.string().optional(),
 
     // Only used in development
+    // biome-ignore lint/style/useNamingConvention: for dev only, this is OK
     raw_error: z.string().optional(),
 });
 export type ErrorResponse = z.infer<typeof ErrorResponseSchema>;

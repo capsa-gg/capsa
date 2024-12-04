@@ -35,7 +35,7 @@ export default class JwtValidator {
         return jwk;
     }
 
-    public static async validateJwt(jwt: string): Promise<boolean> {
+    public static async ValidateJwt(jwt: string): Promise<boolean> {
         const jwk = await JwtValidator.getJwk();
 
         try {

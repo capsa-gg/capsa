@@ -7,7 +7,7 @@ import { type NextRequest, NextResponse } from "next/server";
 // It simply serves as a way to make sure users don't get 4xx errors.
 export async function middleware(req: NextRequest) {
     const token = await getJwtCookieFromRequest(req);
-    const isAuthenticated = token ? await JwtValidator.validateJwt(token) : false;
+    const isAuthenticated = token ? await JwtValidator.ValidateJwt(token) : false;
     const isAuthRoute = req.nextUrl.pathname.startsWith("/auth");
 
     // Logged-in users accessing login routes should be redirected to the homepage
@@ -19,9 +19,11 @@ export async function middleware(req: NextRequest) {
     if (!isAuthenticated && !isAuthRoute) {
         await deleteJwtCookie(req);
 
-        const url = new URL("/auth/login", req.url);
-        url.searchParams.set("redirect", req.url);
-        return NextResponse.redirect(url);
+        const { pathname, search, origin, basePath } = req.nextUrl;
+        const signInUrl = new URL(`${basePath}/auth/login`, origin);
+        signInUrl.searchParams.set("redirect", `${basePath}${pathname}${search}`);
+
+        return NextResponse.redirect(signInUrl);
     }
 
     return NextResponse.next();

@@ -93,7 +93,7 @@ const NewUserDialog: React.FC<FormDialogProps> = ({ open, onClose }) => {
                         <Controller
                             name="role"
                             control={control}
-                            defaultValue={"User"}
+                            defaultValue="User"
                             render={({ field }) => (
                                 <Select {...field} label="Role">
                                     <MenuItem value="User">User</MenuItem>

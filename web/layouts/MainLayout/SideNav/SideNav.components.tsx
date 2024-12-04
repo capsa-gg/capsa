@@ -35,7 +35,7 @@ export const BottomIcons = () => {
                 justifyContent: "center",
             }}
         >
-            <Tooltip title={"Switch dark/light mode"} placement="top">
+            <Tooltip title="Switch dark/light mode" placement="top">
                 <IconButton
                     onClick={() => setDarkMode(!darkMode)}
                     color="primary"
@@ -45,7 +45,7 @@ export const BottomIcons = () => {
                     {darkMode ? <DarkModeOutlinedIcon /> : <DarkModeIcon />}
                 </IconButton>
             </Tooltip>
-            <Tooltip title={"Open Capsa on GitHub"} placement="top">
+            <Tooltip title="Open Capsa on GitHub" placement="top">
                 <IconButton
                     color="primary"
                     size="small"
@@ -57,7 +57,7 @@ export const BottomIcons = () => {
                     <GitHubIcon fontSize="small" />
                 </IconButton>
             </Tooltip>
-            <Tooltip title={"Open Capsa documentation"} placement="top">
+            <Tooltip title="Open Capsa documentation" placement="top">
                 <IconButton
                     color="primary"
                     size="small"
