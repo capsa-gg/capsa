@@ -2,16 +2,17 @@
 
 import { Admin } from "@/api/admin";
 import { useGetAllUsers } from "@/api/hooks";
+import { useNotificationsContext } from "@/context/NotificationsContext/NotificationsContext";
 import { ApplicationError } from "@/types/api/error";
 import type { CreateUserRequest, SingleUserResponse, UpdateUserRequest } from "@/types/api/users";
 import type React from "react";
-import { useEffect } from "react";
 import { useState } from "react";
 import { createContext, useContext } from "react";
 
 const AdminUsersContext = createContext<UseAdminUsers | undefined>(undefined);
 
 const useAdminUsersHook = (): UseAdminUsers => {
+    const { addNotification } = useNotificationsContext();
     const [isUpdating, setIsUpdating] = useState(false);
     const [updateError, setUpdateError] = useState<ApplicationError | undefined>(undefined);
     const {
@@ -21,10 +22,6 @@ const useAdminUsersHook = (): UseAdminUsers => {
         isLoading: allUsersIsLoading,
     } = useGetAllUsers();
 
-    useEffect(() => {
-        console.warn(allUsers);
-    }, [allUsers]);
-
     const addUser = async (newUser: CreateUserRequest, onSuccess: () => void) => {
         setUpdateError(undefined);
         setIsUpdating(true);
@@ -33,6 +30,11 @@ const useAdminUsersHook = (): UseAdminUsers => {
             setUpdateError(new ApplicationError(err));
         } else {
             onSuccess();
+            addNotification({
+                severity: "success",
+                title: "User added",
+                message: `The user for ${newUser.firstName} ${newUser.lastName} with role ${newUser.role} has been added successfully`,
+            });
         }
         await reloadUsers();
         setIsUpdating(false);
@@ -44,6 +46,12 @@ const useAdminUsersHook = (): UseAdminUsers => {
         const [res, err] = await Admin.UpdateUser(userUuid, updatedUser);
         if (err) {
             setUpdateError(new ApplicationError(err));
+        } else {
+            addNotification({
+                severity: "success",
+                title: "User updated",
+                message: `The user ${userUuid} has been updated successfully`,
+            });
         }
         await reloadUsers();
         setIsUpdating(false);
@@ -55,6 +63,12 @@ const useAdminUsersHook = (): UseAdminUsers => {
         const [res, err] = await Admin.DeactivateUser(userUuid);
         if (err) {
             setUpdateError(new ApplicationError(err));
+        } else {
+            addNotification({
+                severity: "success",
+                title: "User deactivated",
+                message: `The user ${userUuid} has been deactivated`,
+            });
         }
         await reloadUsers();
         setIsUpdating(false);
@@ -66,6 +80,12 @@ const useAdminUsersHook = (): UseAdminUsers => {
         const [res, err] = await Admin.ReactivateUser(userUuid);
         if (err) {
             setUpdateError(new ApplicationError(err));
+        } else {
+            addNotification({
+                severity: "success",
+                title: "User reactivated",
+                message: `The user ${userUuid} has been reactivated`,
+            });
         }
         await reloadUsers();
         setIsUpdating(false);

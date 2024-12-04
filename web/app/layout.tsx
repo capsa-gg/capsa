@@ -1,6 +1,6 @@
 import { SWRProvider } from "@/app/swr-provider";
-import ErrorSnackbar from "@/containers/ErrorSnackbar/ErrorSnackbar";
-import { ErrorProvider } from "@/context/ErrorContext";
+import ErrorSnackbar from "@/containers/NotificationSnackbar/NotificationSnackbar";
+import { NotificationsContextProvider } from "@/context/NotificationsContext/NotificationsContext";
 import MainLayout from "@/layouts/MainLayout/MainLayout";
 import ScreenTooSmall from "@/layouts/ScreenTooSmall/ScreenTooSmall";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
@@ -23,10 +23,10 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
     <html lang="en">
         <body>
             <AppRouterCacheProvider>
-                <AppContextProvider>
-                    <UserProvider>
-                        <ThemeProviderWithMode>
-                            <ErrorProvider>
+                <NotificationsContextProvider>
+                    <AppContextProvider>
+                        <UserProvider>
+                            <ThemeProviderWithMode>
                                 <SWRProvider>
                                     <CssBaseline />
                                     <div className="screen-too-small">
@@ -37,10 +37,10 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
                                         <MainLayout>{children}</MainLayout>
                                     </div>
                                 </SWRProvider>
-                            </ErrorProvider>
-                        </ThemeProviderWithMode>
-                    </UserProvider>
-                </AppContextProvider>
+                            </ThemeProviderWithMode>
+                        </UserProvider>
+                    </AppContextProvider>
+                </NotificationsContextProvider>
             </AppRouterCacheProvider>
         </body>
     </html>
