@@ -19,9 +19,11 @@ export async function middleware(req: NextRequest) {
     if (!isAuthenticated && !isAuthRoute) {
         await deleteJwtCookie(req);
 
-        const url = new URL("/auth/login", req.url);
-        url.searchParams.set("redirect", req.url);
-        return NextResponse.redirect(url);
+        const { pathname, search, origin, basePath } = req.nextUrl;
+        const signInUrl = new URL(`${basePath}/auth/login`, origin);
+        signInUrl.searchParams.set("redirect", `${basePath}${pathname}${search}`);
+
+        return NextResponse.redirect(signInUrl);
     }
 
     return NextResponse.next();
