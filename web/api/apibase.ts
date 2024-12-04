@@ -11,7 +11,7 @@ import type { ZodSchema } from "zod";
 class BaseUrl {
     private static _baseUrl?: string;
 
-    public static async getBaseUrl(): Promise<string> {
+    public static async GetBaseUrl(): Promise<string> {
         if (BaseUrl._baseUrl) return BaseUrl._baseUrl;
 
         const env = await getEnv();
@@ -25,7 +25,7 @@ class BaseUrl {
 }
 
 export const getRequestUrl = async (path: string) => {
-    const baseUrl = await BaseUrl.getBaseUrl();
+    const baseUrl = await BaseUrl.GetBaseUrl();
     return `${baseUrl}/v1${path}`;
 };
 

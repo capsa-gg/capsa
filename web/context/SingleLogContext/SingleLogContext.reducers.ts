@@ -58,6 +58,8 @@ export const filterReducer = (state: FilterState, action: FilterAction) => {
                 excludedCategories: [],
             };
         }
+        default:
+            console.error("[SingleLogContext.reducers]: unknown action", action);
     }
 
     // In case an action is not supported, return the state to prevent runtime errors

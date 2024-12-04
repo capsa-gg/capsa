@@ -7,7 +7,7 @@ import { type NextRequest, NextResponse } from "next/server";
 // It simply serves as a way to make sure users don't get 4xx errors.
 export async function middleware(req: NextRequest) {
     const token = await getJwtCookieFromRequest(req);
-    const isAuthenticated = token ? await JwtValidator.validateJwt(token) : false;
+    const isAuthenticated = token ? await JwtValidator.ValidateJwt(token) : false;
     const isAuthRoute = req.nextUrl.pathname.startsWith("/auth");
 
     // Logged-in users accessing login routes should be redirected to the homepage

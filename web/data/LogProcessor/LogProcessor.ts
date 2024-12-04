@@ -51,6 +51,8 @@ export default class LogProcessor {
                         this.doneCallback();
                     }
                     break;
+                default:
+                    console.error("[LogProcessor]: Unsupported action", type);
             }
         });
     }
