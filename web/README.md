@@ -49,3 +49,9 @@ For input should be validated and show meaningful errors. An example of this can
 The `NEXT_PUBLIC_` environment variables should be avoided, as get inlined during the build process. That means that they should only be used for variables that don't change with different deployments, making them just an inferior non-typesafe alternative to a constant in the code.
 
 Use the `data/env.ts` file instead for server environment variable access in the browser. Be cautious with this however, everything in here will be available for clients!
+
+## Visualizing rerenders
+
+To visualize rerenders, you can use [React Scan](https://github.com/aidenybai/react-scan).
+
+You can run `npx react-scan localhost:3000` while the application is running to start React Scan.

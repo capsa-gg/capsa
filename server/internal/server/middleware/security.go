@@ -14,7 +14,7 @@ func SecurityHeadersMiddleware() gin.HandlerFunc {
 		c.Header("Strict-Transport-Security", fmt.Sprintf("max-age=%d; includeSubDomains; preload", hstsSeconds))
 		c.Header("Content-Security-Policy", "default-src 'self'; connect-src *; font-src *; script-src-elem * 'unsafe-inline'; img-src * data:; style-src * 'unsafe-inline';")
 		c.Header("Referrer-Policy", "strict-origin")
-		c.Header("Permissions-Policy", "camera=(); battery=(); geolocation=(); microphone=()")
+		c.Header("Permissions-Policy", "camera=(), geolocation=(), microphone=()")
 
 		c.Header("X-Content-Type-Options", "nosniff")
 		c.Header("X-XSS-Protection", "1; mode=block")
