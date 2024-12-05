@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 
+	"github.com/capsa-gg/capsa/server/constants"
 	"github.com/capsa-gg/capsa/server/internal/domain/logs"
 	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
@@ -15,8 +16,9 @@ import (
 // @Summary 	Log listing
 // @Tags        UserLogs
 // @Produce    	json
-// @Param		title	query	string 		false 		"Title for which to fetch logs, required if 'env' is set"
-// @Param		env		query	string 		false 		"Environment for which to fetch logs"
+// @Param		env		query	string 		false 		"Environment UUID key for which to fetch logs"
+// @Param		type	query	string 		false 		"Log type, can be Server or Client"
+// @Param		platform query	string 		false 		"Platform for which to fetch logs"
 // @Description	Allows users to fetch available logs from the database, limiting the results to 1000.
 // @Security	JwtUser
 // @Security	JwtAdmin
@@ -97,6 +99,20 @@ func extractLogFilterSettings(c *gin.Context) (logs.ListFilters, error) {
 		}
 
 		filters.Environment = &envUUID
+	}
+
+	if logType := c.Query("type"); logType != "" {
+		logTypeVal, err := constants.LogTypeFromString(logType)
+
+		if err != nil {
+			return filters, domainerror.New(domainerror.InvalidArgument, "log type cannot be parsed to LogType", err)
+		}
+
+		filters.LogType = &logTypeVal
+	}
+
+	if platform := c.Query("platform"); platform != "" {
+		filters.Platform = &platform
 	}
 
 	return filters, nil

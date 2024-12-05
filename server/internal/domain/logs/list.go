@@ -15,15 +15,26 @@ import (
 const getLogsLimitCount = 1000
 
 // GetLogs fetches the high-level overview of all available logs.
-func GetLogs(ctx context.Context, s *interactor.Services, filters ListFilters) ([]bodies.LogInfo, bool, error) {
+func GetLogs(ctx context.Context, s *interactor.Services, filters ListFilters) ([]bodies.LogInfo, bool, error) { //nolint:gocyclo // This is more readable than breaking it up
 	log := s.GetDomainLogger("logs", "GetLogs").With("filters", filters)
 
-	// Get from database
-	rows, err := s.Database.ListAvailableLogs(ctx, database.ListAvailableLogsParams{
+	params := database.ListAvailableLogsParams{
 		FilterByLogUuid:     nil,
 		FilterByEnvironment: filters.Environment,
+		FilterByLogtype:     database.NullLogClientType{Valid: false},
+		FilterByPlatform:    filters.Platform,
 		Fetchlimit:          getLogsLimitCount + 1, // Using +1 here to check for hasMore
-	})
+	}
+
+	if filters.LogType != nil {
+		params.FilterByLogtype = database.NullLogClientType{
+			LogClientType: database.LogClientType(*filters.LogType), // Safe conversion
+			Valid:         true,
+		}
+	}
+
+	// Get from database
+	rows, err := s.Database.ListAvailableLogs(ctx, params)
 	if err != nil {
 		return nil, false, domainerror.NewFromDatabaseError(err)
 	}

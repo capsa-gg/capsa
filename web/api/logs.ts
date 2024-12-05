@@ -10,8 +10,8 @@ import {
 
 // biome-ignore lint/complexity/noStaticOnlyClass: desired here
 export class Logs {
-    public static async ListLogs(env: string): Promise<ApiResponse<LogOverviewResponse>> {
-        const endpoint = `/user/logs?env=${encodeURIComponent(env)}`;
+    public static async ListLogs(query: string): Promise<ApiResponse<LogOverviewResponse>> {
+        const endpoint = `/user/logs?${query}`;
         return await call("GET", endpoint, LogOverviewResponseSchema, true);
     }
 

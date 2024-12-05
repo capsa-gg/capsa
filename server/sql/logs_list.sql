@@ -47,8 +47,10 @@ JOIN sev_counts sc ON sc.log = l.id
 JOIN chunk_data cd ON cd.log = l.id
 JOIN environments e on l.environment = e.id
 JOIN titles t on e.title = t.id
-WHERE ( l.log_uuid =    sqlc.narg(filter_by_log_uuid)          OR sqlc.narg(filter_by_log_uuid) IS NULL )     -- Optionally filter by Log UUID
-AND   ( e.key =         sqlc.narg(filter_by_environment)::uuid OR sqlc.narg(filter_by_environment) IS NULL )  -- Optionally filter by Environment
+WHERE ( l.log_uuid =  sqlc.narg(filter_by_log_uuid)          OR sqlc.narg(filter_by_log_uuid)    IS NULL )  -- Optionally filter by Log UUID
+AND   ( e.key =       sqlc.narg(filter_by_environment)::uuid OR sqlc.narg(filter_by_environment) IS NULL )  -- Optionally filter by Environment
+AND   ( l.platform =  sqlc.narg(filter_by_platform)::varchar OR sqlc.narg(filter_by_platform)    IS NULL )  -- Optionally filter by Platform
+AND   ( l.log_type =  sqlc.narg(filter_by_logtype)           OR sqlc.narg(filter_by_logtype)     IS NULL )  -- Optionally filter by LogType
 GROUP BY l.id, t.name, e.name, cd.line_count, cd.chunk_count, cd.earliest_start, cd.latest_end
 ORDER BY earliest DESC
 LIMIT @fetchlimit::int;

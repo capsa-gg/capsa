@@ -57,7 +57,7 @@ const apiCallToSwrPlain = <Res>(
     return () => useSWR(name, fetcher);
 };
 
-const apiCallToSwrWithSingleArg = <Res>(
+const apiCallToSwrWithStringArg = <Res>(
     baseName: string,
     apiCallFunc: (arg: string) => Promise<ApiResponse<Res>>,
 ): ((arg: string) => SWRResponse<Res, ApplicationError, null>) => {
@@ -85,7 +85,7 @@ export const useUserPasswordResetRequest = apiCallToSwrMutation("passwordforgot"
 export const useUserPasswordResetComplete = apiCallToSwrMutation("passwordreset", UserAuth.PasswordResetComplete);
 
 // Search
-export const useSearch = apiCallToSwrWithSingleArg<SearchResults>("search", Search.Search);
+export const useSearch = apiCallToSwrWithStringArg<SearchResults>("search", Search.Search);
 
 // Admin
 export const useGetAllTitles = apiCallToSwrPlain<ListAllTitlesResponse>("listalltitles", Admin.ListAllTitles);
@@ -103,8 +103,8 @@ export const useGetAllEnvironments = apiCallToSwrPlain<ListAllEnvironmentsRespon
 );
 
 // Logs
-export const getLogsOverview = apiCallToSwrWithSingleArg<LogOverviewResponse>("getlogsoverview", Logs.ListLogs);
-export const useGetSingleLogMetadata = apiCallToSwrWithSingleArg<LogMetadata>(
+export const getLogsOverview = apiCallToSwrWithStringArg<LogOverviewResponse>("getlogsoverview", Logs.ListLogs);
+export const useGetSingleLogMetadata = apiCallToSwrWithStringArg<LogMetadata>(
     "singlelogmetadata",
     Logs.GetSingleLogMetadata,
 );

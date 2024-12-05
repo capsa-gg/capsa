@@ -4,27 +4,14 @@ import { getLogsOverview, useGetAllEnvironments } from "@/api/hooks";
 import ColoredSeverities from "@/components/ColoredSeverities";
 import Spinner from "@/components/Spinner";
 import { useNotificationsContext } from "@/context/NotificationsContext/NotificationsContext";
-import type { EnvironmentResponseItem, ListAllEnvironmentsResponse } from "@/types/api/environments";
 import type { LogOverviewItem } from "@/types/api/logs";
 import { formatDate } from "@/util/formatDate";
-import {
-    Alert,
-    AlertTitle,
-    Box,
-    FormControl,
-    InputLabel,
-    Link,
-    MenuItem,
-    Select,
-    type SelectChangeEvent,
-    Stack,
-    Typography,
-} from "@mui/material";
+import { Alert, AlertTitle, Box, Stack, Typography } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
-import { useRouter, useSearchParams } from "next/navigation";
-import type React from "react";
+import { type ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useEffect, useState } from "react";
+import { EnvironmentSelector, LogLink, LogTypeSelector, PlatformInput } from "./components";
 
 const columns: GridColDef<LogOverviewItem>[] = [
     { field: "id", headerName: "ID", maxWidth: 300, flex: 4, renderCell: row => <LogLink id={row.row.id} /> },
@@ -69,6 +56,19 @@ const columns: GridColDef<LogOverviewItem>[] = [
     },
 ];
 
+const searchParamsToString = (searchParams: ReadonlyURLSearchParams): string => {
+    const paramsOut = new URLSearchParams();
+    console.warn(searchParams.toString());
+
+    searchParams.forEach((val, key) => {
+        if (val !== null && val !== "" && val !== "all") {
+            paramsOut.set(key, val);
+        }
+    });
+
+    return paramsOut.toString();
+};
+
 const LogsOverview = () => {
     const { addNotification } = useNotificationsContext();
     const searchParams = useSearchParams();
@@ -78,7 +78,7 @@ const LogsOverview = () => {
         data: logs,
         error: errorLogs,
         isLoading: isLoadingLogs,
-    } = getLogsOverview(searchParams.get("env") === "all" ? "" : (searchParams.get("env") ?? ""));
+    } = getLogsOverview(searchParamsToString(searchParams));
 
     useEffect(() => {
         if (!isLoadingLogs && logs?.hasMore && !hasNotified) {
@@ -131,7 +131,11 @@ const LogsOverview = () => {
         <Box mr="40px">
             <Stack direction="row" justifyContent="space-between" mb={6}>
                 <Typography variant="h4">Available logs</Typography>
-                <EnvironmentSelector envs={envs} />
+                <Stack direction="row" gap={2}>
+                    <PlatformInput />
+                    <LogTypeSelector />
+                    <EnvironmentSelector envs={envs} />
+                </Stack>
             </Stack>
             <LogsOverview />
         </Box>
@@ -145,46 +149,3 @@ const LogsOverviewPage = () => (
 );
 
 export default LogsOverviewPage;
-
-const LogLink: React.FC<{ id: string }> = ({ id }) => {
-    const router = useRouter();
-
-    return (
-        <Link sx={{ cursor: "pointer" }} onClick={() => router.push(`/logs/${id}`)}>
-            {id}
-        </Link>
-    );
-};
-
-const EnvironmentSelector: React.FC<{ envs?: ListAllEnvironmentsResponse }> = ({ envs }) => {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const currentEnv = searchParams.get("env") || "all";
-
-    const handleChange = (event: SelectChangeEvent) => {
-        const newEnv = event.target.value;
-        const params = new URLSearchParams(searchParams);
-        params.set("env", newEnv);
-        router.push(`/logs?${params.toString()}`);
-    };
-
-    if (!envs) return null;
-
-    return (
-        <FormControl sx={{ minWidth: 200 }}>
-            <InputLabel>Environment</InputLabel>
-            <Select value={currentEnv} label="Environment" onChange={handleChange}>
-                <MenuItem value="all">All</MenuItem>
-                {envs
-                    .sort((a, b) => (envToDisplayString(a) > envToDisplayString(b) ? 1 : -1))
-                    .map(env => (
-                        <MenuItem key={env.environmentKey} value={env.environmentKey}>
-                            {envToDisplayString(env)}
-                        </MenuItem>
-                    ))}
-            </Select>
-        </FormControl>
-    );
-};
-
-const envToDisplayString = (env: EnvironmentResponseItem): string => `${env.title} / ${env.environmentName}`;

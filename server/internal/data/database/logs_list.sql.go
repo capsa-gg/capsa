@@ -58,17 +58,21 @@ JOIN sev_counts sc ON sc.log = l.id
 JOIN chunk_data cd ON cd.log = l.id
 JOIN environments e on l.environment = e.id
 JOIN titles t on e.title = t.id
-WHERE ( l.log_uuid =    $1          OR $1 IS NULL )     -- Optionally filter by Log UUID
-AND   ( e.key =         $2::uuid OR $2 IS NULL )  -- Optionally filter by Environment
+WHERE ( l.log_uuid =  $1          OR $1    IS NULL )  -- Optionally filter by Log UUID
+AND   ( e.key =       $2::uuid OR $2 IS NULL )  -- Optionally filter by Environment
+AND   ( l.platform =  $3::varchar OR $3    IS NULL )  -- Optionally filter by Platform
+AND   ( l.log_type =  $4           OR $4     IS NULL )  -- Optionally filter by LogType
 GROUP BY l.id, t.name, e.name, cd.line_count, cd.chunk_count, cd.earliest_start, cd.latest_end
 ORDER BY earliest DESC
-LIMIT $3::int
+LIMIT $5::int
 `
 
 type ListAvailableLogsParams struct {
-	FilterByLogUuid     *uuid.UUID `json:"filterByLogUuid"`
-	FilterByEnvironment *uuid.UUID `json:"filterByEnvironment"`
-	Fetchlimit          int32      `json:"fetchlimit"`
+	FilterByLogUuid     *uuid.UUID        `json:"filterByLogUuid"`
+	FilterByEnvironment *uuid.UUID        `json:"filterByEnvironment"`
+	FilterByPlatform    *string           `json:"filterByPlatform"`
+	FilterByLogtype     NullLogClientType `json:"filterByLogtype"`
+	Fetchlimit          int32             `json:"fetchlimit"`
 }
 
 type ListAvailableLogsRow struct {
@@ -88,7 +92,13 @@ type ListAvailableLogsRow struct {
 // Fetches all log chunks and aggregates an overview.
 // LogUUID is an optional field used as a filter, which if set will return only a single result.
 func (q *Queries) ListAvailableLogs(ctx context.Context, arg ListAvailableLogsParams) ([]ListAvailableLogsRow, error) {
-	rows, err := q.db.Query(ctx, listAvailableLogs, arg.FilterByLogUuid, arg.FilterByEnvironment, arg.Fetchlimit)
+	rows, err := q.db.Query(ctx, listAvailableLogs,
+		arg.FilterByLogUuid,
+		arg.FilterByEnvironment,
+		arg.FilterByPlatform,
+		arg.FilterByLogtype,
+		arg.Fetchlimit,
+	)
 	if err != nil {
 		return nil, err
 	}
