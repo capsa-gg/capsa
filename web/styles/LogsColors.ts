@@ -3,10 +3,10 @@ export enum LogsColorsLightMode {
     Category = "#555555",
     Contents = "#333333",
 
-    Fatal = "#a80000",
+    Fatal = "#7c0000",
     Error = "#f13434",
-    Warning = "#ef7300",
-    Info = "#e5be10",
+    Warning = "#ff932e",
+    Info = "#cecb03",
     Verbose = "#527311",
     VeryVerbose = "#1e3877",
 }

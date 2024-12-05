@@ -33,6 +33,8 @@ SELECT
     l.log_uuid AS log_uuid,
     l.platform AS platform,
     l.log_type AS log_type,
+    t.name AS title,
+    e.name AS environment,
     cd.line_count AS line_count,
     cd.chunk_count AS chunk_count,
     cd.earliest_start AS earliest,
@@ -43,6 +45,10 @@ FROM logs l
 JOIN cat_counts cc ON cc.log = l.id
 JOIN sev_counts sc ON sc.log = l.id
 JOIN chunk_data cd ON cd.log = l.id
-WHERE ( l.log_uuid = sqlc.narg(filter_by_log_uuid) OR sqlc.narg(filter_by_log_uuid) IS NULL ) -- Optionally filter by Log UUID
-GROUP BY l.id, cd.line_count, cd.chunk_count, cd.earliest_start, cd.latest_end
-ORDER BY earliest DESC;
+JOIN environments e on l.environment = e.id
+JOIN titles t on e.title = t.id
+WHERE ( l.log_uuid =    sqlc.narg(filter_by_log_uuid)          OR sqlc.narg(filter_by_log_uuid) IS NULL )     -- Optionally filter by Log UUID
+AND   ( e.key =         sqlc.narg(filter_by_environment)::uuid OR sqlc.narg(filter_by_environment) IS NULL )  -- Optionally filter by Environment
+GROUP BY l.id, t.name, e.name, cd.line_count, cd.chunk_count, cd.earliest_start, cd.latest_end
+ORDER BY earliest DESC
+LIMIT @fetchlimit::int;

@@ -3,12 +3,14 @@
 import { useGetAllLogs } from "@/api/hooks";
 import ColoredSeverities from "@/components/ColoredSeverities";
 import Spinner from "@/components/Spinner";
+import { useNotificationsContext } from "@/context/NotificationsContext/NotificationsContext";
 import type { LogOverviewItem } from "@/types/api/logs";
 import { formatDate } from "@/util/formatDate";
 import { Alert, AlertTitle, Box, Link, Typography } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
 import type React from "react";
+import { useEffect, useState } from "react";
 
 const columns: GridColDef<LogOverviewItem>[] = [
     { field: "id", headerName: "ID", maxWidth: 300, flex: 4, renderCell: row => <LogLink id={row.row.id} /> },
@@ -54,7 +56,20 @@ const columns: GridColDef<LogOverviewItem>[] = [
 ];
 
 const LogsOverviewPage = () => {
+    const { addNotification } = useNotificationsContext();
+    const [hasNotified, setHasNotified] = useState(false);
     const { data, error, isLoading } = useGetAllLogs();
+
+    useEffect(() => {
+        if (!isLoading && data?.hasMore && !hasNotified) {
+            addNotification({
+                severity: "info",
+                title: "Not all logs are shown",
+                message: "There are more logs than shown here due to the configured filters.",
+            });
+            setHasNotified(true);
+        }
+    }, [isLoading, data, data?.hasMore, addNotification, hasNotified]);
 
     const LogsOverview = () => {
         if (error) {
@@ -79,7 +94,7 @@ const LogsOverviewPage = () => {
 
         return (
             <Box sx={{ width: "100%", maxWidth: "1400px" }}>
-                <DataGrid rows={data} columns={columns} getRowId={row => row.id} disableRowSelectionOnClick />
+                <DataGrid rows={data.logs} columns={columns} getRowId={row => row.id} disableRowSelectionOnClick />
             </Box>
         );
     };

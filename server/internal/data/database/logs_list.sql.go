@@ -44,6 +44,8 @@ SELECT
     l.log_uuid AS log_uuid,
     l.platform AS platform,
     l.log_type AS log_type,
+    t.name AS title,
+    e.name AS environment,
     cd.line_count AS line_count,
     cd.chunk_count AS chunk_count,
     cd.earliest_start AS earliest,
@@ -54,15 +56,27 @@ FROM logs l
 JOIN cat_counts cc ON cc.log = l.id
 JOIN sev_counts sc ON sc.log = l.id
 JOIN chunk_data cd ON cd.log = l.id
-WHERE ( l.log_uuid = $1 OR $1 IS NULL ) -- Optionally filter by Log UUID
-GROUP BY l.id, cd.line_count, cd.chunk_count, cd.earliest_start, cd.latest_end
+JOIN environments e on l.environment = e.id
+JOIN titles t on e.title = t.id
+WHERE ( l.log_uuid =    $1          OR $1 IS NULL )     -- Optionally filter by Log UUID
+AND   ( e.key =         $2::uuid OR $2 IS NULL )  -- Optionally filter by Environment
+GROUP BY l.id, t.name, e.name, cd.line_count, cd.chunk_count, cd.earliest_start, cd.latest_end
 ORDER BY earliest DESC
+LIMIT $3::int
 `
+
+type ListAvailableLogsParams struct {
+	FilterByLogUuid     *uuid.UUID `json:"filterByLogUuid"`
+	FilterByEnvironment *uuid.UUID `json:"filterByEnvironment"`
+	Fetchlimit          int32      `json:"fetchlimit"`
+}
 
 type ListAvailableLogsRow struct {
 	LogUuid         uuid.UUID     `json:"logUuid"`
 	Platform        string        `json:"platform"`
 	LogType         LogClientType `json:"logType"`
+	Title           string        `json:"title"`
+	Environment     string        `json:"environment"`
 	LineCount       int64         `json:"lineCount"`
 	ChunkCount      int64         `json:"chunkCount"`
 	Earliest        interface{}   `json:"earliest"`
@@ -73,8 +87,8 @@ type ListAvailableLogsRow struct {
 
 // Fetches all log chunks and aggregates an overview.
 // LogUUID is an optional field used as a filter, which if set will return only a single result.
-func (q *Queries) ListAvailableLogs(ctx context.Context, filterByLogUuid *uuid.UUID) ([]ListAvailableLogsRow, error) {
-	rows, err := q.db.Query(ctx, listAvailableLogs, filterByLogUuid)
+func (q *Queries) ListAvailableLogs(ctx context.Context, arg ListAvailableLogsParams) ([]ListAvailableLogsRow, error) {
+	rows, err := q.db.Query(ctx, listAvailableLogs, arg.FilterByLogUuid, arg.FilterByEnvironment, arg.Fetchlimit)
 	if err != nil {
 		return nil, err
 	}
@@ -86,6 +100,8 @@ func (q *Queries) ListAvailableLogs(ctx context.Context, filterByLogUuid *uuid.U
 			&i.LogUuid,
 			&i.Platform,
 			&i.LogType,
+			&i.Title,
+			&i.Environment,
 			&i.LineCount,
 			&i.ChunkCount,
 			&i.Earliest,
