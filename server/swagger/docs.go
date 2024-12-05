@@ -502,7 +502,7 @@ const docTemplate = `{
                         }
                     },
                     "304": {
-                        "description": "Returned when a user is already deactivated",
+                        "description": "User already activated",
                         "headers": {
                             "X-Capsa-Server-Version": {
                                 "type": "string",
@@ -576,7 +576,7 @@ const docTemplate = `{
                         }
                     },
                     "304": {
-                        "description": "Not Modified",
+                        "description": "User already deactivated",
                         "headers": {
                             "X-Capsa-Server-Version": {
                                 "type": "string",
@@ -1283,7 +1283,7 @@ const docTemplate = `{
                         "JwtAdmin": []
                     }
                 ],
-                "description": "Allows users to fetch available logs from the database",
+                "description": "Allows users to fetch available logs from the database, limiting the results to 1000.",
                 "produces": [
                     "application/json"
                 ],
@@ -1291,14 +1291,31 @@ const docTemplate = `{
                     "UserLogs"
                 ],
                 "summary": "Log listing",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Environment UUID key for which to fetch logs",
+                        "name": "env",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Log type, can be Server or Client",
+                        "name": "type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Platform for which to fetch logs",
+                        "name": "platform",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/bodies.LogOverview"
-                            }
+                            "$ref": "#/definitions/bodies.LogOverview"
                         },
                         "headers": {
                             "X-Capsa-Server-Version": {
@@ -1708,6 +1725,50 @@ const docTemplate = `{
                 }
             }
         },
+        "bodies.LogInfo": {
+            "type": "object",
+            "properties": {
+                "categoriesCounts": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "integer"
+                    }
+                },
+                "chunkCount": {
+                    "type": "integer"
+                },
+                "environment": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "lineCount": {
+                    "type": "integer"
+                },
+                "logType": {
+                    "type": "string"
+                },
+                "platform": {
+                    "type": "string"
+                },
+                "severitiesCounts": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "integer"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "tsFirstLine": {
+                    "type": "string"
+                },
+                "tsLastLine": {
+                    "type": "string"
+                }
+            }
+        },
         "bodies.LogLink": {
             "type": "object",
             "properties": {
@@ -1735,7 +1796,7 @@ const docTemplate = `{
                     }
                 },
                 "logData": {
-                    "$ref": "#/definitions/bodies.LogOverview"
+                    "$ref": "#/definitions/bodies.LogInfo"
                 }
             }
         },
@@ -1757,38 +1818,14 @@ const docTemplate = `{
         "bodies.LogOverview": {
             "type": "object",
             "properties": {
-                "categoriesCounts": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "integer"
+                "hasMore": {
+                    "type": "boolean"
+                },
+                "logs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/bodies.LogInfo"
                     }
-                },
-                "chunkCount": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "lineCount": {
-                    "type": "integer"
-                },
-                "logType": {
-                    "type": "string"
-                },
-                "platform": {
-                    "type": "string"
-                },
-                "severitiesCounts": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "integer"
-                    }
-                },
-                "tsFirstLine": {
-                    "type": "string"
-                },
-                "tsLastLine": {
-                    "type": "string"
                 }
             }
         },

@@ -74,6 +74,35 @@ definitions:
       savedOn:
         type: string
     type: object
+  bodies.LogInfo:
+    properties:
+      categoriesCounts:
+        additionalProperties:
+          type: integer
+        type: object
+      chunkCount:
+        type: integer
+      environment:
+        type: string
+      id:
+        type: string
+      lineCount:
+        type: integer
+      logType:
+        type: string
+      platform:
+        type: string
+      severitiesCounts:
+        additionalProperties:
+          type: integer
+        type: object
+      title:
+        type: string
+      tsFirstLine:
+        type: string
+      tsLastLine:
+        type: string
+    type: object
   bodies.LogLink:
     properties:
       description:
@@ -92,7 +121,7 @@ definitions:
           $ref: '#/definitions/bodies.LogLink'
         type: array
       logData:
-        $ref: '#/definitions/bodies.LogOverview'
+        $ref: '#/definitions/bodies.LogInfo'
     type: object
   bodies.LogMetadataSaveRequest:
     properties:
@@ -106,28 +135,12 @@ definitions:
     type: object
   bodies.LogOverview:
     properties:
-      categoriesCounts:
-        additionalProperties:
-          type: integer
-        type: object
-      chunkCount:
-        type: integer
-      id:
-        type: string
-      lineCount:
-        type: integer
-      logType:
-        type: string
-      platform:
-        type: string
-      severitiesCounts:
-        additionalProperties:
-          type: integer
-        type: object
-      tsFirstLine:
-        type: string
-      tsLastLine:
-        type: string
+      hasMore:
+        type: boolean
+      logs:
+        items:
+          $ref: '#/definitions/bodies.LogInfo'
+        type: array
     type: object
   bodies.SearchResult:
     properties:
@@ -590,7 +603,7 @@ paths:
           schema:
             $ref: '#/definitions/bodies.UserInfoResponse'
         "304":
-          description: Not Modified
+          description: User already deactivated
           headers:
             X-Capsa-Server-Version:
               description: Current Capsa Server version
@@ -638,7 +651,7 @@ paths:
           schema:
             $ref: '#/definitions/bodies.UserInfoResponse'
         "304":
-          description: Returned when a user is already deactivated
+          description: User already activated
           headers:
             X-Capsa-Server-Version:
               description: Current Capsa Server version
@@ -1107,7 +1120,21 @@ paths:
       - UserEnvironments
   /user/logs:
     get:
-      description: Allows users to fetch available logs from the database
+      description: Allows users to fetch available logs from the database, limiting
+        the results to 1000.
+      parameters:
+      - description: Environment UUID key for which to fetch logs
+        in: query
+        name: env
+        type: string
+      - description: Log type, can be Server or Client
+        in: query
+        name: type
+        type: string
+      - description: Platform for which to fetch logs
+        in: query
+        name: platform
+        type: string
       produces:
       - application/json
       responses:
@@ -1118,9 +1145,7 @@ paths:
               description: Current Capsa Server version
               type: string
           schema:
-            items:
-              $ref: '#/definitions/bodies.LogOverview'
-            type: array
+            $ref: '#/definitions/bodies.LogOverview'
         "400":
           description: Bad Request
           headers:

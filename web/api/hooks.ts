@@ -57,15 +57,15 @@ const apiCallToSwrPlain = <Res>(
     return () => useSWR(name, fetcher);
 };
 
-const apiCallToSwrWithIdArg = <Res>(
+const apiCallToSwrWithStringArg = <Res>(
     baseName: string,
     apiCallFunc: (arg: string) => Promise<ApiResponse<Res>>,
 ): ((arg: string) => SWRResponse<Res, ApplicationError, null>) => {
     const fetcher = async (arg: string) => {
         // Remove basename, which is required in the useSWR hook to not have swr cache values
-        const id = arg.slice(baseName.length + 1); // +1 for the `-` character
+        const argValue = arg.slice(baseName.length + 1); // +1 for the `-` character
 
-        const [res, err] = await apiCallFunc(id);
+        const [res, err] = await apiCallFunc(argValue);
         if (err) {
             throw new ApplicationError(err);
         }
@@ -85,7 +85,7 @@ export const useUserPasswordResetRequest = apiCallToSwrMutation("passwordforgot"
 export const useUserPasswordResetComplete = apiCallToSwrMutation("passwordreset", UserAuth.PasswordResetComplete);
 
 // Search
-export const useSearch = apiCallToSwrWithIdArg<SearchResults>("search", Search.Search);
+export const useSearch = apiCallToSwrWithStringArg<SearchResults>("search", Search.Search);
 
 // Admin
 export const useGetAllTitles = apiCallToSwrPlain<ListAllTitlesResponse>("listalltitles", Admin.ListAllTitles);
@@ -103,8 +103,8 @@ export const useGetAllEnvironments = apiCallToSwrPlain<ListAllEnvironmentsRespon
 );
 
 // Logs
-export const useGetAllLogs = apiCallToSwrPlain<LogOverviewResponse>("getalllogs", Logs.ListAllLogs);
-export const useGetSingleLogMetadata = apiCallToSwrWithIdArg<LogMetadata>(
+export const getLogsOverview = apiCallToSwrWithStringArg<LogOverviewResponse>("getlogsoverview", Logs.ListLogs);
+export const useGetSingleLogMetadata = apiCallToSwrWithStringArg<LogMetadata>(
     "singlelogmetadata",
     Logs.GetSingleLogMetadata,
 );

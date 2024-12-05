@@ -5,6 +5,8 @@ export const LogOverviewItemSchema = z.object({
     id: z.string(),
     platform: z.string(),
     logType: z.string(),
+    title: z.string(),
+    environment: z.string(),
     lineCount: z.number(),
     chunkCount: z.number(),
     tsFirstLine: z.string().nullable(),
@@ -13,7 +15,10 @@ export const LogOverviewItemSchema = z.object({
     severitiesCounts: z.record(z.string(), z.number()),
 });
 
-export const LogOverviewResponseSchema = z.array(LogOverviewItemSchema);
+export const LogOverviewResponseSchema = z.object({
+    hasMore: z.boolean(),
+    logs: z.array(LogOverviewItemSchema),
+});
 export type LogOverviewResponse = z.infer<typeof LogOverviewResponseSchema>;
 
 export type LogAdditionalMetadata = z.infer<typeof LogAdditionalMetadataSchema>;

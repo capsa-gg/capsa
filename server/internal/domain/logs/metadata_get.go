@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/capsa-gg/capsa/server/constants"
+	"github.com/capsa-gg/capsa/server/internal/data/database"
 	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
@@ -70,18 +71,23 @@ func GetMetadataForLog(ctx context.Context, s *interactor.Services, logUUID uuid
 	}
 
 	// Get log data from database
-	rows, err := s.Database.ListAvailableLogs(ctx, &logUUID)
+	rows, err := s.Database.ListAvailableLogs(ctx, database.ListAvailableLogsParams{
+		FilterByLogUuid: &logUUID,
+		Fetchlimit:      1,
+	})
 	if err != nil {
 		return nil, domainerror.NewFromDatabaseError(err)
 	}
 
 	if len(rows) != 1 {
-		log.Errorf("logData query yielded %d results, expected 1", len(rows))
+		log.Errorf("logData query yielded %d results, hasError 1", len(rows))
 	} else {
 		logDataResponse := rows[0]
 
 		metadata.LogData.LogUUID = logDataResponse.LogUuid
 		metadata.LogData.LogType = constants.LogType(logDataResponse.LogType) // safe conversion
+		metadata.LogData.Title = logDataResponse.Title
+		metadata.LogData.Environment = logDataResponse.Environment
 		metadata.LogData.Platform = logDataResponse.Platform
 		metadata.LogData.LineCount = logDataResponse.LineCount
 		metadata.LogData.ChunkCount = logDataResponse.ChunkCount

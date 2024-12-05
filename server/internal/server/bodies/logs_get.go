@@ -8,11 +8,19 @@ import (
 	"github.com/capsa-gg/capsa/server/constants"
 )
 
-// LogOverview contains the data for log stored log.
+// LogOverview is used to show information about available logs.
 type LogOverview struct {
+	HasMore bool      `json:"hasMore"`
+	Logs    []LogInfo `json:"logs"`
+}
+
+// LogInfo contains the data for log stored log.
+type LogInfo struct {
 	LogUUID            uuid.UUID         `json:"id"`
 	Platform           string            `json:"platform"`
 	LogType            constants.LogType `json:"logType"`
+	Title              string            `json:"title"`
+	Environment        string            `json:"environment"`
 	LineCount          int64             `json:"lineCount"`
 	ChunkCount         int64             `json:"chunkCount"`
 	TimestampFirstLine *time.Time        `json:"tsFirstLine"`
@@ -23,7 +31,7 @@ type LogOverview struct {
 
 // LogMetadata contains the metadata for a stored log.
 type LogMetadata struct {
-	LogData            LogOverview             `json:"logData"`
+	LogData            LogInfo                 `json:"logData"`
 	AdditionalMetadata []LogAdditionalMetadata `json:"additionalMetadata"`
 	Links              []LogLink               `json:"linkedLogs"`
 }

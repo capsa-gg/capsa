@@ -4,18 +4,25 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 
+	"github.com/capsa-gg/capsa/server/constants"
 	"github.com/capsa-gg/capsa/server/internal/domain/logs"
+	"github.com/capsa-gg/capsa/server/internal/domainerror"
+	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 )
 
 // LogsList allows users to fetch available logs from the database
 // @Summary 	Log listing
 // @Tags        UserLogs
 // @Produce    	json
-// @Description	Allows users to fetch available logs from the database
+// @Param		env		query	string 		false 		"Environment UUID key for which to fetch logs"
+// @Param		type	query	string 		false 		"Log type, can be Server or Client"
+// @Param		platform query	string 		false 		"Platform for which to fetch logs"
+// @Description	Allows users to fetch available logs from the database, limiting the results to 1000.
 // @Security	JwtUser
 // @Security	JwtAdmin
-// @Success		200		{array}		bodies.LogOverview
+// @Success		200		{object}	bodies.LogOverview
 // @Failure     400		{object}	bodies.ErrorResponse
 // @Failure     404		{object}	bodies.ErrorResponse
 // @Failure     500		{object}	bodies.ErrorResponse
@@ -24,14 +31,26 @@ import (
 func (h Handlers) LogsList(c *gin.Context) {
 	log := h.logger.Named("LogsList")
 
-	res, err := logs.GetAllLogsOverview(c, h.services)
+	filters, err := extractLogFilterSettings(c)
 	if err != nil {
 		h.sendErrorResponse(c, err)
 
 		return
 	}
 
-	log.Debugf("fetched %d items", len(res))
+	fetchedLogs, hasMore, err := logs.GetLogs(c, h.services, filters)
+	if err != nil {
+		h.sendErrorResponse(c, err)
+
+		return
+	}
+
+	res := bodies.LogOverview{
+		HasMore: hasMore,
+		Logs:    fetchedLogs,
+	}
+
+	log.Debugf("fetched %d items, hasMore: %v", len(fetchedLogs), hasMore)
 
 	c.JSON(http.StatusOK, res)
 }
@@ -67,4 +86,34 @@ func (h Handlers) LogGetMetadata(c *gin.Context) {
 	log.Debug("metadata fetched")
 
 	c.JSON(http.StatusOK, res)
+}
+
+func extractLogFilterSettings(c *gin.Context) (logs.ListFilters, error) {
+	filters := logs.ListFilters{}
+
+	if env := c.Query("env"); env != "" {
+		envUUID, err := uuid.Parse(env)
+
+		if err != nil {
+			return filters, domainerror.New(domainerror.InvalidArgument, "env query could not be parsed to uuid", err)
+		}
+
+		filters.Environment = &envUUID
+	}
+
+	if logType := c.Query("type"); logType != "" {
+		logTypeVal, err := constants.LogTypeFromString(logType)
+
+		if err != nil {
+			return filters, domainerror.New(domainerror.InvalidArgument, "log type cannot be parsed to LogType", err)
+		}
+
+		filters.LogType = &logTypeVal
+	}
+
+	if platform := c.Query("platform"); platform != "" {
+		filters.Platform = &platform
+	}
+
+	return filters, nil
 }

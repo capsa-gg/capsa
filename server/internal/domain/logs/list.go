@@ -5,33 +5,58 @@ import (
 	"encoding/json"
 
 	"github.com/capsa-gg/capsa/server/constants"
+	"github.com/capsa-gg/capsa/server/internal/data/database"
 	"github.com/capsa-gg/capsa/server/internal/domainerror"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 	"github.com/capsa-gg/capsa/server/internal/server/bodies"
 	"github.com/capsa-gg/capsa/server/internal/util"
 )
 
-// GetAllLogsOverview fetches the high-level overview of all available logs.
-// TODO: pagination.
-func GetAllLogsOverview(ctx context.Context, s *interactor.Services) ([]bodies.LogOverview, error) {
-	log := s.GetDomainLogger("logs", "GetAllLogsOverview")
+const getLogsLimitCount = 1000
 
-	// Get from database
-	rows, err := s.Database.ListAvailableLogs(ctx, nil)
-	if err != nil {
-		return nil, domainerror.NewFromDatabaseError(err)
+// GetLogs fetches the high-level overview of all available logs.
+func GetLogs(ctx context.Context, s *interactor.Services, filters ListFilters) ([]bodies.LogInfo, bool, error) { //nolint:gocyclo // This is more readable than breaking it up
+	log := s.GetDomainLogger("logs", "GetLogs").With("filters", filters)
+
+	params := database.ListAvailableLogsParams{
+		FilterByLogUuid:     nil,
+		FilterByEnvironment: filters.Environment,
+		FilterByLogtype:     database.NullLogClientType{Valid: false},
+		FilterByPlatform:    filters.Platform,
+		Fetchlimit:          getLogsLimitCount + 1, // Using +1 here to check for hasMore
 	}
 
-	logsAvailable := make([]bodies.LogOverview, len(rows))
+	if filters.LogType != nil {
+		params.FilterByLogtype = database.NullLogClientType{
+			LogClientType: database.LogClientType(*filters.LogType), // Safe conversion
+			Valid:         true,
+		}
+	}
+
+	// Get from database
+	rows, err := s.Database.ListAvailableLogs(ctx, params)
+	if err != nil {
+		return nil, false, domainerror.NewFromDatabaseError(err)
+	}
+
+	logsAvailable := make([]bodies.LogInfo, 0, len(rows))
 
 	for i := range rows {
+		if i >= getLogsLimitCount {
+			break
+		}
+
 		logLoop := log.With("log_uuid", rows[i].LogUuid)
 
-		logsAvailable[i].LogUUID = rows[i].LogUuid
-		logsAvailable[i].LogType = constants.LogType(rows[i].LogType) // safe conversion
-		logsAvailable[i].Platform = rows[i].Platform
-		logsAvailable[i].LineCount = rows[i].LineCount
-		logsAvailable[i].ChunkCount = rows[i].ChunkCount
+		info := bodies.LogInfo{
+			LogUUID:     rows[i].LogUuid,
+			LogType:     constants.LogType(rows[i].LogType), // safe conversion
+			Title:       rows[i].Title,
+			Environment: rows[i].Environment,
+			Platform:    rows[i].Platform,
+			LineCount:   rows[i].LineCount,
+			ChunkCount:  rows[i].ChunkCount,
+		}
 
 		earliest := rows[i].Earliest
 
@@ -40,7 +65,7 @@ func GetAllLogsOverview(ctx context.Context, s *interactor.Services) ([]bodies.L
 			if err != nil {
 				logLoop.Errorf("could not convert earlist value %#v to time: %s", earliest, err)
 			} else {
-				logsAvailable[i].TimestampFirstLine = &earliestTS
+				info.TimestampFirstLine = &earliestTS
 			}
 		}
 
@@ -51,18 +76,22 @@ func GetAllLogsOverview(ctx context.Context, s *interactor.Services) ([]bodies.L
 			if err != nil {
 				logLoop.Errorf("could not convert last value %#v to time: %s", last, err)
 			} else {
-				logsAvailable[i].TimestampLastLine = &lastTS
+				info.TimestampLastLine = &lastTS
 			}
 		}
 
-		if err = json.Unmarshal(rows[i].CategoriesCount, &logsAvailable[i].CategoriesCounts); err != nil {
+		if err = json.Unmarshal(rows[i].CategoriesCount, &info.CategoriesCounts); err != nil {
 			logLoop.Errorf("cannot convert CategoriesCount to map[string]int: %s", err)
 		}
 
-		if err = json.Unmarshal(rows[i].SeveritiesCount, &logsAvailable[i].SeveritiesCounts); err != nil {
+		if err = json.Unmarshal(rows[i].SeveritiesCount, &info.SeveritiesCounts); err != nil {
 			logLoop.Errorf("cannot convert SeveritiesCounts to map[string]int: %s", err)
 		}
+
+		logsAvailable = append(logsAvailable, info)
 	}
 
-	return logsAvailable, nil
+	hasMore := len(rows) > getLogsLimitCount
+
+	return logsAvailable, hasMore, nil
 }

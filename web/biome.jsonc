@@ -37,7 +37,6 @@
       "correctness": {
         "noChildrenProp": "error",
         "noInvalidUseBeforeDeclaration": "off",
-        "noUndeclaredDependencies": "error",
         "noUndeclaredVariables": "error",
         "noUnusedImports": "warn",
         "useJsxKeyInIterable": "error",

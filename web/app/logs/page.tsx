@@ -1,14 +1,17 @@
 "use client";
 
-import { useGetAllLogs } from "@/api/hooks";
+import { getLogsOverview, useGetAllEnvironments } from "@/api/hooks";
 import ColoredSeverities from "@/components/ColoredSeverities";
 import Spinner from "@/components/Spinner";
+import { useNotificationsContext } from "@/context/NotificationsContext/NotificationsContext";
 import type { LogOverviewItem } from "@/types/api/logs";
 import { formatDate } from "@/util/formatDate";
-import { Alert, AlertTitle, Box, Link, Typography } from "@mui/material";
+import { Alert, AlertTitle, Box, Stack, Typography } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
-import { useRouter } from "next/navigation";
-import type React from "react";
+import { type ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+import { useEffect, useState } from "react";
+import { EnvironmentSelector, LogLink, LogTypeSelector, PlatformInput } from "./components";
 
 const columns: GridColDef<LogOverviewItem>[] = [
     { field: "id", headerName: "ID", maxWidth: 300, flex: 4, renderCell: row => <LogLink id={row.row.id} /> },
@@ -53,22 +56,62 @@ const columns: GridColDef<LogOverviewItem>[] = [
     },
 ];
 
-const LogsOverviewPage = () => {
-    const { data, error, isLoading } = useGetAllLogs();
+const searchParamsToString = (searchParams: ReadonlyURLSearchParams): string => {
+    const paramsOut = new URLSearchParams();
+    console.warn(searchParams.toString());
+
+    searchParams.forEach((val, key) => {
+        if (val !== null && val !== "" && val !== "all") {
+            paramsOut.set(key, val);
+        }
+    });
+
+    return paramsOut.toString();
+};
+
+const LogsOverview = () => {
+    const { addNotification } = useNotificationsContext();
+    const searchParams = useSearchParams();
+    const [hasNotified, setHasNotified] = useState(false);
+    const { data: envs, isLoading: isLoadingEnv, error: errorEnv } = useGetAllEnvironments();
+    const {
+        data: logs,
+        error: errorLogs,
+        isLoading: isLoadingLogs,
+    } = getLogsOverview(searchParamsToString(searchParams));
+
+    useEffect(() => {
+        if (!isLoadingLogs && logs?.hasMore && !hasNotified) {
+            addNotification({
+                severity: "info",
+                title: "Not all logs are shown",
+                message: "There are more logs than shown here due to the configured filters.",
+            });
+            setHasNotified(true);
+        }
+    }, [isLoadingLogs, logs, logs?.hasMore, addNotification, hasNotified]);
 
     const LogsOverview = () => {
-        if (error) {
+        if (errorEnv) {
             return (
                 <Alert severity="error">
-                    <AlertTitle>Could not load logs</AlertTitle>
-                    {error?.error}
+                    <AlertTitle>Could not load environments</AlertTitle>
+                    {errorEnv?.error}
                 </Alert>
             );
         }
-        if (isLoading) {
+        if (errorLogs) {
+            return (
+                <Alert severity="error">
+                    <AlertTitle>Could not load logs</AlertTitle>
+                    {errorLogs?.error}
+                </Alert>
+            );
+        }
+        if (isLoadingLogs || isLoadingEnv) {
             return <Spinner />;
         }
-        if (!data) {
+        if (!logs) {
             return (
                 <Alert severity="warning">
                     <AlertTitle>No logs present</AlertTitle>
@@ -79,29 +122,30 @@ const LogsOverviewPage = () => {
 
         return (
             <Box sx={{ width: "100%", maxWidth: "1400px" }}>
-                <DataGrid rows={data} columns={columns} getRowId={row => row.id} disableRowSelectionOnClick />
+                <DataGrid rows={logs.logs} columns={columns} getRowId={row => row.id} disableRowSelectionOnClick />
             </Box>
         );
     };
 
     return (
-        <>
-            <Typography variant="h4" mb={2}>
-                Available logs
-            </Typography>
+        <Box mr="40px">
+            <Stack direction="row" justifyContent="space-between" mb={6}>
+                <Typography variant="h4">Available logs</Typography>
+                <Stack direction="row" gap={2}>
+                    <PlatformInput />
+                    <LogTypeSelector />
+                    <EnvironmentSelector envs={envs} />
+                </Stack>
+            </Stack>
             <LogsOverview />
-        </>
+        </Box>
     );
 };
+
+const LogsOverviewPage = () => (
+    <Suspense>
+        <LogsOverview />
+    </Suspense>
+);
 
 export default LogsOverviewPage;
-
-const LogLink: React.FC<{ id: string }> = ({ id }) => {
-    const router = useRouter();
-
-    return (
-        <Link sx={{ cursor: "pointer" }} onClick={() => router.push(`/logs/${id}`)}>
-            {id}
-        </Link>
-    );
-};
