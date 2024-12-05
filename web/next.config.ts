@@ -4,6 +4,17 @@ const nextConfig: NextConfig = {
     output: "standalone",
     productionBrowserSourceMaps: true,
     reactStrictMode: true,
+    cacheMaxMemorySize: 0, // disable default in-memory caching
+    logging: {
+        fetches: {
+            fullUrl: true,
+            hmrRefreshes: true,
+        },
+    },
+    experimental: {
+        serverComponentsHmrCache: false, // defaults to true
+    },
+
     async headers() {
         return [
             {
