@@ -1,5 +1,3 @@
-"use client";
-
 import ListAllEnvironments from "@/views/ListAllEnvironments";
 import { Typography } from "@mui/material";
 
@@ -15,3 +13,5 @@ const Home = () => {
 };
 
 export default Home;
+
+export const dynamic = "force-dynamic";
