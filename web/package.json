@@ -43,7 +43,7 @@
     "js-cookie": "^3.0.5",
     "moment": "^2.30.1",
     "monaco-editor": "^0.52.0",
-    "next": "15.0.3",
+    "next": "15.0.4",
     "react": "19.0.0-rc.1",
     "react-dom": "19.0.0-rc.1",
     "react-error-boundary": "^4.1.2",
