@@ -56,7 +56,7 @@ jobs:
           tags: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_SERVER}}:latest,${{ env.DIGITALOCEAN_REGISTRY }}/${{ env.IMAGE_SERVER }}:latest
           labels: ${{ steps.metaserver.outputs.labels }}
       - name: Generate artifact attestation (Server)
-        uses: actions/attest-build-provenance@v1
+        uses: actions/attest-build-provenance@v2
         with:
           subject-name: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_SERVER}}
           subject-digest: ${{ steps.pushserver.outputs.digest }}
@@ -77,7 +77,7 @@ jobs:
           tags: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_WEBAPP}}:latest,${{ env.DIGITALOCEAN_REGISTRY }}/${{ env.IMAGE_WEBAPP }}:latest
           labels: ${{ steps.metaweb.outputs.labels }}
       - name: Generate artifact attestation (Web)
-        uses: actions/attest-build-provenance@v1
+        uses: actions/attest-build-provenance@v2
         with:
           subject-name: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_WEBAPP}}
           subject-digest: ${{ steps.pushweb.outputs.digest }}
