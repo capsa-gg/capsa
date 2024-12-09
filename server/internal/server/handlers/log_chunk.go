@@ -3,6 +3,7 @@ package handlers
 import (
 	"bytes"
 	"compress/gzip"
+	"compress/zlib"
 	"fmt"
 	"io"
 	"net/http"
@@ -19,6 +20,7 @@ import (
 // @Tags        ClientAuthenticated
 // @Accept     	plain
 // @Accept     	application/gzip
+// @Accept     	application/zlib
 // @Description	Allows clients to upload log chunks for their log sessions. To test this endpoint, please run the upload locally to add the correct request body.
 // @Security	JwtClient
 // @Param 		log		body 		string 		true 	"Log contents, in line with the Content-Type specified"
@@ -30,7 +32,7 @@ import (
 // @Failure     500		{object}	bodies.ErrorResponse
 // @Header		all		{string} 	X-Capsa-Server-Version			"Current Capsa Server version"
 // @Router 		/client/log/chunk [post]
-func (h Handlers) LogStoreChunk(c *gin.Context) {
+func (h Handlers) LogStoreChunk(c *gin.Context) { //nolint:funlen,gocyclo // This is easier to understand than broken up logic
 	log := h.logger.Named("LogStoreChunk")
 
 	// Validate content type
@@ -58,7 +60,16 @@ func (h Handlers) LogStoreChunk(c *gin.Context) {
 		}
 	case "application/gzip":
 		decodedBody, err := decodeGzipBody(c)
-		log.Errorf("gzip: %s", decodedBody)
+
+		if err != nil {
+			h.sendErrorResponse(c, err)
+
+			return
+		}
+
+		chunkText = decodedBody
+	case "application/zlib":
+		decodedBody, err := decodeZlibBody(c)
 
 		if err != nil {
 			h.sendErrorResponse(c, err)
@@ -105,7 +116,7 @@ func (h Handlers) LogStoreChunk(c *gin.Context) {
 	c.Status(http.StatusCreated)
 }
 
-func decodeGzipBody(c *gin.Context) ([]byte, error) {
+func decodeGzipBody(c *gin.Context) ([]byte, error) { //nolint:dupl // This is fine
 	gzipContents, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		return nil, domainerror.New(domainerror.Unexpected, "cannot extract request body", err)
@@ -114,6 +125,29 @@ func decodeGzipBody(c *gin.Context) ([]byte, error) {
 	buf := bytes.NewBuffer(gzipContents)
 
 	reader, err := gzip.NewReader(buf)
+	if err != nil {
+		return nil, domainerror.New(domainerror.InvalidArgument, "cannot decompress request body", err)
+	}
+
+	defer reader.Close() //nolint:errcheck // Best effort is fine here
+
+	logContents, err := io.ReadAll(reader)
+	if err != nil {
+		return nil, domainerror.New(domainerror.Unexpected, "cannot read decompressed log data", err)
+	}
+
+	return logContents, nil
+}
+
+func decodeZlibBody(c *gin.Context) ([]byte, error) { //nolint:dupl // This is fine
+	gzipContents, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		return nil, domainerror.New(domainerror.Unexpected, "cannot extract request body", err)
+	}
+
+	buf := bytes.NewBuffer(gzipContents)
+
+	reader, err := zlib.NewReader(buf)
 	if err != nil {
 		return nil, domainerror.New(domainerror.InvalidArgument, "cannot decompress request body", err)
 	}
