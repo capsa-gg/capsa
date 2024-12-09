@@ -62,7 +62,7 @@ export const LogTypeSelector: React.FC = () => {
 export const EnvironmentSelector: React.FC<{ envs?: ListAllEnvironmentsResponse }> = ({ envs }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const currentEnv = searchParams.get("env") || "all";
+    const currentEnv = searchParams?.get("env") || "all";
 
     const handleChange = (event: SelectChangeEvent) => {
         const newEnv = event.target.value;
@@ -78,7 +78,7 @@ export const EnvironmentSelector: React.FC<{ envs?: ListAllEnvironmentsResponse 
             <InputLabel>Environment</InputLabel>
             <Select value={currentEnv} label="Environment" onChange={handleChange}>
                 <MenuItem value="all">All</MenuItem>
-                {envs
+                {(JSON.parse(JSON.stringify(envs)) as ListAllEnvironmentsResponse)
                     .sort((a, b) => (envToDisplayString(a) > envToDisplayString(b) ? 1 : -1))
                     .map(env => (
                         <MenuItem key={env.environmentKey} value={env.environmentKey}>

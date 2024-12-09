@@ -41,6 +41,12 @@ const columns: GridColDef<LogOverviewItem>[] = [
         maxWidth: 100,
     },
     {
+        field: "linkedLogCount",
+        headerName: "Links",
+        flex: 1,
+        maxWidth: 100,
+    },
+    {
         field: "tsFirstLine",
         headerName: "First timestamp",
         flex: 3,
@@ -58,7 +64,6 @@ const columns: GridColDef<LogOverviewItem>[] = [
 
 const searchParamsToString = (searchParams: ReadonlyURLSearchParams): string => {
     const paramsOut = new URLSearchParams();
-    console.warn(searchParams.toString());
 
     searchParams.forEach((val, key) => {
         if (val !== null && val !== "" && val !== "all") {

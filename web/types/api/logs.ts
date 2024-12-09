@@ -9,6 +9,7 @@ export const LogOverviewItemSchema = z.object({
     environment: z.string(),
     lineCount: z.number(),
     chunkCount: z.number(),
+    linkedLogCount: z.number(),
     tsFirstLine: z.string().nullable(),
     tsLastLine: z.string().nullable(),
     categoriesCounts: z.record(z.string(), z.number()),

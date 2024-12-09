@@ -10,9 +10,9 @@ const MetadataItem = styled(Paper)(({ theme }) => ({
     ...theme.typography.body,
     textAlign: "center",
     color: theme.palette.text.secondary,
-    height: 40,
-    lineHeight: "40px",
-    padding: "0 16px",
+    height: 32,
+    lineHeight: "32px",
+    padding: "0 12px",
 }));
 
 export const LogMetadataList: React.FC<{ logMetadata: LogMetadata }> = ({ logMetadata }) => (
@@ -24,18 +24,18 @@ export const LogMetadataList: React.FC<{ logMetadata: LogMetadata }> = ({ logMet
             paddingBottom: 2,
         }}
     >
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={1}>
             <MetadataItem>
-                Log type: <b>{logMetadata.logData.logType}</b>
+                Type: <b>{logMetadata.logData.logType}</b> on <b>{logMetadata.logData.platform}</b>
             </MetadataItem>
             <MetadataItem>
-                Platform: <b>{logMetadata.logData.platform}</b>
-            </MetadataItem>
-            <MetadataItem>
-                Line: <b>{logMetadata.logData.lineCount}</b>
+                Lines: <b>{logMetadata.logData.lineCount}</b>
             </MetadataItem>
             <MetadataItem>
                 Chunks: <b>{logMetadata.logData.chunkCount}</b>
+            </MetadataItem>
+            <MetadataItem>
+                Links: <b>{logMetadata.logData.linkedLogCount}</b>
             </MetadataItem>
             <MetadataItem>
                 Categories: <b>{Object.keys(logMetadata.logData.categoriesCounts).length}</b>
