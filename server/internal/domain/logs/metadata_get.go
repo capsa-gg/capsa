@@ -91,6 +91,7 @@ func GetMetadataForLog(ctx context.Context, s *interactor.Services, logUUID uuid
 		metadata.LogData.Platform = logDataResponse.Platform
 		metadata.LogData.LineCount = logDataResponse.LineCount
 		metadata.LogData.ChunkCount = logDataResponse.ChunkCount
+		metadata.LogData.LinkedLogCount = logDataResponse.LinkCount
 
 		earliest := logDataResponse.Earliest
 

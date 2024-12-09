@@ -1746,6 +1746,9 @@ const docTemplate = `{
                 "lineCount": {
                     "type": "integer"
                 },
+                "linkedLogCount": {
+                    "type": "integer"
+                },
                 "logType": {
                     "type": "string"
                 },

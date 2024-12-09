@@ -49,13 +49,14 @@ func GetLogs(ctx context.Context, s *interactor.Services, filters ListFilters) (
 		logLoop := log.With("log_uuid", rows[i].LogUuid)
 
 		info := bodies.LogInfo{
-			LogUUID:     rows[i].LogUuid,
-			LogType:     constants.LogType(rows[i].LogType), // safe conversion
-			Title:       rows[i].Title,
-			Environment: rows[i].Environment,
-			Platform:    rows[i].Platform,
-			LineCount:   rows[i].LineCount,
-			ChunkCount:  rows[i].ChunkCount,
+			LogUUID:        rows[i].LogUuid,
+			LogType:        constants.LogType(rows[i].LogType), // safe conversion
+			Title:          rows[i].Title,
+			Environment:    rows[i].Environment,
+			Platform:       rows[i].Platform,
+			LineCount:      rows[i].LineCount,
+			ChunkCount:     rows[i].ChunkCount,
+			LinkedLogCount: rows[i].LinkCount,
 		}
 
 		earliest := rows[i].Earliest

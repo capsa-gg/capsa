@@ -23,6 +23,7 @@ type LogInfo struct {
 	Environment        string            `json:"environment"`
 	LineCount          int64             `json:"lineCount"`
 	ChunkCount         int64             `json:"chunkCount"`
+	LinkedLogCount     int64             `json:"linkedLogCount"`
 	TimestampFirstLine *time.Time        `json:"tsFirstLine"`
 	TimestampLastLine  *time.Time        `json:"tsLastLine"`
 	CategoriesCounts   map[string]int    `json:"categoriesCounts"`
