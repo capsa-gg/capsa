@@ -28,7 +28,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@emotion/cache": "^11.13.5",
+    "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
     "@hookform/resolvers": "^3.9.1",
