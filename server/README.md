@@ -70,6 +70,8 @@ To add a new migration script, run `make migration` and follow the instructions 
 
 Database migrations should have both up and down scripts.
 
+Once a migration is merged to the main branch, these migrations should not be changed.
+
 ## Running tasks locally to know the CI will pass
 
 First, run the formatting/linter with `make fmt`.
