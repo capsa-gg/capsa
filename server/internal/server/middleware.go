@@ -17,7 +17,7 @@ func registerMiddleware(router *gin.Engine, logger *zap.Logger) {
 	router.Use(middleware.ServerVersionMiddleware())
 	router.Use(middleware.SecurityHeadersMiddleware())
 
-	// TODO: Configure properly
+	// TODO: Do we need to configure this?
 	config := cors.DefaultConfig()
 	config.AllowAllOrigins = true
 	config.ExposeHeaders = []string{

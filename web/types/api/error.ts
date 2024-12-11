@@ -24,7 +24,6 @@ z.never();
 
 export default ApiError;
 
-// TODO: extend with success and info
 // TODO: better formatting
 // TODO: add response codes
 export class ApplicationError extends Error {

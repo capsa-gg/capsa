@@ -36,8 +36,6 @@ func Execute() {
 	}
 }
 
-// TODO: Support config.prod.yml
-// rootCmd.PersistentFlags().BoolVarP(&production, "prod", "p", false, "use production configuration file (./config.prod.yml)").
 // TODO: use dynamic config loading f.e. https://github.com/spf13/cobra-cli/blob/main/tpl/main.go#L95
 // rootCmd.PersistentFlags().StringVar(&configFile, "config", "", "config file (default is ./config.yml, or ./config.prod.yml for production mode)").
 

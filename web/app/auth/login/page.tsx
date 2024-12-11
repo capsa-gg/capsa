@@ -39,8 +39,6 @@ const LoginPage: React.FC = () => {
         mode: "onChange",
     });
 
-    // TODO: callback functions
-
     // Remove jwt info if this page is reached
     // biome-ignore lint/correctness/useExhaustiveDependencies: fine here, for now
     useEffect(() => {
