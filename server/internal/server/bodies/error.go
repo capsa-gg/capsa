@@ -11,5 +11,5 @@ type ErrorResponse struct {
 
 	// RawError contains the raw error.
 	// This field is only sent in development mode.
-	RawError string `json:"raw_error,omitempty"`
+	RawError string `json:"rawError,omitempty"`
 }

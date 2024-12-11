@@ -15,7 +15,7 @@ const (
 )
 
 // GinLogger is Gin middleware to log request metadata.
-// TODO: We probably want error tracking to either Sentry .
+// TODO: We probably want error tracking to something like Sentry.
 func GinLogger(rootLogger *zap.Logger) gin.HandlerFunc {
 	timeFormat := "02/Jan/2006:15:04:05 -0700"
 	httpLog := rootLogger.Named("HttpLogger")

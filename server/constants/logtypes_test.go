@@ -1,4 +1,3 @@
-//nolint:dupl // Tests for separate, but similar types
 package constants_test
 
 import (
@@ -23,6 +22,16 @@ func TestLogTypeFromString(t *testing.T) {
 		"Valid Server": {
 			input:     "Server",
 			wantValue: constants.LogTypeServer,
+			wantErr:   false,
+		},
+		"Valid Game": {
+			input:     "Game",
+			wantValue: constants.LogTypeGame,
+			wantErr:   false,
+		},
+		"Valid Editor": {
+			input:     "Editor",
+			wantValue: constants.LogTypeEditor,
 			wantErr:   false,
 		},
 		"Client invalid casing": {

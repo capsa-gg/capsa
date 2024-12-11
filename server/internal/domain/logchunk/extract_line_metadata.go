@@ -73,7 +73,7 @@ charLoop:
 				}
 
 				lineMetadata.Timestamp = ts
-			case 2: // Severity // TODO: Verify if the Severity is valid
+			case 2: // Severity, we don't check for validity
 				lineMetadata.Severity = string(metadataBlockContents)
 			case 3: // Category
 				lineMetadata.Category = string(metadataBlockContents)

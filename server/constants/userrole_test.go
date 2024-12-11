@@ -1,4 +1,3 @@
-//nolint:dupl // Tests for separate, but similar types
 package constants_test
 
 import (

@@ -90,7 +90,6 @@ const SideNav = () => {
                     </Box>
                     <SideNavListItemsUsers />
                 </List>
-                {/* TODO: Add about/help page link */}
                 <List sx={{ width: sideNavWidthPx }}>
                     <SideNavListItemsAdmin />
                     <Divider sx={{ mt: 1, mb: 3 }} />

@@ -43,9 +43,9 @@ definitions:
     properties:
       expiry:
         type: string
-      link_web:
+      linkWeb:
         type: string
-      log_id:
+      logId:
         type: string
       token:
         type: string
@@ -60,7 +60,7 @@ definitions:
       error:
         description: Error contains the error string.
         type: string
-      raw_error:
+      rawError:
         description: |-
           RawError contains the raw error.
           This field is only sent in development mode.
@@ -127,10 +127,10 @@ definitions:
     type: object
   bodies.LogMetadataSaveRequest:
     properties:
-      additional_metadata:
+      additionalMetadata:
         additionalProperties: {}
         type: object
-      log_links:
+      linkedLogs:
         additionalProperties:
           type: string
         type: object

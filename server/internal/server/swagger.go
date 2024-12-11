@@ -42,7 +42,6 @@ import (
 // @BasePath /v1
 
 func swaggerDoc(conf *entities.Config) func(c *gin.Context) {
-	// TODO: allow dev mode on deployed servers but with the correct hostname, otherwise the uri would become .tld/:[port]/path
 	if strings.Contains(conf.ServerHostname, "local") {
 		serverHostname := conf.ServerHostname + ":" + strconv.Itoa(conf.ServerPort)
 
@@ -60,8 +59,12 @@ func swaggerRedirect(c *gin.Context) {
 	c.Redirect(http.StatusPermanentRedirect, "/v1/swagger/index.html")
 }
 
-// TODO: do we want to disable Swagger for non-dev builds?
 func registerSwagger(r *gin.RouterGroup, conf *entities.Config) {
+	// Disable Swagger in production mode
+	if !conf.IsDevMode {
+		return
+	}
+
 	r.GET("/swagger.json", swaggerDoc(conf))
 	r.GET("/swagger", swaggerRedirect)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(
