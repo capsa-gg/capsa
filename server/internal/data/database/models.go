@@ -9,16 +9,16 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
-
 	"github.com/capsa-gg/capsa/server/internal/entities"
+	"github.com/google/uuid"
 )
 
 type LogClientType string
 
 const (
-	LogClientTypeClient LogClientType = "Client"
-	LogClientTypeServer LogClientType = "Server"
+	LogClientTypeClient       LogClientType = "Client"
+	LogClientTypeGame         LogClientType = "Game"
+	LogClientTypeEditorServer LogClientType = "EditorServer"
 )
 
 func (e *LogClientType) Scan(src interface{}) error {

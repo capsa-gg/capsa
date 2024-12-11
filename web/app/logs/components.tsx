@@ -53,6 +53,8 @@ export const LogTypeSelector: React.FC = () => {
             <Select value={currentEnv} label="Log Type" onChange={handleChange}>
                 <MenuItem value="all">All</MenuItem>
                 <MenuItem value="Client">Client</MenuItem>
+                <MenuItem value="Game">Game</MenuItem>
+                <MenuItem value="Editor">Editor</MenuItem>
                 <MenuItem value="Server">Server</MenuItem>
             </Select>
         </FormControl>

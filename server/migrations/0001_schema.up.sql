@@ -43,7 +43,12 @@ CREATE TABLE environments (
 );
 
 -- Enum for different client types
-CREATE TYPE log_client_type AS ENUM ('Client', 'Server');
+CREATE TYPE log_client_type AS ENUM (
+    'Client',
+    'Game',
+    'Editor'
+    'Server'
+);
 
 -- Logs table
 CREATE TABLE logs (
