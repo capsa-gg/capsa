@@ -1,3 +1,42 @@
+## [0.0.6](https://github.com/capsa-gg/capsa/compare/v0.0.5...v0.0.6) (2024-12-11)
+
+
+### Bug Fixes
+
+* **server:** don't allow deactivated users to be redeactivated ([aabc561](https://github.com/capsa-gg/capsa/commit/aabc561e7c1e137eb97339da91255134fa634595))
+* **server:** honour chunk filtering without severity setting ([6d3cbed](https://github.com/capsa-gg/capsa/commit/6d3cbed89a297e97138ab3ce97a0ae099a725e0c))
+* **web:** correctly redirect after login ([b152e89](https://github.com/capsa-gg/capsa/commit/b152e89b428b21402f60120dc9aea3c5f66841f3))
+* **web:** login background not white anymore on login screen ([fafa0f6](https://github.com/capsa-gg/capsa/commit/fafa0f688c03c007178402c6676393d078f218b6))
+
+
+### Features
+
+* add log filtering by platform and log type ([3e06fdf](https://github.com/capsa-gg/capsa/commit/3e06fdf9a798c4a649cb538a808d75d19723eb85))
+* add support for Game and Editor log types ([e86014b](https://github.com/capsa-gg/capsa/commit/e86014b626ad2e581ccc9cdeacd2f9d2416ecc56))
+* **deployment:** add GHCR repos for DO Apps Spec ([895d4e9](https://github.com/capsa-gg/capsa/commit/895d4e9485b8b3ea8ce16c5d3776b7495d586faf))
+* **deployment:** automatic db migration with server App Service spec ([dfa2602](https://github.com/capsa-gg/capsa/commit/dfa26021342fab39fced4592d3d73978f52918a4))
+* **deployment:** automatic db migration with server App Service spec ([#122](https://github.com/capsa-gg/capsa/issues/122)) ([9e1a889](https://github.com/capsa-gg/capsa/commit/9e1a889bf3c3fc4457418163cc74e4774563c6c0))
+* **server:** add endpoints for title and environment management ([599eb62](https://github.com/capsa-gg/capsa/commit/599eb625cde4609c72ef8cab4abe2c202485ebc0))
+* **server:** add filtering for log overview ([8dad79b](https://github.com/capsa-gg/capsa/commit/8dad79b456999942fd5e2093b84b770eb9bafa6a))
+* **server:** add user management endpoints ([7503aa4](https://github.com/capsa-gg/capsa/commit/7503aa4acec09119e70b4704b4bb8cbb4194158b))
+* **server:** add user roles and deactivation/reactivation ([9b78410](https://github.com/capsa-gg/capsa/commit/9b784103446a7053cd4e7c1e6ca7ff6915f774a8))
+* **server:** add zlib compression support ([0e65929](https://github.com/capsa-gg/capsa/commit/0e65929dca330e5210e93e7cd9fad1c44da50a3d))
+* **server:** add zlib compression support ([#151](https://github.com/capsa-gg/capsa/issues/151)) ([5650cdb](https://github.com/capsa-gg/capsa/commit/5650cdbdc5069ad511c9e78a0aff3810194735b3))
+* **server:** nightly automatic removal of old logs ([c06b80c](https://github.com/capsa-gg/capsa/commit/c06b80ca6184804fc5608038517a147c2d7c5a66))
+* **server:** nightly automatic removal of old logs ([#123](https://github.com/capsa-gg/capsa/issues/123)) ([255167f](https://github.com/capsa-gg/capsa/commit/255167fd82748ce0bad34fdfeae1415926c479d7)), closes [#74](https://github.com/capsa-gg/capsa/issues/74)
+* **server:** search endpoint ([2f3ad80](https://github.com/capsa-gg/capsa/commit/2f3ad80a4f8434e153c317f2f47e52b63156fdda))
+* show linked log count for logs ([24a1126](https://github.com/capsa-gg/capsa/commit/24a112631ac46f29617230d108220e3cbc706d82))
+* show linked log count for logs ([#149](https://github.com/capsa-gg/capsa/issues/149)) ([bcc7ced](https://github.com/capsa-gg/capsa/commit/bcc7cede363d78db037ddc8cfa11806373a64bf5))
+* **web:** add admin pages and improve sidebar ([5a51dd2](https://github.com/capsa-gg/capsa/commit/5a51dd2606edeb6cc5eb969721abcdc4b886c7d5))
+* **web:** add environment filtering for log overview ([010b99e](https://github.com/capsa-gg/capsa/commit/010b99e08bcb21d4f3f66d67d58c01b84ea7d5c5))
+* **web:** add error boundary in web app ([7dff9dc](https://github.com/capsa-gg/capsa/commit/7dff9dc5b2aec63e2b510645d12ec5678b60efdc))
+* **web:** add single log metadata tab ([0d2817c](https://github.com/capsa-gg/capsa/commit/0d2817c837c893c8433ce22f45f21f3b37efe40d))
+* **web:** add snackbar notifications (by extending error snackbar) ([aef6a74](https://github.com/capsa-gg/capsa/commit/aef6a74361e7b7db05894add69320c9e69269ec6))
+* **web:** dark mode support ([8da4bab](https://github.com/capsa-gg/capsa/commit/8da4bab4f17f3d56b4acdc6c901b2654d76eb983))
+* **web:** search functionality ([6544414](https://github.com/capsa-gg/capsa/commit/6544414ea250285752a441efe2fc1baed1aafc66))
+* **web:** title and environment management UI ([1d6f4a2](https://github.com/capsa-gg/capsa/commit/1d6f4a207d4f07368951e4e88e68bb23eb096259))
+* **web:** user management page implementation ([4a0c17e](https://github.com/capsa-gg/capsa/commit/4a0c17e897dafc5cb09bc2ba371ddf98f6fa9d91))
+
 ## [0.0.5](https://github.com/capsa-gg/capsa/compare/v0.0.4...v0.0.5) (2024-11-20)
 
 
