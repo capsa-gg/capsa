@@ -8,8 +8,7 @@ export const ErrorResponseSchema = z.object({
     details: z.string().optional(),
 
     // Only used in development
-    // biome-ignore lint/style/useNamingConvention: for dev only, this is OK
-    raw_error: z.string().optional(),
+    rawError: z.string().optional(),
 });
 export type ErrorResponse = z.infer<typeof ErrorResponseSchema>;
 
@@ -43,6 +42,6 @@ export class ApplicationError extends Error {
         this.error = err.error;
         this.details = err.details;
         this.additionalData = err.additionalData;
-        this.rawError = err.raw_error;
+        this.rawError = err.rawError;
     }
 }

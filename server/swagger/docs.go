@@ -1686,10 +1686,10 @@ const docTemplate = `{
                 "expiry": {
                     "type": "string"
                 },
-                "link_web": {
+                "linkWeb": {
                     "type": "string"
                 },
-                "log_id": {
+                "logId": {
                     "type": "string"
                 },
                 "token": {
@@ -1708,7 +1708,7 @@ const docTemplate = `{
                     "description": "Error contains the error string.",
                     "type": "string"
                 },
-                "raw_error": {
+                "rawError": {
                     "description": "RawError contains the raw error.\nThis field is only sent in development mode.",
                     "type": "string"
                 }
@@ -1807,11 +1807,11 @@ const docTemplate = `{
         "bodies.LogMetadataSaveRequest": {
             "type": "object",
             "properties": {
-                "additional_metadata": {
+                "additionalMetadata": {
                     "type": "object",
                     "additionalProperties": {}
                 },
-                "log_links": {
+                "linkedLogs": {
                     "type": "object",
                     "additionalProperties": {
                         "type": "string"

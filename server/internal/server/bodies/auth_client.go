@@ -16,7 +16,7 @@ type ClientLogCreationRequest struct {
 // ClientLogCreationResponse contains the after a client has successfully authenticated and a log session has been created.
 type ClientLogCreationResponse struct {
 	Token   string    `json:"token"`
-	LogID   uuid.UUID `json:"log_id"`
-	LinkWeb string    `json:"link_web"`
+	LogID   uuid.UUID `json:"logId"`
+	LinkWeb string    `json:"linkWeb"`
 	Expiry  time.Time `json:"expiry"`
 }

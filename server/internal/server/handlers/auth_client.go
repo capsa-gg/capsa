@@ -59,7 +59,6 @@ func (h Handlers) ClientAuth(c *gin.Context) {
 		return
 	}
 
-	// Note: we force https to be used
 	linkWeb := fmt.Sprintf("https://%s/logs/%s", h.services.Config.WebappHostname, sesInfo.UUID)
 
 	res := bodies.ClientLogCreationResponse{
