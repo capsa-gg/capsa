@@ -20,8 +20,6 @@ export const ApiErrorSchema = ErrorResponseSchema.extend({
 });
 type ApiError = z.infer<typeof ApiErrorSchema>;
 
-z.never();
-
 export default ApiError;
 
 // TODO: better formatting
