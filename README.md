@@ -36,7 +36,7 @@ This project tries to use code generation where possible.
 
 Generated code means less time maintaining it and is often less error-prone than hand-rolled code.
 
-For Typescript, code generation is not as prevalent as with Go. Therefore it relies more on helper functions that hide the complexity but offer a nice and simple API for users.
+For Typescript, code generation is not as prevalent as with Go. Therefore, it relies more on helper functions that hide the complexity but offer a nice and simple API for users.
 
 ### Strict linting
 
