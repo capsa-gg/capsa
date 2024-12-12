@@ -1,3 +1,4 @@
+import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -46,4 +47,28 @@ const nextConfig: NextConfig = {
     },
 };
 
-export default nextConfig;
+const getNextConfig = (): NextConfig => {
+    const sentryAuthToken = process.env.SENTRY_AUTH_TOKEN;
+
+    if (!sentryAuthToken) {
+        return nextConfig;
+    }
+
+    return withSentryConfig(nextConfig, {
+        // For source map upload in CI
+        org: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
+        authToken: sentryAuthToken,
+
+        widenClientFileUpload: true,
+        reactComponentAnnotation: {
+            enabled: true,
+        },
+
+        tunnelRoute: "/monitoring",
+
+        disableLogger: true,
+    });
+};
+
+export default getNextConfig();

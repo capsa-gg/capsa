@@ -39,6 +39,9 @@ type Config struct {
 	EmailSenderEmail string `mapstructure:"email_sender_email" validate:"required"`
 	BrevoAPIKey      string `mapstructure:"brevo_api_key" validate:"required"`
 
+	// Sentry
+	SentryDsn string `mapstructure:"sentry_dsn"` // Optional
+
 	// Application logic configuration
 	LogRetentionDays    int `mapstructure:"log_retention_days" validate:"required"`
 	LogMaxDurationHours int `mapstructure:"log_max_duration_hours" validate:"required"`

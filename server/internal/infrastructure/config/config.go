@@ -50,7 +50,7 @@ func LoadConfig(configFile string) (*entities.Config, error) {
 		return nil, fmt.Errorf("error unmarshalling config: %w", err)
 	}
 
-	logger, err := loggerCreator.New(config.IsDevMode)
+	logger, err := loggerCreator.New(config.IsDevMode, config.SentryDsn)
 	if err != nil {
 		return nil, fmt.Errorf("error creating logger: %w", err)
 	}

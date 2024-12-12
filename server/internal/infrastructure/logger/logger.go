@@ -1,6 +1,8 @@
 package logger
 
 import (
+	"fmt"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -68,12 +70,24 @@ func generateConfig(isDev bool) zap.Config {
 }
 
 // New returns a *zap.Logger for the given environment.
-func New(isDev bool) (*zap.Logger, error) {
+// If the sentryDns argument is not an empty string, Sentry will be initialized and attached to the logger.
+func New(isDev bool, sentryDsn string) (*zap.Logger, error) {
 	config := generateConfig(isDev)
 	loggerBase, err := config.Build()
 
-	core := zapcore.NewTee(loggerBase.Core())
-	logger := zap.New(core, zap.AddCaller())
+	if err != nil {
+		return nil, fmt.Errorf("error building logging config: %w", err)
+	}
 
-	return logger, err
+	core := zapcore.NewTee(loggerBase.Core())
+
+	if sentryDsn != "" {
+		logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel), withSentry(sentryDsn))
+
+		return logger, nil
+	}
+
+	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
+
+	return logger, nil
 }

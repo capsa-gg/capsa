@@ -31,6 +31,9 @@ email_sender_name: Capsa
 email_sender_email: no-reply@capsa.gg
 brevo_api_key: see https://app-smtp.brevo.com/real-time
 
-#Application logic configuration
+# Application logic configuration
 log_retention_days: 90
 log_max_duration_hours: 48
+
+# Sentry
+#sentry_dsn: ""

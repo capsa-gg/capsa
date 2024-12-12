@@ -9,6 +9,7 @@ import (
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 	"github.com/capsa-gg/capsa/server/internal/server/handlers"
 
+	sentrygin "github.com/getsentry/sentry-go/gin"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,7 +25,7 @@ func (s GinServer) Start() error {
 }
 
 // New creates a new Server instance with middleware and handlers added.
-// Use Server.Start() to run the server.
+// Use GinServer.Start() to run the server.
 func New(services *interactor.Services) (*GinServer, error) {
 	c := services.Config
 	log := c.RootLogger.Named("HttpInit").Sugar()
@@ -46,6 +47,10 @@ func New(services *interactor.Services) (*GinServer, error) {
 		port:   port,
 	}
 	gin.DefaultWriter = os.Stdout // Reset to the default writer
+
+	if c.SentryDsn != "" {
+		server.Router.Use(sentrygin.New(sentrygin.Options{}))
+	}
 
 	registerMiddleware(server.Router, c.RootLogger)
 
