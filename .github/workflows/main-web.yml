@@ -17,9 +17,14 @@ defaults:
     working-directory: ./web
 
 env:
+  # Docker
   GHCR_REGISTRY: ghcr.io/capsa-gg
   DIGITALOCEAN_REGISTRY: registry.digitalocean.com/capsa
   DOCKER_CONTAINER_NAME: capsa-web
+  # Sentry
+  SENTRY_AUTH_TOKEN: ${{ vars.SENTRY_AUTH_TOKEN }}
+  SENTRY_ORG: capsa-gg
+  SENTRY_PROJECT: web
 
 jobs:
   validate-deploy:

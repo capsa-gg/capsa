@@ -5,7 +5,7 @@ import type React from "react";
 import { useState } from "react";
 import type { FallbackProps } from "react-error-boundary";
 
-const ErrorFallback: React.FC<FallbackProps> = ({ error, resetErrorBoundary }) => {
+const ErrorFallback: React.FC<FallbackProps> = ({ error }) => {
     const [showStack, setShowStack] = useState(false);
 
     return (
@@ -35,8 +35,8 @@ const ErrorFallback: React.FC<FallbackProps> = ({ error, resetErrorBoundary }) =
                 </Paper>
             </Collapse>
 
-            <Button variant="contained" color="primary" onClick={resetErrorBoundary}>
-                Try Again
+            <Button variant="contained" color="primary" onClick={() => window.location.reload()}>
+                Reload page
             </Button>
         </Paper>
     );
