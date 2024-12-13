@@ -46,7 +46,7 @@ CREATE TABLE environments (
 CREATE TYPE log_client_type AS ENUM (
     'Client',
     'Game',
-    'Editor'
+    'Editor',
     'Server'
 );
 

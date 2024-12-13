@@ -21,6 +21,7 @@ const LogViewer: React.FC<LogViewerProps> = ({ data, absoluteLineNumbers }) => {
             options={{
                 ...monacoOptions,
                 lineNumbers: absoluteLineNumbers ? (i: number) => `${absoluteLineNumbers[i - 1]}` : "on",
+                lineNumbersMinChars: 9,
             }}
         />
     );
@@ -30,5 +31,5 @@ export default LogViewer;
 
 export interface LogViewerProps {
     data: string;
-    absoluteLineNumbers: number[] | null;
+    absoluteLineNumbers: string[] | null;
 }

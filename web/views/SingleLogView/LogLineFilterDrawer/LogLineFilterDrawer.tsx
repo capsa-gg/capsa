@@ -12,7 +12,7 @@ import type * as React from "react";
 
 const LogLineFilterDrawer: React.FC = () => {
     const {
-        drawerState: [drawerOpen, setDrawerOpen],
+        filterDrawerState: [drawerOpen, setDrawerOpen],
         filters: [filterState, filterDispatch],
     } = useSingleLogContext();
 

@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
+	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 func TestHasFilters(t *testing.T) {
@@ -39,42 +41,42 @@ func TestHasFilters(t *testing.T) {
 
 func TestShouldIncludeLineBasedOnFilters(t *testing.T) {
 	tests := map[string]struct {
-		lineMetadata logChunkLineMetadata
+		lineMetadata entities.LogChunkLineMetadata
 		filters      LogStreamLineFilters
 		expected     bool
 	}{
 		"no filters": {
-			lineMetadata: logChunkLineMetadata{Severity: "Log", Category: "LogTestExample"},
+			lineMetadata: entities.LogChunkLineMetadata{Severity: "Log", Category: "LogTestExample"},
 			filters:      LogStreamLineFilters{},
 			expected:     true,
 		},
 		"included severity match": {
-			lineMetadata: logChunkLineMetadata{Severity: "Log", Category: "LogTestExample"},
+			lineMetadata: entities.LogChunkLineMetadata{Severity: "Log", Category: "LogTestExample"},
 			filters:      LogStreamLineFilters{IncludedSeverities: []string{"Log"}},
 			expected:     true,
 		},
 		"included severity no match": {
-			lineMetadata: logChunkLineMetadata{Severity: "Error", Category: "LogTestExample"},
+			lineMetadata: entities.LogChunkLineMetadata{Severity: "Error", Category: "LogTestExample"},
 			filters:      LogStreamLineFilters{IncludedSeverities: []string{"Log", "Verbose"}},
 			expected:     false,
 		},
 		"included category match": {
-			lineMetadata: logChunkLineMetadata{Severity: "Log", Category: "LogTestExample"},
+			lineMetadata: entities.LogChunkLineMetadata{Severity: "Log", Category: "LogTestExample"},
 			filters:      LogStreamLineFilters{IncludedCategories: []string{"LogTestExample"}},
 			expected:     true,
 		},
 		"included category no match": {
-			lineMetadata: logChunkLineMetadata{Severity: "Log", Category: "LogWorldMetrics"},
+			lineMetadata: entities.LogChunkLineMetadata{Severity: "Log", Category: "LogWorldMetrics"},
 			filters:      LogStreamLineFilters{IncludedCategories: []string{"LogTestExample"}},
 			expected:     false,
 		},
 		"excluded category match": {
-			lineMetadata: logChunkLineMetadata{Severity: "Log", Category: "LogTestExample"},
+			lineMetadata: entities.LogChunkLineMetadata{Severity: "Log", Category: "LogTestExample"},
 			filters:      LogStreamLineFilters{ExcludedCategories: []string{"LogTestExample"}},
 			expected:     false,
 		},
 		"excluded category match overwritten by included category": {
-			lineMetadata: logChunkLineMetadata{Severity: "Log", Category: "LogTestExample"},
+			lineMetadata: entities.LogChunkLineMetadata{Severity: "Log", Category: "LogTestExample"},
 			filters: LogStreamLineFilters{
 				IncludedCategories: []string{"LogCapsaCore"},
 				ExcludedCategories: []string{"LogTestExample"},
@@ -82,7 +84,7 @@ func TestShouldIncludeLineBasedOnFilters(t *testing.T) {
 			expected: false,
 		},
 		"excluded category no match": {
-			lineMetadata: logChunkLineMetadata{Severity: "Log", Category: "LogWorldMetrics"},
+			lineMetadata: entities.LogChunkLineMetadata{Severity: "Log", Category: "LogWorldMetrics"},
 			filters:      LogStreamLineFilters{ExcludedCategories: []string{"LogTestExample"}},
 			expected:     true,
 		},

@@ -1,19 +1,28 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 
+	"github.com/capsa-gg/capsa/server/internal/data/database"
 	"github.com/capsa-gg/capsa/server/internal/domain/logchunk"
+	"github.com/capsa-gg/capsa/server/internal/domain/logs"
 	"github.com/capsa-gg/capsa/server/internal/domainerror"
+	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 const (
 	logModeHeaderName       = "X-Capsa-Log-Mode"
 	logModeSingleUnfiltered = "SingleUnfiltered"
 	logModeSingleFiltered   = "SingleFiltered"
+	logModeMergedFiltered   = "MergedFiltered"
+
+	maxLinesPerMergedChunk = uint64(100)
 )
 
 // StreamLogChunks allows users to stream all uploaded chunks for a given log id
@@ -24,6 +33,7 @@ const (
 // @Param		included_severities	query	string 		false 		"Included log line severities, optional"
 // @Param		included_categories	query	string 		false 		"Included log categories, optional"
 // @Param		excluded_categories	query	string 		false 		"Excluded log categories, will be ignored if included_categories is set, optional"
+// @Param		merge_logs			query	[]string 	false 		"Comma separated log UUIDs that should be merged"
 // @Description	Allows users to stream all uploaded chunks for a given log id. If no query parameters are set, the whole log will be fetched.
 // @Security	JwtUser
 // @Security	JwtAdmin
@@ -35,7 +45,7 @@ const (
 // @Header		all		{string} 	X-Capsa-Log-Mode				"Indicates the log mode, which can change the log content response, possible values: SingleUnfiltered|SingleFiltered"
 // @Header		500		{string} 	X-Capsa-Error					"Server error information"
 // @Router 		/user/logs/{logid}/log [get]
-func (h Handlers) StreamLogChunks(c *gin.Context) {
+func (h Handlers) StreamLogChunks(c *gin.Context) { //nolint:funlen // This is fine
 	log := h.logger.Named("LogStoreChunk")
 
 	logUUID, ok := getLogUUIDFromURI(c)
@@ -77,15 +87,27 @@ func (h Handlers) StreamLogChunks(c *gin.Context) {
 	log = log.With("log_id", logInfo.ID)
 	log.Debug("processing log stream request")
 
-	// Set response headers
-	c.Header("Content-Type", "text/plain")
-	c.Header("Transfer-Encoding", "chunked")
-
 	streamer := c.Writer.WriteString
+
+	// Check if we need to merge logs or not
+	mergeLogsArg := c.Query("merge_logs")
+	if mergeLogsArg != "" {
+		c.Header(logModeHeaderName, logModeMergedFiltered)
+
+		mergeLogs := strings.Split(mergeLogsArg, ",")
+
+		h.streamMergedLogs(c, &logInfo, mergeLogs, filters, streamer)
+
+		return
+	}
 
 	hasFilters := filters.HasFilters()
 
 	log.With("has_filters", hasFilters)
+
+	// Set response headers
+	c.Header("Content-Type", "text/plain")
+	c.Header("Transfer-Encoding", "chunked")
 
 	if hasFilters {
 		c.Header(logModeHeaderName, logModeSingleFiltered)
@@ -107,4 +129,109 @@ func (h Handlers) StreamLogChunks(c *gin.Context) {
 	c.Status(http.StatusOK)
 
 	log.Debug("finished streaming log")
+}
+
+func (h Handlers) streamMergedLogs(c *gin.Context, baseLog *database.Log, mergeLogs []string, filters logchunk.LogStreamLineFilters, streamChunk entities.ChunkStreamer) {
+	log := h.logger.Named("streamMergedLogs")
+
+	mergeLogsInfo := []database.Log{}
+
+	for _, ml := range mergeLogs {
+		mlUUID, err := uuid.Parse(ml)
+		if err != nil {
+			h.sendErrorResponse(c, domainerror.New(domainerror.InvalidArgument, ml+" cannot be parsed to uuid", err))
+
+			return
+		}
+
+		l, err := h.services.Database.GetLogByUuid(c, mlUUID)
+		if err != nil {
+			h.sendErrorResponse(c, domainerror.NewFromDatabaseError(err))
+
+			return
+		}
+
+		mergeLogsInfo = append(mergeLogsInfo, l)
+	}
+
+	mergeInput, err := h.getMergedLogLoaders(c, baseLog, mergeLogsInfo, filters)
+	if err != nil {
+		h.sendErrorResponse(c, domainerror.NewFromDatabaseError(err))
+
+		return
+	}
+
+	// Set response headers
+	c.Header("Content-Type", "text/plain")
+	c.Header("Transfer-Encoding", "chunked")
+
+	// Start streaming
+	err = logs.StreamMergedLog(c, h.services, mergeInput, maxLinesPerMergedChunk, streamChunk)
+	if err != nil {
+		log.Errorf("error streaming log chunks: %s", err)
+
+		c.Header("X-Capsa-Error", "error streaming merged logs")
+		c.Status(http.StatusInternalServerError)
+
+		return
+	}
+
+	c.Status(http.StatusOK)
+}
+
+func (h Handlers) getMergedLogLoaders(c *gin.Context, baseLog *database.Log, mergeLogs []database.Log, filters logchunk.LogStreamLineFilters) (entities.MergedLogInput, error) {
+	if baseLog == nil {
+		return nil, domainerror.New(domainerror.Unexpected, "baseLog nil", errors.New("baseLog nil"))
+	}
+
+	typeCounts := map[database.LogClientType]int{
+		database.LogClientTypeEditor: 0,
+		database.LogClientTypeGame:   0,
+		database.LogClientTypeClient: 0,
+		database.LogClientTypeServer: 0,
+	}
+
+	// Add base log as first argument
+	baseLoader, err := logchunk.GenerateFilteredLineLoaderForLog(c, h.services, baseLog.ID, filters)
+	if err != nil {
+		return nil, err
+	}
+
+	mergedLogInput := entities.MergedLogInput{
+		{Key: "--", Loader: baseLoader},
+	}
+
+	// Add the rest of the merged logs
+	for _, ml := range mergeLogs {
+		typeCounts[ml.LogType]++
+		num := typeCounts[ml.LogType]
+		key := fmt.Sprintf("%s%d", logClientPrefix(ml.LogType), num)
+
+		loader, err := logchunk.GenerateFilteredLineLoaderForLog(c, h.services, ml.ID, filters)
+		if err != nil {
+			return nil, fmt.Errorf("error generating loader for log with ID %d: %w", ml.ID, err)
+		}
+
+		mergedLogInput = append(mergedLogInput, entities.MergedLogInputData{
+			Key:    key,
+			Loader: loader,
+		})
+	}
+
+	return mergedLogInput, err
+}
+
+func logClientPrefix(lct database.LogClientType) string {
+	switch lct {
+	case database.LogClientTypeEditor:
+		return "E"
+	case database.LogClientTypeGame:
+		return "G"
+	case database.LogClientTypeClient:
+		return "C"
+	case database.LogClientTypeServer:
+		return "S"
+	default:
+		return "?"
+	}
 }

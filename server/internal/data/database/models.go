@@ -17,9 +17,10 @@ import (
 type LogClientType string
 
 const (
-	LogClientTypeClient       LogClientType = "Client"
-	LogClientTypeGame         LogClientType = "Game"
-	LogClientTypeEditorServer LogClientType = "EditorServer"
+	LogClientTypeClient LogClientType = "Client"
+	LogClientTypeGame   LogClientType = "Game"
+	LogClientTypeEditor LogClientType = "Editor"
+	LogClientTypeServer LogClientType = "Server"
 )
 
 func (e *LogClientType) Scan(src interface{}) error {

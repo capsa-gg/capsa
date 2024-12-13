@@ -4,7 +4,7 @@ import { getRequestUrl } from "@/api/apibase";
 import { getJwtFromLocalStorage } from "@/data/jwt/localStorage";
 import type { LogFilters, LogMode, WorkerCommandMessage, WorkerPostMessage } from "./LogProcessor.types";
 
-type LogContentsUpdatedCallback = (fullLog: string, absoluteLineNumbers: number[] | null) => void;
+type LogContentsUpdatedCallback = (fullLog: string, addedChunk: string, absoluteLineNumbers: string[] | null) => void;
 type LogModeReceivedCallback = (logMode: LogMode | null) => void;
 type ErrorCallback = (error: string) => void;
 type DoneCallback = () => void;
@@ -30,7 +30,7 @@ export default class LogProcessor {
                 case "LOG_CONTENTS_UPDATED":
                     console.log("[LogProcessor]: LOG_CONTENTS_UPDATED");
                     if (this.logContentsUpdatedCallback) {
-                        this.logContentsUpdatedCallback(payload.fullLog, payload.lineNumbers);
+                        this.logContentsUpdatedCallback(payload.fullLog, payload.newChunk, payload.lineNumbers);
                     }
                     break;
                 case "LOG_MODE_RECEIVED":
@@ -62,7 +62,7 @@ export default class LogProcessor {
             this.logModeReceivedCallback(null);
         }
         if (this.logContentsUpdatedCallback) {
-            this.logContentsUpdatedCallback("", null);
+            this.logContentsUpdatedCallback("", "", null);
         }
 
         const path = `/user/logs/${id}/log`;

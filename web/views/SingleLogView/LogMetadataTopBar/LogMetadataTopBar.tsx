@@ -3,6 +3,7 @@ import { LogMetadataList } from "@/views/SingleLogView/LogMetadataTopBar/LogMeta
 import DataObjectIcon from "@mui/icons-material/DataObject";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
+import MergeIcon from "@mui/icons-material/Merge";
 import { Alert, AlertTitle, Badge, Divider, IconButton, Tooltip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { Stack } from "@mui/system";
@@ -11,7 +12,8 @@ import type React from "react";
 const LogMetadataTopBar: React.FC = () => {
     const {
         viewMode: [viewMode, setViewMode],
-        drawerState: [drawerOpen, setDrawerOpen],
+        filterDrawerState: [filterDrawerOpen, setFilterDrawerOpen],
+        mergeDrawerState: [mergeDrawerOpen, setMergeDrawerOpen],
         metadata: { error, isLoading, data },
     } = useSingleLogContext();
 
@@ -59,8 +61,15 @@ const LogMetadataTopBar: React.FC = () => {
                     </Tooltip>
                 </Badge>
                 <Badge color="primary">
-                    <Tooltip title="Open log line filters">
-                        <IconButton onClick={() => setDrawerOpen(true)}>
+                    <Tooltip title="Open merged logs drawer">
+                        <IconButton onClick={() => setMergeDrawerOpen(true)}>
+                            <MergeIcon />
+                        </IconButton>
+                    </Tooltip>
+                </Badge>
+                <Badge color="primary">
+                    <Tooltip title="Open log line filters drawer">
+                        <IconButton onClick={() => setFilterDrawerOpen(true)}>
                             <FilterAltIcon />
                         </IconButton>
                     </Tooltip>

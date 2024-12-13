@@ -5,6 +5,7 @@ import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext
 import LogLineFilterDrawer from "@/views/SingleLogView/LogLineFilterDrawer/LogLineFilterDrawer";
 import LogMetadataPage from "@/views/SingleLogView/LogMetadataPage/LogMetadataPage";
 import LogMetadataTopBar from "@/views/SingleLogView/LogMetadataTopBar/LogMetadataTopBar";
+import MergeLogsDrawer from "@/views/SingleLogView/MergeLogsDrawer/MergeLogsDrawer";
 import Box from "@mui/material/Box";
 import type React from "react";
 
@@ -29,6 +30,7 @@ const SingleLogView: React.FC = () => {
     return (
         <Box width="97%" height="calc(100vh - 240px)">
             <LogLineFilterDrawer />
+            <MergeLogsDrawer />
             <LogMetadataTopBar />
             <ViewBody />
         </Box>

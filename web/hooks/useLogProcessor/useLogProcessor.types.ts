@@ -7,7 +7,7 @@ export interface UseLogProcessor {
     error: string | null;
     isDone: boolean;
     logMode: string | null;
-    absoluteLineNumbers: number[] | null;
+    absoluteLineNumbers: string[] | null;
     startFetchingLog: (logUUID: string, filters: FilterState) => void;
     stopFetchingLog: () => void;
 }

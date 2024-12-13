@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"go.uber.org/zap"
+
+	"github.com/capsa-gg/capsa/server/internal/entities"
 )
 
 var (
@@ -20,16 +22,6 @@ var (
 
 const timestampParseLayout = "2006.01.02-15.04.05.000"
 
-type logChunkLineMetadata struct {
-	Timestamp time.Time
-	Category  string
-	Severity  string
-}
-
-func (l logChunkLineMetadata) isComplete() bool {
-	return l.Severity != "" && l.Category != "" && !l.Timestamp.IsZero()
-}
-
 type logChunkMetadata struct {
 	Start           time.Time
 	End             time.Time
@@ -38,8 +30,8 @@ type logChunkMetadata struct {
 	SeveritiesCount map[string]int
 }
 
-// Should only be called when the line processing was successful and the line .isComplete().
-func (lcm *logChunkMetadata) addLineMetadata(lineMetadata logChunkLineMetadata) {
+// Should only be called when the line processing was successful and the line .IsComplete().
+func (lcm *logChunkMetadata) addLineMetadata(lineMetadata entities.LogChunkLineMetadata) {
 	if lcm.Start.IsZero() || lineMetadata.Timestamp.Before(lcm.Start) {
 		lcm.Start = lineMetadata.Timestamp
 	}
@@ -77,7 +69,7 @@ func extractMetadataFromChunk(logger *zap.SugaredLogger, logChunk []byte) (logCh
 		// We encountered a \n, so handle the line and try and get the metadata for it
 		lineCount++
 
-		lineMetadata, err := extractMetadataFromLine(lineContents)
+		lineMetadata, err := ExtractMetadataFromLine(lineContents)
 
 		switch {
 		case err != nil: // Metadata is complete and should be processed
@@ -88,7 +80,7 @@ func extractMetadataFromChunk(logger *zap.SugaredLogger, logChunk []byte) (logCh
 			).Warn("error extracting metadata from line, not processing")
 
 			unprocessedLines = append(unprocessedLines, string(lineContents))
-		case !lineMetadata.isComplete(): // Don't process incomplete lines
+		case !lineMetadata.IsComplete(): // Don't process incomplete lines
 			log.With(
 				zap.Int("line", i),
 				zap.Time("timestamp", lineMetadata.Timestamp),
