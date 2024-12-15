@@ -49,16 +49,32 @@ func (s sentry) Write(entry zapcore.Entry, fields []zapcore.Field) error { //nol
 
 	hub := sentrysdk.CurrentHub().Clone()
 
-	event := sentrysdk.NewEvent()
-	event.Level = zapToSentryLevel(entry.Level)
-	event.Message = entry.Message
-	event.Timestamp = entry.Time
-	event.Tags["logger"] = entry.LoggerName
-	event.Tags["stack"] = entry.Stack
-	event.Tags["caller"] = entry.Caller.String()
-	event.Extra = m
+	if shouldCaptureEvent(entry.Level) { // Event
+		event := sentrysdk.NewEvent()
 
-	hub.CaptureEvent(event)
+		event.Level = zapToSentryLevel(entry.Level)
+		event.Message = entry.Message
+		event.Timestamp = entry.Time
+		event.Tags["logger"] = entry.LoggerName
+		event.Tags["stack"] = entry.Stack
+		event.Tags["caller"] = entry.Caller.String()
+		event.Extra = m
+
+		hub.CaptureEvent(event)
+	} else { // Breadcrumb
+		hint := sentrysdk.BreadcrumbHint{
+			"logger": entry.LoggerName,
+			"stack":  entry.Stack,
+			"caller": entry.Caller.String(),
+		}
+
+		hub.AddBreadcrumb(&sentrysdk.Breadcrumb{
+			Level:     zapToSentryLevel(entry.Level),
+			Timestamp: entry.Time,
+			Message:   entry.Message,
+			Data:      m,
+		}, &hint)
+	}
 
 	return nil
 }
@@ -96,4 +112,8 @@ func zapToSentryLevel(l zapcore.Level) sentrysdk.Level {
 	default:
 		return sentrysdk.LevelInfo
 	}
+}
+
+func shouldCaptureEvent(level zapcore.Level) bool {
+	return level >= zapcore.WarnLevel // TODO: change to ErrorLevel for v0.1 release
 }
