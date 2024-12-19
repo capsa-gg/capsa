@@ -15,26 +15,26 @@ import (
 )
 
 type filteredLineLoader struct {
-	log                     *zap.SugaredLogger
-	services                *interactor.Services
-	filters                 LogStreamLineFilters
-	chunks                  []database.LogsChunk
-	lineCounter             int
-	currentLineInChunkIndex int
-	currentChunkIndex       int
-	currentChunkLines       []string
+	log               *zap.SugaredLogger
+	services          *interactor.Services
+	filters           LogStreamLineFilters
+	chunks            []database.LogsChunk
+	lineCounter       int
+	nextLineIndex     int
+	currentChunkIndex int
+	currentChunkLines []string
 }
 
 func newFilteredLineLoader(log *zap.SugaredLogger, s *interactor.Services, filters LogStreamLineFilters, chunks []database.LogsChunk) entities.FilteredLineLoader {
 	return &filteredLineLoader{
-		log:                     log,
-		services:                s,
-		filters:                 filters,
-		chunks:                  chunks,
-		lineCounter:             0,
-		currentChunkIndex:       0,
-		currentChunkLines:       []string{},
-		currentLineInChunkIndex: 0,
+		log:               log,
+		services:          s,
+		filters:           filters,
+		chunks:            chunks,
+		lineCounter:       0,
+		currentChunkIndex: 0,
+		currentChunkLines: []string{},
+		nextLineIndex:     0,
 	}
 }
 
@@ -58,9 +58,9 @@ func GenerateFilteredLineLoaderForLog(ctx context.Context, s *interactor.Service
 }
 
 func (fll *filteredLineLoader) HasNextLine() (bool, error) {
-	log := fll.log.Named("HasNextLine").With("i_line_in_chunk", fll.currentLineInChunkIndex, "len_chunk_lines", len(fll.currentChunkLines))
+	log := fll.log.Named("HasNextLine").With("i_line_in_chunk", fll.nextLineIndex, "len_chunk_lines", len(fll.currentChunkLines))
 
-	if fll.currentLineInChunkIndex+2 > len(fll.currentChunkLines) { // +1 to account for 0-based index, then another +1 for the next line
+	if fll.nextLineIndex+1 > len(fll.currentChunkLines) {
 		log.Debug("no more data in chunk, loading next chunk")
 
 		fetchedNext, err := fll.loadNextBlob()
@@ -90,12 +90,12 @@ func (fll *filteredLineLoader) ReadNextLineMetadata() (lineMetadata *entities.Lo
 	}
 
 	if !hasNext {
-		log.Warn("No next line present")
+		log.Info("No next line present")
 
 		return nil, nil //nolint:nilnil // this is well documented in the interface.
 	}
 
-	lineContents := fll.currentChunkLines[fll.currentLineInChunkIndex+1]
+	lineContents := fll.currentChunkLines[fll.nextLineIndex]
 
 	if lineContents == "" {
 		return nil, domainerror.New(domainerror.Unexpected, "line contents empty", errors.New("line contents empty"))
@@ -125,20 +125,20 @@ func (fll *filteredLineLoader) GetNextLine() (logLine *string, err error) {
 	}
 
 	if !hasNext {
-		log.Warn("No next line present")
+		log.Info("No next line present")
 
 		return nil, nil //nolint:nilnil // this is well documented in the interface.
 	}
 
-	fll.currentLineInChunkIndex++
-
-	lineContents := fll.currentChunkLines[fll.currentLineInChunkIndex]
+	lineContents := fll.currentChunkLines[fll.nextLineIndex]
 
 	if lineContents == "" {
 		return nil, nil //nolint:nilnil // this is well documented in the interface.
 	}
 
-	return &fll.currentChunkLines[fll.currentLineInChunkIndex], nil
+	fll.nextLineIndex++
+
+	return &lineContents, nil
 }
 
 // Boolean indicates whether the next chunk has been loaded.
@@ -189,7 +189,7 @@ func (fll *filteredLineLoader) loadNextBlob() (bool, error) {
 		filteredNonEmptyLine := slices.DeleteFunc(filteredLinesSlice, func(s string) bool { return s == "" })
 
 		fll.currentChunkLines = filteredNonEmptyLine
-		fll.currentLineInChunkIndex = 0
+		fll.nextLineIndex = 0
 
 		logLoop.Debug("fetched chunk contents")
 
