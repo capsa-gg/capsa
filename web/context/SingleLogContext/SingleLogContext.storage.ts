@@ -21,6 +21,12 @@ export const getSingleLogFilterStateFromLocalStorage = (): FilterState | null =>
             removeSingleLogFilterStateFromLocalStorage();
             return null;
         }
+
+        // Merged logs should not be loaded from localstorage.
+        if (data?.mergedLogs) {
+            data.mergedLogs = [];
+        }
+
         return data;
     } catch (e) {
         console.error("error parsing single log context state", e);

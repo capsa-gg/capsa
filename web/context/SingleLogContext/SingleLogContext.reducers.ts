@@ -4,6 +4,7 @@ import logSeverities from "@/types/logSeverities";
 
 export const filterReducer = (state: FilterState, action: FilterAction) => {
     switch (action.type) {
+        // Misc
         case "RESET_FILTERS": {
             return defaultFilterReducerState;
         }
@@ -18,6 +19,8 @@ export const filterReducer = (state: FilterState, action: FilterAction) => {
                 },
             };
         }
+
+        // Included categories
         case "INCLUDED_CATEGORY_ADD": {
             const category = action.category;
             return {
@@ -38,6 +41,8 @@ export const filterReducer = (state: FilterState, action: FilterAction) => {
                 includedCategories: [],
             };
         }
+
+        // Excluded categories
         case "EXCLUDED_CATEGORY_ADD": {
             const category = action.category;
             return {
@@ -58,6 +63,33 @@ export const filterReducer = (state: FilterState, action: FilterAction) => {
                 excludedCategories: [],
             };
         }
+
+        // Merged logs
+        case "MERGED_LOGS_SWITCH": {
+            const log = action.log;
+
+            const hasLog = state.mergedLogs.includes(log);
+
+            if (hasLog) {
+                return {
+                    ...state,
+                    mergedLogs: state.mergedLogs.filter(l => l !== log),
+                };
+            }
+
+            return {
+                ...state,
+                mergedLogs: [...state.mergedLogs, log],
+            };
+        }
+        case "MERGED_LOGS_CLEAR": {
+            return {
+                ...state,
+                mergedLogs: [],
+            };
+        }
+
+        // Fallback
         default:
             console.error("[SingleLogContext.reducers]: unknown action", action);
     }
@@ -76,4 +108,5 @@ export const defaultFilterReducerState: FilterState = {
     severities: logSeverities.reduce((acc, sev) => ({ ...acc, [sev]: true }), {}),
     includedCategories: [],
     excludedCategories: [],
+    mergedLogs: [],
 };

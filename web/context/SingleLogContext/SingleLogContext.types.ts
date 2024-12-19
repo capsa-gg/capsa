@@ -15,7 +15,8 @@ export type SingleLogViewMode = "Log" | "Metadata";
 
 export interface SingleLogContextData {
     viewMode: [SingleLogViewMode, Dispatch<SetStateAction<SingleLogViewMode>>];
-    drawerState: [boolean, Dispatch<SetStateAction<boolean>>];
+    filterDrawerState: [boolean, Dispatch<SetStateAction<boolean>>];
+    mergeDrawerState: [boolean, Dispatch<SetStateAction<boolean>>];
     metadata: SWRResponse<LogMetadata, ApplicationError, null>;
     logProcessor: UseLogProcessor;
     filters: [FilterState, Dispatch<FilterAction>];
@@ -26,6 +27,7 @@ export const FilterStateSchema = z.object({
     severities: z.record(z.string(), z.boolean()),
     includedCategories: z.array(z.string()),
     excludedCategories: z.array(z.string()),
+    mergedLogs: z.array(z.string()),
 });
 
 export type FilterState = z.infer<typeof FilterStateSchema>;
@@ -39,5 +41,6 @@ export type CategoryAction =
     | { type: "EXCLUDED_CATEGORY_ADD"; category: string }
     | { type: "EXCLUDED_CATEGORY_REMOVE"; category: string }
     | { type: "EXCLUDED_CATEGORY_CLEAR" };
+export type MergedLogActionAction = { type: "MERGED_LOGS_SWITCH"; log: string } | { type: "MERGED_LOGS_CLEAR" };
 
-export type FilterAction = ResetFiltersAction | SwitchSeverityAction | CategoryAction;
+export type FilterAction = ResetFiltersAction | SwitchSeverityAction | CategoryAction | MergedLogActionAction;

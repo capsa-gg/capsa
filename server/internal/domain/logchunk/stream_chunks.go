@@ -7,15 +7,13 @@ import (
 	"strings"
 
 	"github.com/capsa-gg/capsa/server/internal/domainerror"
+	"github.com/capsa-gg/capsa/server/internal/entities"
 	"github.com/capsa-gg/capsa/server/internal/interactor"
 )
 
-// ChunkStreamer is the type used to stream chunks.
-type ChunkStreamer func(chunk string) (int, error)
-
 // StreamUnfilteredLogChunks fetches the log chunks and streams them without filtering
 // NOTE: the ID is not validated, this should be done in the calling function.
-func StreamUnfilteredLogChunks(ctx context.Context, s *interactor.Services, logID int64, streamChunk ChunkStreamer) error {
+func StreamUnfilteredLogChunks(ctx context.Context, s *interactor.Services, logID int64, streamChunk entities.ChunkStreamer) error {
 	log := s.GetDomainLogger("logs", "StreamUnfilteredLogChunks").With("log_id", logID)
 
 	log.Debug("start chunk streaming")
@@ -28,25 +26,32 @@ func StreamUnfilteredLogChunks(ctx context.Context, s *interactor.Services, logI
 
 	// Loop over log, and stream chunks
 	for i, c := range chunks {
-		logLoop := log.With("i_chunk", i, "blob_path", c.BlobPath, "created_on", c.CreatedOn)
+		select {
+		case <-ctx.Done():
+			log.Warn("streaming canceled, due to ctx.Done()")
 
-		chunkText, err := s.LogChunks.GetChunk(c.BlobPath)
-		if err != nil {
-			logLoop.Errorf("error fetching chunk: %s", err)
+			return nil
+		default:
+			logLoop := log.With("i_chunk", i, "blob_path", c.BlobPath, "created_on", c.CreatedOn)
 
-			return domainerror.New(domainerror.Unexpected, "error getting chunk from storage", err)
+			chunkText, err := s.LogChunks.GetChunk(c.BlobPath)
+			if err != nil {
+				logLoop.Errorf("error fetching chunk: %s", err)
+
+				return domainerror.New(domainerror.Unexpected, "error getting chunk from storage", err)
+			}
+
+			logLoop.Debug("fetched chunk contents")
+
+			bytesWritten, err := streamChunk(string(chunkText))
+			if err != nil {
+				logLoop.Errorf("error streaming chunk: %s", err)
+
+				return domainerror.New(domainerror.Unexpected, "error streaming chunk", err)
+			}
+
+			logLoop.Debugf("streamed %d bytes", bytesWritten)
 		}
-
-		logLoop.Debug("fetched chunk contents")
-
-		bytesWritten, err := streamChunk(string(chunkText))
-		if err != nil {
-			logLoop.Errorf("error streaming chunk: %s", err)
-
-			return domainerror.New(domainerror.Unexpected, "error streaming chunk", err)
-		}
-
-		logLoop.Debugf("streamed %d bytes", bytesWritten)
 	}
 
 	return nil
@@ -54,7 +59,7 @@ func StreamUnfilteredLogChunks(ctx context.Context, s *interactor.Services, logI
 
 // StreamFilteredLogChunks fetches the log chunks and streams them after filtering them with the setting in LogStreamLineFilters, the absolute line numbers are added as prefixes with {int}.
 // NOTE: the ID is not validated, this should be done in the calling function.
-func StreamFilteredLogChunks(ctx context.Context, s *interactor.Services, logID int64, filters LogStreamLineFilters, streamChunk ChunkStreamer) error {
+func StreamFilteredLogChunks(ctx context.Context, s *interactor.Services, logID int64, filters LogStreamLineFilters, streamChunk entities.ChunkStreamer) error {
 	log := s.GetDomainLogger("logs", "StreamLogChunks").With("log_id", logID)
 
 	log.Debug("start chunk streaming")
@@ -80,7 +85,7 @@ func StreamFilteredLogChunks(ctx context.Context, s *interactor.Services, logID 
 		if !shouldStreamChunk {
 			lineCounter += int(c.LineCount)
 
-			logLoop.Info("shouldStreamChunk returned false, skipping chunk processing/streaming")
+			logLoop.Debug("shouldStreamChunk returned false, skipping chunk processing/streaming")
 
 			continue
 		}
@@ -132,9 +137,9 @@ func filterLinesForChunk(chunk []byte, filters LogStreamLineFilters, lineCounter
 		// We encountered a \n, so handle the line
 		*lineCounter++
 
-		lineMetadata, err := extractMetadataFromLine(currentLineContents)
+		lineMetadata, err := ExtractMetadataFromLine(currentLineContents)
 
-		includeLine := err == nil && lineMetadata.isComplete() && shouldIncludeLineBasedOnFilters(lineMetadata, filters)
+		includeLine := err == nil && lineMetadata.IsComplete() && shouldIncludeLineBasedOnFilters(lineMetadata, filters)
 
 		// Build prefix with the absolute line number
 		sb := strings.Builder{}
@@ -155,7 +160,7 @@ func filterLinesForChunk(chunk []byte, filters LogStreamLineFilters, lineCounter
 	return filteredLines
 }
 
-func shouldIncludeLineBasedOnFilters(lineMetadata logChunkLineMetadata, filters LogStreamLineFilters) bool {
+func shouldIncludeLineBasedOnFilters(lineMetadata entities.LogChunkLineMetadata, filters LogStreamLineFilters) bool {
 	// If severity filters are enabled, we filter out lines that don't fit the filters
 	if len(filters.IncludedSeverities) > 0 && !slices.Contains(filters.IncludedSeverities, lineMetadata.Severity) {
 		return false

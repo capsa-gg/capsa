@@ -89,7 +89,7 @@ func deleteLogsAndChunks(ctx context.Context, s *interactor.Services, log *zap.S
 	defer func(tx pgx.Tx, ctx context.Context) {
 		errRb := tx.Rollback(ctx)
 		if errRb != nil {
-			log.Warnf("error rolling back transaction: %s", errRb)
+			log.Info("error rolling back transaction: %s", errRb)
 		}
 	}(tx, ctx)
 
@@ -102,7 +102,7 @@ func deleteLogsAndChunks(ctx context.Context, s *interactor.Services, log *zap.S
 
 	// Delete from blob storage
 	if len(chunks) == 0 {
-		log.Warn("no chunks for log, not removing from blob storage")
+		log.Info("no chunks for log, not removing from blob storage")
 	} else {
 		for i, c := range chunks {
 			path := c.BlobPath

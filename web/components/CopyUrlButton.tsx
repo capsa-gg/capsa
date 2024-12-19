@@ -12,7 +12,6 @@ const CopyUrlButton = () => {
         setHasCopied(true);
 
         setTimeout(() => setHasCopied(false), 2000);
-        // TODO: Snackbar message
     };
 
     return (

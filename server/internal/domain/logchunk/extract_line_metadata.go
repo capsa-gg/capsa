@@ -1,9 +1,16 @@
 package logchunk
 
-import "time"
+import (
+	"time"
 
+	"github.com/capsa-gg/capsa/server/internal/entities"
+)
+
+// ExtractMetadataFromLine extracts the metadata the input line.
+// In case a line cannot be parsed, the err value will be populated.
+//
 //nolint:funlen,nakedret,gocognit,gocyclo // This is easier to comprehend as a single function with naked returns, the function is somewhat complex, but hard to simplify, the alternative is a lexer/parser
-func extractMetadataFromLine(line []byte) (lineMetadata logChunkLineMetadata, err error) {
+func ExtractMetadataFromLine(line []byte) (lineMetadata entities.LogChunkLineMetadata, err error) {
 	// Check if we have content
 	if len(line) == 0 {
 		err = errorLineEmpty

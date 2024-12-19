@@ -9,13 +9,13 @@ import { useCallback, useEffect, useState } from "react";
 const useLogProcessor: UseLogProcessorHook = () => {
     const [logWorkerManager] = useState(() => new LogProcessor());
     const [fullLog, setFullLog] = useState("Log not loaded");
-    const [absoluteLineNumbers, setAbsoluteLineNumbers] = useState<number[] | null>(null);
+    const [absoluteLineNumbers, setAbsoluteLineNumbers] = useState<string[] | null>(null);
     const [logMode, setLogMode] = useState<LogMode | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isDone, setIsDone] = useState(false);
 
     useEffect(() => {
-        logWorkerManager.setOnLogContentsUpdated((newFullLog, lineNumbers) => {
+        logWorkerManager.setOnLogContentsUpdated((newFullLog, newChunk, lineNumbers) => {
             setFullLog(newFullLog);
             setAbsoluteLineNumbers(lineNumbers);
         });
@@ -83,5 +83,6 @@ const filterStateToWorkerFilters = (filterState: FilterState): LogFilters => {
         includedSeverities: getIncludedSeverities(),
         includedCategories: filterState.includedCategories,
         excludedCategories: filterState.excludedCategories,
+        mergeLogs: filterState.mergedLogs,
     };
 };

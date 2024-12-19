@@ -243,7 +243,7 @@ func TestExtractMetadataFromLine(t *testing.T) {
 
 	for tt, tData := range tests {
 		t.Run(tt, func(t *testing.T) {
-			got, err := extractMetadataFromLine(tData.input)
+			got, err := ExtractMetadataFromLine(tData.input)
 
 			if tData.err != nil {
 				require.ErrorIs(t, tData.err, err)
@@ -254,7 +254,7 @@ func TestExtractMetadataFromLine(t *testing.T) {
 			require.Equal(t, tData.timestamp, got.Timestamp)
 			require.Equal(t, tData.severity, got.Severity)
 			require.Equal(t, tData.category, got.Category)
-			require.Equal(t, tData.isComplete, got.isComplete())
+			require.Equal(t, tData.isComplete, got.IsComplete())
 		})
 	}
 }

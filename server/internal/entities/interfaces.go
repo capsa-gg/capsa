@@ -17,3 +17,21 @@ type BlobStorage interface {
 	// DeleteFile deletes a file from blob storage.
 	DeleteFile(path string) error
 }
+
+// FilteredLineLoader is a way to abstract getting log lines, used for merging logs.
+type FilteredLineLoader interface {
+	// HasNextLine returns whether the log has a next line available.
+	HasNextLine() (bool, error)
+
+	// ReadNextLineMetadata returns the metadata for the next log.
+	// In case error is nil and lineMetadata is also nil, there are no more log lines.
+	// NOTE: there must be a check for `lineMetadata != nil`, as nil is a valid return value, even without an error.
+	ReadNextLineMetadata() (lineMetadata *LogChunkLineMetadata, err error)
+
+	// GetNextLine returns the next line of a log.
+	// In case error is nil and logLine is also nil, there are no more log lines.
+	// By calling GetNextLine, the line gets consumed and the return value for ReadNextLineMetadata gets populated.
+	// The line content should not include the final line break.
+	// NOTE: there must be a check for `logLine != nil`, as nil is a valid return value, even without an error.
+	GetNextLine() (logLine *string, err error)
+}

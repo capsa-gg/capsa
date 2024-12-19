@@ -21,6 +21,7 @@ import { createContext, useContext, useEffect, useReducer, useState } from "reac
 const searchParamIncludedSeverities = "included_severities";
 const searchParamIncludedCategories = "included_categories";
 const searchParamExcludedCategories = "excluded_categories";
+const searchParamMergeLogs = "merge_logs";
 
 //@ts-ignore // This is fine, we are checking with the use hook
 export const SingleLogContext = createContext<SingleLogContextData>(undefined);
@@ -29,7 +30,8 @@ export const SingleLogContextProvider: React.FC<SingleLogContextProviderProps> =
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
-    const drawerState = useState(false);
+    const filterDrawerState = useState(false);
+    const mergeDrawerState = useState(false);
     const viewMode = useState<SingleLogViewMode>("Log");
     const filters = useReducer(filterReducer, null, () => getInitialFilterState(searchParams));
     const metadata = useGetSingleLogMetadata(logUUID);
@@ -43,7 +45,8 @@ export const SingleLogContextProvider: React.FC<SingleLogContextProviderProps> =
         const params = generateUrlParamString(filterState);
         router.push(`${pathname}?${params}`);
 
-        drawerState[1](false); // Hide drawer
+        filterDrawerState[1](false); // Hide drawer
+        mergeDrawerState[1](false); // Hide drawer
         logProcessor.stopFetchingLog; // Stop fetching current log
         logProcessor.startFetchingLog(logUUID, filterState); // Start fetching log with set filters
     };
@@ -55,7 +58,8 @@ export const SingleLogContextProvider: React.FC<SingleLogContextProviderProps> =
     }, []);
 
     const context: SingleLogContextData = {
-        drawerState,
+        filterDrawerState,
+        mergeDrawerState,
         viewMode,
         metadata,
         logProcessor,
@@ -78,8 +82,9 @@ const getInitialFilterState = (searchParams: ReadonlyURLSearchParams): FilterSta
     const severityParam = searchParams.get(searchParamIncludedSeverities);
     const includedCategoryParam = searchParams.get(searchParamIncludedCategories);
     const excludedCategoryParam = searchParams.get(searchParamExcludedCategories);
+    const mergeLogsParam = searchParams.get(searchParamMergeLogs);
 
-    if (!severityParam && !includedCategoryParam && !excludedCategoryParam) {
+    if (!severityParam && !includedCategoryParam && !excludedCategoryParam && !mergeLogsParam) {
         console.log("[getInitialFilterState]: no search parameters set, loading local");
         return getFilterReducerLocalInitialState();
     }
@@ -108,6 +113,10 @@ const getInitialFilterState = (searchParams: ReadonlyURLSearchParams): FilterSta
         filterStateFromUrl.excludedCategories = excludedCategoryParam.split(",");
     }
 
+    if (mergeLogsParam) {
+        filterStateFromUrl.mergedLogs = mergeLogsParam.split(",");
+    }
+
     return filterStateFromUrl;
 };
 
@@ -116,6 +125,7 @@ const generateUrlParamString = (filterState: FilterState) => {
         [searchParamIncludedSeverities]: "",
         [searchParamIncludedCategories]: "",
         [searchParamExcludedCategories]: "",
+        [searchParamMergeLogs]: "",
     };
 
     // At least one disabled category to be added
@@ -134,6 +144,10 @@ const generateUrlParamString = (filterState: FilterState) => {
 
     if (filterState.excludedCategories.length > 0) {
         params[searchParamExcludedCategories] = filterState.excludedCategories.join(",");
+    }
+
+    if (filterState.mergedLogs.length > 0) {
+        params[searchParamMergeLogs] = filterState.mergedLogs.join(",");
     }
 
     const urlParams = new URLSearchParams(params);

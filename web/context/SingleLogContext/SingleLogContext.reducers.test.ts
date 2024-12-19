@@ -86,4 +86,34 @@ describe("filterReducer", () => {
         const newState = filterReducer(stateWithExcluded, action);
         expect(newState.excludedCategories.length).toBe(0);
     });
+
+    it("should add a merged log to mergedLogs on MERGED_LOGS_SWITCH with it not present", () => {
+        const action: FilterAction = { type: "MERGED_LOGS_SWITCH", log: "merged_log_uuid" };
+        const newState = filterReducer(initialState, action);
+
+        expect(newState.mergedLogs).toContain("merged_log_uuid");
+        expect(newState.mergedLogs.length).toBe(1);
+    });
+
+    it("should remove a merged log from excludedCategories on MERGED_LOGS_SWITCH with it present", () => {
+        const stateWithExcluded: FilterState = {
+            ...initialState,
+            mergedLogs: ["example_uuid_1", "example_uuid_2"],
+        };
+        const action: FilterAction = { type: "MERGED_LOGS_SWITCH", log: "example_uuid_1" };
+        const newState = filterReducer(stateWithExcluded, action);
+
+        expect(newState.mergedLogs).not.toContain("example_uuid_1");
+        expect(newState.mergedLogs.length).toBe(1);
+    });
+
+    it("should clear merged logs from excludedCategories on MERGED_LOGS_CLEAR", () => {
+        const stateWithExcluded: FilterState = {
+            ...initialState,
+            mergedLogs: ["example_uuid_1", "example_uuid_2"],
+        };
+        const action: FilterAction = { type: "MERGED_LOGS_CLEAR" };
+        const newState = filterReducer(stateWithExcluded, action);
+        expect(newState.mergedLogs.length).toBe(0);
+    });
 });
