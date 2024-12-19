@@ -115,5 +115,5 @@ func zapToSentryLevel(l zapcore.Level) sentrysdk.Level {
 }
 
 func shouldCaptureEvent(level zapcore.Level) bool {
-	return level >= zapcore.WarnLevel // TODO: change to ErrorLevel for v0.1 release
+	return level >= zapcore.WarnLevel
 }

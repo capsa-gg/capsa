@@ -3,7 +3,6 @@
 // Note(lucianonooijen): this file contains a lot of overly complex gibberish
 // There must be a better way to make swr work nicely together with custom fetching functions, but for now this works
 // This will need s proper rewrite of the internals while keeping the hook type signatures the same, so I will add a
-// TODO: rewrite this to be a custom fetcher
 
 import { Admin } from "@/api/admin";
 import type { ApiResponse } from "@/api/apibase";

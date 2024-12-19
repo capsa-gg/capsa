@@ -159,7 +159,7 @@ async function processFilteredChunkMergedLog(chunk: string): Promise<[string, st
         const lineNumber = match[2];
         const spacesCount = 5 - lineNumber.length;
 
-        const newAbsLineNumber = `${description === "--" ? "  " : description}${"&nbsp;".repeat(spacesCount)}${lineNumber}`; // TODO: padding for lineNumber
+        const newAbsLineNumber = `${description === "--" ? "  " : description}${"&nbsp;".repeat(spacesCount)}${lineNumber}`;
 
         absoluteLineNumbers.push(newAbsLineNumber);
         cleanedLines.push(match[3]);
