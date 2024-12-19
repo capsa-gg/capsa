@@ -46,6 +46,7 @@ export const SingleLogContextProvider: React.FC<SingleLogContextProviderProps> =
         router.push(`${pathname}?${params}`);
 
         filterDrawerState[1](false); // Hide drawer
+        mergeDrawerState[1](false); // Hide drawer
         logProcessor.stopFetchingLog; // Stop fetching current log
         logProcessor.startFetchingLog(logUUID, filterState); // Start fetching log with set filters
     };
