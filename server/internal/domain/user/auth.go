@@ -12,7 +12,7 @@ import (
 )
 
 // Login validates a user's password and returns the login result if everything is valid.
-func Login(ctx context.Context, s *interactor.Services, email, password string) (*bodies.UserLoginResult, error) { //nolint:funlen // This is fine
+func Login(ctx context.Context, s *interactor.Services, email, password string) (*bodies.UserLoginResult, error) {
 	log := s.GetDomainLogger("user", "CreateNewLogSession").With("email", email)
 
 	log.Debug("attempting to log in user")
