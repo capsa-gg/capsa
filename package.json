@@ -31,7 +31,7 @@
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^11.0.1",
     "@semantic-release/release-notes-generator": "^14.0.3",
-    "semantic-release": "^24.2.1"
+    "semantic-release": "^24.2.2"
   },
   "dependencies": {
     "replace-in-file": "^8.3.0"
