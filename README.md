@@ -1,12 +1,24 @@
-# Capsa
+<div style="text-align: center">
+<img src="/web/public/logo-with-by.png" width="400px">
+<h1>Capsa Web Stack</h1>
+</div>
+
+> Open-source, cloud-native logging solution built specifically for Unreal Engine projects. Designed to integrate effortlessly with Unreal Engine to enhance debugging, monitoring, and observability without disrupting your workflow.
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Server](https://github.com/capsa-gg/capsa/actions/workflows/main-server.yml/badge.svg?branch=main)](https://github.com/capsa-gg/capsa/actions/workflows/main-server.yml)
 [![Web](https://github.com/capsa-gg/capsa/actions/workflows/main-web.yml/badge.svg?branch=main)](https://github.com/capsa-gg/capsa/actions/workflows/main-web.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/capsa-gg/capsa/server)](https://goreportcard.com/report/github.com/capsa-gg/capsa/server)
+
+## Key Features
+- **Plug & Play**: minimal setup required, works out of the box
+- **Cloud-Native**: deploy anywhere — in the cloud or on-premise
+- **Optimized for Unreal Engine**: extends Unreal Engine's logging without replacing it
+- **Lightweight & Non-Intrusive**: keeps overhead minimal for optimal performance
 
 ## Getting started
 
-_TODO: write_
+Instructions for getting started can be found on [capsa.gg](https://capsa.gg/docs/getting-started/).
 
 ## Development setup
 
