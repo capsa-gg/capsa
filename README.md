@@ -8,6 +8,7 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Server](https://github.com/capsa-gg/capsa/actions/workflows/main-server.yml/badge.svg?branch=main)](https://github.com/capsa-gg/capsa/actions/workflows/main-server.yml)
 [![Web](https://github.com/capsa-gg/capsa/actions/workflows/main-web.yml/badge.svg?branch=main)](https://github.com/capsa-gg/capsa/actions/workflows/main-web.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/capsa-gg/capsa/server)](https://goreportcard.com/report/github.com/capsa-gg/capsa/server)
 
 ## Key Features
 - **Plug & Play**: minimal setup required, works out of the box
