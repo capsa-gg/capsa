@@ -1,3 +1,5 @@
+# [0.1.0](https://github.com/capsa-gg/capsa/compare/v0.0.7...v0.1.0) (2025-02-16)
+
 ## [0.0.7](https://github.com/capsa-gg/capsa/compare/v0.0.6...v0.0.7) (2025-02-16)
 
 
