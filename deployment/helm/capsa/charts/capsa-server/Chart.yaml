@@ -3,4 +3,4 @@ name: capsa-server
 description: A Helm chart for Capsa server
 type: application
 version: 0.0.6
-appVersion: 0.0.4
+appVersion: 0.0.6
