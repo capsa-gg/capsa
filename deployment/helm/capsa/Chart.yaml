@@ -3,7 +3,7 @@ name: capsa
 description: A Helm chart for deploying the Capsa API server and web panel
 type: application
 version: 0.0.6
-appVersion: 0.0.4
+appVersion: 0.0.6
 dependencies:
   - name: capsa-web
     version: 0.0.6
