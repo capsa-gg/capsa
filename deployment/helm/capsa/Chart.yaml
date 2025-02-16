@@ -2,12 +2,12 @@ apiVersion: v2
 name: capsa
 description: A Helm chart for deploying the Capsa API server and web panel
 type: application
-version: 0.0.6
-appVersion: 0.0.6
+version: 0.0.7
+appVersion: 0.0.7
 dependencies:
   - name: capsa-web
-    version: 0.0.6
+    version: 0.0.7
     repository: "file://./charts/capsa-web"
   - name: capsa-server
-    version: 0.0.6
+    version: 0.0.7
     repository: "file://./charts/capsa-server"

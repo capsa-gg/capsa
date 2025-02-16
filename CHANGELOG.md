@@ -1,3 +1,20 @@
+## [0.0.7](https://github.com/capsa-gg/capsa/compare/v0.0.6...v0.0.7) (2025-02-16)
+
+
+### Bug Fixes
+
+* **deployment:** correctly update Chart versions ([310d348](https://github.com/capsa-gg/capsa/commit/310d3486feea503ddcd96270fb1e5c1296f1e03f))
+* **deployment:** correctly update Chart versions ([#242](https://github.com/capsa-gg/capsa/issues/242)) ([d411579](https://github.com/capsa-gg/capsa/commit/d41157909c8c3995b42dd55b45523cc93c5440f9))
+* **server:** capture logs as Sentry breadcrumbs if level below warning ([a2bdafd](https://github.com/capsa-gg/capsa/commit/a2bdafd499995f77b01944d3bf5c7b9a57f7b245))
+* **web:** include first and last line for each log in merged response ([87fef32](https://github.com/capsa-gg/capsa/commit/87fef329dfd39940ce0c4db409c85eacd6ac59bc))
+
+
+### Features
+
+* opt-in support for Sentry ([a610c4f](https://github.com/capsa-gg/capsa/commit/a610c4ff4d1f3331626563c43b5d960b8e0a8bfe))
+* opt-in support for Sentry ([#170](https://github.com/capsa-gg/capsa/issues/170)) ([a9979cf](https://github.com/capsa-gg/capsa/commit/a9979cff7c51ce3940fc5e04af0da4acbcd437b3))
+* support merged log streaming ([d841747](https://github.com/capsa-gg/capsa/commit/d8417472a53511ad5fb7c9f6404aaf625d9b6562))
+
 ## [0.0.6](https://github.com/capsa-gg/capsa/compare/v0.0.5...v0.0.6) (2024-12-11)
 
 
