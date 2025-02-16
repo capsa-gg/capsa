@@ -77,7 +77,7 @@ console.table(resHelmOne);
 
 const resHelmTwo = replace.replaceInFileSync({
     files: [helmChartFiles],
-    from: new RegExp(`appVersion: "${from}"`, "g"),
+    from: new RegExp(`appVersion: ${from}`, "g"),
     to: `appVersion: ${to}`,
 });
 
