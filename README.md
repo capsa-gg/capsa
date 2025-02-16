@@ -10,6 +10,8 @@
 [![Web](https://github.com/capsa-gg/capsa/actions/workflows/main-web.yml/badge.svg?branch=main)](https://github.com/capsa-gg/capsa/actions/workflows/main-web.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/capsa-gg/capsa/server)](https://goreportcard.com/report/github.com/capsa-gg/capsa/server)
 
+This repository contains the web-stack for Capsa, for the Unreal Engine plugin, check out [capsa-gg/capsa-plugin-unreal-engine](https://github.com/capsa-gg/capsa-plugin-unreal-engine).
+
 ## Key Features
 - **Plug & Play**: minimal setup required, works out of the box
 - **Cloud-Native**: deploy anywhere — in the cloud or on-premise
