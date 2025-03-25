@@ -11,7 +11,7 @@ require (
 	github.com/go-playground/validator/v10 v10.25.0
 	github.com/golang-migrate/migrate/v4 v4.18.2
 	github.com/google/uuid v1.6.0
-	github.com/jackc/pgx/v5 v5.7.2
+	github.com/jackc/pgx/v5 v5.7.4
 	github.com/matcornic/hermes/v2 v2.1.0
 	github.com/minio/minio-go/v7 v7.0.87
 	github.com/robfig/cron/v3 v3.0.1
