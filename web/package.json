@@ -35,7 +35,7 @@
     "@monaco-editor/react": "^4.7.0",
     "@mui/icons-material": "^6.4.8",
     "@mui/material": "^6.4.8",
-    "@mui/material-nextjs": "^6.4.3",
+    "@mui/material-nextjs": "^7.0.0",
     "@mui/system": "^6.4.8",
     "@mui/x-data-grid": "^7.28.1",
     "@sentry/nextjs": "^9.9.0",
