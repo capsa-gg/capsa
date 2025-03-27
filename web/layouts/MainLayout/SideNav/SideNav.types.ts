@@ -1,5 +1,5 @@
 import type { OverridableComponent } from "@mui/material/OverridableComponent";
-import type { SvgIconTypeMap } from "@mui/material/SvgIcon/SvgIcon";
+import type { SvgIconTypeMap } from "@mui/material/SvgIcon";
 
 export interface SideNavItemProps {
     title: string;

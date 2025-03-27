@@ -9,10 +9,7 @@ import {
     Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import type {
-    AutocompleteChangeDetails,
-    AutocompleteChangeReason,
-} from "@mui/material/useAutocomplete/useAutocomplete";
+import type { AutocompleteChangeDetails, AutocompleteChangeReason } from "@mui/material/useAutocomplete";
 import type * as React from "react";
 
 export const SeveritiesFilters: React.FC = () => {
