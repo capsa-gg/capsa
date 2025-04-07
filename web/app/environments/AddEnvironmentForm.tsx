@@ -36,7 +36,7 @@ export const AddEnvironmentForm: React.FC<{ addedTitle: string }> = ({ addedTitl
         setValue,
         resetField,
     } = useForm<AddEnvironmentForm>({
-        resolver: yupResolver<AddEnvironmentForm>(validationSchemaAddEnvironment),
+        resolver: yupResolver(validationSchemaAddEnvironment),
         mode: "onChange",
     });
 

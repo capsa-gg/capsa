@@ -32,7 +32,7 @@ const PasswordReset: React.FC = () => {
         formState: { errors, isValid },
         setValue,
     } = useForm<FormInputPasswordReset>({
-        resolver: yupResolver<FormInputPasswordReset>(validationSchemaPasswordReset),
+        resolver: yupResolver(validationSchemaPasswordReset),
         mode: "onChange",
     });
 

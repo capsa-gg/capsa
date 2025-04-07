@@ -30,7 +30,7 @@ export const AddTitle: React.FC<AddTitleProps> = ({ onTitleAdded }) => {
         control,
         resetField,
     } = useForm<AddTitleForm>({
-        resolver: yupResolver<AddTitleForm>(validationSchemaAddTitle),
+        resolver: yupResolver(validationSchemaAddTitle),
         mode: "onChange",
     });
 
