@@ -1,5 +1,5 @@
 # syntax=docker.io/docker/dockerfile:1
-FROM golang:1.23.2-alpine AS builder
+FROM golang:1.24.2-alpine AS builder
 
 LABEL org.opencontainers.image.source="https://github.com/capsa-gg/capsa"
 LABEL org.opencontainers.image.description="Capsa Server"

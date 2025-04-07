@@ -98,7 +98,7 @@ func (s sentry) Sync() error {
 }
 
 func zapToSentryLevel(l zapcore.Level) sentrysdk.Level {
-	switch l { //nolint:exhaustive // This is OK
+	switch l { //nolint:exhaustive,nolintlint // This is OK
 	case zapcore.DebugLevel:
 		return sentrysdk.LevelDebug
 	case zapcore.InfoLevel:

@@ -2,7 +2,7 @@
 
 ## Requirements
 
-* Go >= v1.23
+* Go >= v1.24
 * PostgreSQL >= 16
 * Make
 * Go dependencies installed via `make bootstrap`
