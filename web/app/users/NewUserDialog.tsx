@@ -43,7 +43,7 @@ const NewUserDialog: React.FC<FormDialogProps> = ({ open, onClose }) => {
         formState: { errors, isValid },
         register,
     } = useForm<FormValues>({
-        resolver: yupResolver<FormValues>(validationSchema),
+        resolver: yupResolver(validationSchema),
         mode: "onChange",
     });
 

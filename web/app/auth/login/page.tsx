@@ -35,7 +35,7 @@ const LoginPage: React.FC = () => {
         handleSubmit,
         formState: { errors, isValid },
     } = useForm<FormInputLogin>({
-        resolver: yupResolver<FormInputLogin>(validationSchemaLogin),
+        resolver: yupResolver(validationSchemaLogin),
         mode: "onChange",
     });
 

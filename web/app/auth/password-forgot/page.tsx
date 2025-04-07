@@ -26,7 +26,7 @@ const PasswordForgot: React.FC = () => {
         handleSubmit,
         formState: { errors, isValid },
     } = useForm<FormInputPasswordForgot>({
-        resolver: yupResolver<FormInputPasswordForgot>(validationSchemaPasswordForgot),
+        resolver: yupResolver(validationSchemaPasswordForgot),
         mode: "onChange",
     });
 
