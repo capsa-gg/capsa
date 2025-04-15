@@ -46,6 +46,7 @@ func New(c *entities.Config, pk *rsa.PrivateKey) (*Token, error) {
 
 	signerOptions := (&jose.SignerOptions{}).
 		WithHeader("alg", algorithm).
+		WithHeader("typ", "JWT").
 		WithHeader("jku", generateWellKnownEndpoint(c))
 
 	jwtSigner, err := jose.NewSigner(jose.SigningKey{
