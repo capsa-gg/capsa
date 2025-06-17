@@ -51,7 +51,7 @@
     "react-hook-form": "^7.58.0",
     "swr": "^2.3.3",
     "yup": "^1.6.1",
-    "zod": "^3.25.64"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
