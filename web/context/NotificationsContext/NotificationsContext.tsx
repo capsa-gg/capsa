@@ -1,8 +1,8 @@
 "use client";
 
-import type { ApplicationError } from "@/types/api/error";
 import type React from "react";
-import { type ReactNode, createContext, useContext, useState } from "react";
+import { createContext, type ReactNode, useContext, useState } from "react";
+import type { ApplicationError } from "@/types/api/error";
 import type { Notification, NotificationsContextType } from "./NotificationsContext.types";
 
 export const DEFAULT_DURATION_NOTIFICATION_SECONDS = 5;
@@ -58,7 +58,7 @@ export const useNotificationsContext = (): NotificationsContextType => {
     return context;
 };
 
-const generateNotificationID = (): string => `${new Date().getTime()}`;
+const generateNotificationID = (): string => `${Date.now()}`;
 
 const getTimeoutDuration = (notification: Notification): number => {
     if (notification.durationSecondsOverride !== undefined) return notification.durationSecondsOverride * 1000;

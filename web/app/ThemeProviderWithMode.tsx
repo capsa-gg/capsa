@@ -1,9 +1,9 @@
 "use client";
 
-import useUser from "@/context/UserContext";
-import getTheme from "@/styles/theme";
 import { ThemeProvider } from "@mui/material";
 import type React from "react";
+import useUser from "@/context/UserContext";
+import getTheme from "@/styles/theme";
 
 const ThemeProviderWithMode: React.FC<ThemeProviderWithModeProps> = ({ children }) => {
     const {

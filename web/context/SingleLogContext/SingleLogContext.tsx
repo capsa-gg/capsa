@@ -1,5 +1,8 @@
 "use client";
 
+import { type ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import type React from "react";
+import { createContext, useContext, useEffect, useReducer, useState } from "react";
 import { useGetSingleLogMetadata } from "@/api/hooks";
 import {
     defaultFilterReducerState,
@@ -14,9 +17,6 @@ import type {
     SingleLogViewMode,
 } from "@/context/SingleLogContext/SingleLogContext.types";
 import useLogProcessor from "@/hooks/useLogProcessor/useLogProcessor";
-import { type ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
-import type React from "react";
-import { createContext, useContext, useEffect, useReducer, useState } from "react";
 
 const searchParamIncludedSeverities = "included_severities";
 const searchParamIncludedCategories = "included_categories";

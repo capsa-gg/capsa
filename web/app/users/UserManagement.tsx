@@ -1,9 +1,5 @@
 "use client";
 
-import useAdminUsers from "@/app/users/useAdminUsers";
-import Spinner from "@/components/Spinner";
-import type { SingleUserResponse, UserRole } from "@/types/api/users";
-import { formatDate } from "@/util/formatDate";
 import ArchiveIcon from "@mui/icons-material/Archive";
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
@@ -13,6 +9,10 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import { Alert, AlertTitle, Box, ButtonGroup, IconButton, Tooltip } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import type React from "react";
+import useAdminUsers from "@/app/users/useAdminUsers";
+import Spinner from "@/components/Spinner";
+import type { SingleUserResponse, UserRole } from "@/types/api/users";
+import { formatDate } from "@/util/formatDate";
 
 const columns: GridColDef<SingleUserResponse>[] = [
     { field: "userUuid", headerName: "User UUID", width: 300 },

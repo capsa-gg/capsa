@@ -1,13 +1,13 @@
-import {
-    DEFAULT_DURATION_ERRORS_SECONDS,
-    DEFAULT_DURATION_NOTIFICATION_SECONDS,
-} from "@/context/NotificationsContext/NotificationsContext";
-import type { Notification } from "@/context/NotificationsContext/NotificationsContext.types";
 import CloseIcon from "@mui/icons-material/Close";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { Alert, AlertTitle, IconButton, Snackbar, Tooltip, Typography } from "@mui/material";
 import type React from "react";
 import { useState } from "react";
+import {
+    DEFAULT_DURATION_ERRORS_SECONDS,
+    DEFAULT_DURATION_NOTIFICATION_SECONDS,
+} from "@/context/NotificationsContext/NotificationsContext";
+import type { Notification } from "@/context/NotificationsContext/NotificationsContext.types";
 
 export const NotificationSnackbarItem: React.FC<{ notification: Notification }> = ({ notification }) => {
     const [open, setOpen] = useState(true);

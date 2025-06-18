@@ -1,10 +1,10 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
 import type { FilterState } from "@/context/SingleLogContext/SingleLogContext.types";
 import LogProcessor from "@/data/LogProcessor/LogProcessor";
 import type { LogFilters, LogMode } from "@/data/LogProcessor/LogProcessor.types";
 import type { UseLogProcessorHook } from "@/hooks/useLogProcessor/useLogProcessor.types";
-import { useCallback, useEffect, useState } from "react";
 
 const useLogProcessor: UseLogProcessorHook = () => {
     const [logWorkerManager] = useState(() => new LogProcessor());
@@ -15,7 +15,7 @@ const useLogProcessor: UseLogProcessorHook = () => {
     const [isDone, setIsDone] = useState(false);
 
     useEffect(() => {
-        logWorkerManager.setOnLogContentsUpdated((newFullLog, newChunk, lineNumbers) => {
+        logWorkerManager.setOnLogContentsUpdated((newFullLog, _newChunk, lineNumbers) => {
             setFullLog(newFullLog);
             setAbsoluteLineNumbers(lineNumbers);
         });

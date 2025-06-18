@@ -1,19 +1,19 @@
 "use client";
 
-import useUser from "@/context/UserContext";
-import { removeJwtCookie } from "@/data/jwt/cookiesClient";
-import { removeJwtFromLocalStorage } from "@/data/jwt/localStorage";
 import { Box, Button, TextField, Toolbar } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import { useRouter } from "next/navigation";
 import { type ChangeEvent, type FormEvent, useState } from "react";
+import useUser from "@/context/UserContext";
+import { removeJwtCookie } from "@/data/jwt/cookiesClient";
+import { removeJwtFromLocalStorage } from "@/data/jwt/localStorage";
 
 export const topNavSidePaddingPx = 20;
 
 const TopNav = () => {
     const router = useRouter();
     const {
-        userInfo: { isLoggedIn, user },
+        userInfo: { isLoggedIn },
     } = useUser();
     const signOut = () => {
         removeJwtCookie();

@@ -4,6 +4,8 @@
 // There must be a better way to make swr work nicely together with custom fetching functions, but for now this works
 // This will need s proper rewrite of the internals while keeping the hook type signatures the same, so I will add a
 
+import useSWR, { type SWRResponse } from "swr";
+import useSWRMutation, { type SWRMutationResponse } from "swr/mutation";
 import { Admin } from "@/api/admin";
 import type { ApiResponse } from "@/api/apibase";
 import { Environments } from "@/api/environments";
@@ -21,8 +23,6 @@ import type {
     ListAllTitlesResponse,
 } from "@/types/api/titleenvironment";
 import type { ListAllUsersResponse } from "@/types/api/users";
-import useSWR, { type SWRResponse } from "swr";
-import useSWRMutation, { type SWRMutationResponse } from "swr/mutation";
 
 type ApiCallFunc<Req, Res> = (req: Req) => Promise<ApiResponse<Res>>;
 

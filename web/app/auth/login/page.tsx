@@ -1,10 +1,5 @@
 "use client";
 
-import { useUserLogin } from "@/api/hooks";
-import useUser from "@/context/UserContext";
-import { removeJwtCookie, setJwtCookie } from "@/data/jwt/cookiesClient";
-import { removeJwtFromLocalStorage, setJwtInLocalStorage } from "@/data/jwt/localStorage";
-import { yupAuthValidation } from "@/types/api/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Link, TextField } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -12,6 +7,11 @@ import type React from "react";
 import { Suspense, useEffect } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
+import { useUserLogin } from "@/api/hooks";
+import useUser from "@/context/UserContext";
+import { removeJwtCookie, setJwtCookie } from "@/data/jwt/cookiesClient";
+import { removeJwtFromLocalStorage, setJwtInLocalStorage } from "@/data/jwt/localStorage";
+import { yupAuthValidation } from "@/types/api/validation";
 
 interface FormInputLogin {
     email: string;

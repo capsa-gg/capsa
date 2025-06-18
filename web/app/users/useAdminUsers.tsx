@@ -1,13 +1,12 @@
 "use client";
 
+import type React from "react";
+import { createContext, useContext, useState } from "react";
 import { Admin } from "@/api/admin";
 import { useGetAllUsers } from "@/api/hooks";
 import { useNotificationsContext } from "@/context/NotificationsContext/NotificationsContext";
 import { ApplicationError } from "@/types/api/error";
 import type { CreateUserRequest, SingleUserResponse, UpdateUserRequest } from "@/types/api/users";
-import type React from "react";
-import { useState } from "react";
-import { createContext, useContext } from "react";
 
 const AdminUsersContext = createContext<UseAdminUsers | undefined>(undefined);
 
@@ -25,7 +24,7 @@ const useAdminUsersHook = (): UseAdminUsers => {
     const addUser = async (newUser: CreateUserRequest, onSuccess: () => void) => {
         setUpdateError(undefined);
         setIsUpdating(true);
-        const [res, err] = await Admin.CreateUser(newUser);
+        const [_res, err] = await Admin.CreateUser(newUser);
         if (err) {
             setUpdateError(new ApplicationError(err));
         } else {
@@ -43,7 +42,7 @@ const useAdminUsersHook = (): UseAdminUsers => {
     const updateUser = async (userUuid: string, updatedUser: UpdateUserRequest) => {
         setUpdateError(undefined);
         setIsUpdating(true);
-        const [res, err] = await Admin.UpdateUser(userUuid, updatedUser);
+        const [_res, err] = await Admin.UpdateUser(userUuid, updatedUser);
         if (err) {
             setUpdateError(new ApplicationError(err));
         } else {
@@ -60,7 +59,7 @@ const useAdminUsersHook = (): UseAdminUsers => {
     const deactivateUser = async (userUuid: string) => {
         setUpdateError(undefined);
         setIsUpdating(true);
-        const [res, err] = await Admin.DeactivateUser(userUuid);
+        const [_res, err] = await Admin.DeactivateUser(userUuid);
         if (err) {
             setUpdateError(new ApplicationError(err));
         } else {
@@ -77,7 +76,7 @@ const useAdminUsersHook = (): UseAdminUsers => {
     const reactivateUser = async (userUuid: string) => {
         setUpdateError(undefined);
         setIsUpdating(true);
-        const [res, err] = await Admin.ReactivateUser(userUuid);
+        const [_res, err] = await Admin.ReactivateUser(userUuid);
         if (err) {
             setUpdateError(new ApplicationError(err));
         } else {

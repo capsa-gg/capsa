@@ -1,4 +1,3 @@
-import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
 import {
     Autocomplete,
     Button,
@@ -11,6 +10,7 @@ import {
 import Box from "@mui/material/Box";
 import type { AutocompleteChangeDetails, AutocompleteChangeReason } from "@mui/material/useAutocomplete";
 import type * as React from "react";
+import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
 
 export const SeveritiesFilters: React.FC = () => {
     const {
@@ -29,7 +29,7 @@ export const SeveritiesFilters: React.FC = () => {
                     .filter(([_, enabled]) => enabled)
                     .map(([sev, _]) => sev)}
             >
-                {Object.entries(filterState.severities).map(([severity, enabled]) => (
+                {Object.entries(filterState.severities).map(([severity, _enabled]) => (
                     <ToggleButton
                         key={severity}
                         value={severity}

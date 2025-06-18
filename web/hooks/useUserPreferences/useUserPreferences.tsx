@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { getUserPreferencesFromLocalStorage, setUserPreferencesInLocalStorage } from "./useUserPreferences.storage";
-import { type UseUserPreferencesHook, type UserPreferences, defaultUserPreferences } from "./useUserPreferences.types";
+import { defaultUserPreferences, type UserPreferences, type UseUserPreferencesHook } from "./useUserPreferences.types";
 
 // Note: this hook should only be used from useUser, not directly in components
 const useUserPreferences: UseUserPreferencesHook = () => {

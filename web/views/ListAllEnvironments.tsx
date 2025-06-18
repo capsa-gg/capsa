@@ -1,11 +1,11 @@
 "use client";
 
-import { useGetAllEnvironments } from "@/api/hooks";
-import Spinner from "@/components/Spinner";
-import type { EnvironmentResponseItem } from "@/types/api/environments";
 import { Alert, AlertTitle, Box } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import type React from "react";
+import { useGetAllEnvironments } from "@/api/hooks";
+import Spinner from "@/components/Spinner";
+import type { EnvironmentResponseItem } from "@/types/api/environments";
 
 const columns: GridColDef<EnvironmentResponseItem>[] = [
     { field: "title", headerName: "Title", flex: 1 },
@@ -14,7 +14,7 @@ const columns: GridColDef<EnvironmentResponseItem>[] = [
 ];
 
 const ListAllEnvironments: React.FC = () => {
-    const { data, error, isLoading, mutate } = useGetAllEnvironments();
+    const { data, error, isLoading } = useGetAllEnvironments();
 
     if (error) {
         return (

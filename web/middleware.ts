@@ -1,6 +1,6 @@
+import { type NextRequest, NextResponse } from "next/server";
 import { deleteJwtCookie, getJwtCookieFromRequest } from "@/data/jwt/cookiesServer";
 import JwtValidator from "@/server/jwt";
-import { type NextRequest, NextResponse } from "next/server";
 
 // This middleware checks if users are logged in.
 // This is not implemented for security reasons, as that is done on the server.

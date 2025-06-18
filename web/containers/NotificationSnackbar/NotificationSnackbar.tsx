@@ -1,8 +1,8 @@
 "use client";
 
+import type React from "react";
 import { NotificationSnackbarItem } from "@/containers/NotificationSnackbar/NotificationSnackbar.components";
 import { useNotificationsContext } from "@/context/NotificationsContext/NotificationsContext";
-import type React from "react";
 
 const NotificationSnackbar: React.FC = () => {
     const { notifications } = useNotificationsContext();

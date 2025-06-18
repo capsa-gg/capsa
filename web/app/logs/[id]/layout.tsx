@@ -1,7 +1,7 @@
-import CopyUrlButton from "@/components/CopyUrlButton";
-import { SingleLogContextProvider } from "@/context/SingleLogContext/SingleLogContext";
 import { Badge, Box, Stack, Typography } from "@mui/material";
 import type React from "react";
+import CopyUrlButton from "@/components/CopyUrlButton";
+import { SingleLogContextProvider } from "@/context/SingleLogContext/SingleLogContext";
 
 const SingleLogLayout = async ({ params, children }: SingleLogLayoutProps) => {
     const { id } = await params;

@@ -1,5 +1,3 @@
-import useUser from "@/context/UserContext";
-import type { SideNavItemProps } from "@/layouts/MainLayout/SideNav/SideNav.types";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import DescriptionIcon from "@mui/icons-material/Description";
@@ -8,6 +6,8 @@ import { IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolt
 import Box from "@mui/material/Box";
 import Link from "next/link";
 import type React from "react";
+import useUser from "@/context/UserContext";
+import type { SideNavItemProps } from "@/layouts/MainLayout/SideNav/SideNav.types";
 
 export const SideNavItem: React.FC<SideNavItemProps> = ({ title, href, selected, disabled, Icon }) => (
     <ListItem>

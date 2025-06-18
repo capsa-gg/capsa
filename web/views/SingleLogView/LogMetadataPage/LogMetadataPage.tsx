@@ -1,13 +1,13 @@
 "use client";
-import Spinner from "@/components/Spinner";
-import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
-import type { LinkedLog } from "@/types/api/logs";
-import { formatDate } from "@/util/formatDate";
 import { Link, Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
 import type React from "react";
+import Spinner from "@/components/Spinner";
+import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
+import type { LinkedLog } from "@/types/api/logs";
+import { formatDate } from "@/util/formatDate";
 
 const LogMetadataPage: React.FC = () => {
     const { metadata } = useSingleLogContext();

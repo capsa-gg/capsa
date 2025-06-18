@@ -1,5 +1,3 @@
-import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
-import { LogMetadataList } from "@/views/SingleLogView/LogMetadataTopBar/LogMetadataTopBar.components";
 import DataObjectIcon from "@mui/icons-material/DataObject";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
@@ -8,12 +6,14 @@ import { Alert, AlertTitle, Badge, Divider, IconButton, Tooltip, Typography } fr
 import Box from "@mui/material/Box";
 import { Stack } from "@mui/system";
 import type React from "react";
+import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
+import { LogMetadataList } from "@/views/SingleLogView/LogMetadataTopBar/LogMetadataTopBar.components";
 
 const LogMetadataTopBar: React.FC = () => {
     const {
         viewMode: [viewMode, setViewMode],
-        filterDrawerState: [filterDrawerOpen, setFilterDrawerOpen],
-        mergeDrawerState: [mergeDrawerOpen, setMergeDrawerOpen],
+        filterDrawerState: [_filterDrawerOpen, setFilterDrawerOpen],
+        mergeDrawerState: [_mergeDrawerOpen, setMergeDrawerOpen],
         metadata: { error, isLoading, data },
     } = useSingleLogContext();
 

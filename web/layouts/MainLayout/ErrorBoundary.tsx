@@ -1,10 +1,10 @@
 "use client";
 
-import ErrorFallback from "@/layouts/MainLayout/ErrorFallback";
 import { Box } from "@mui/material";
 import { captureException } from "@sentry/browser";
 import type React from "react";
 import { ErrorBoundary as ErrorBoundaryComponent, type ErrorBoundaryPropsWithFallback } from "react-error-boundary";
+import ErrorFallback from "@/layouts/MainLayout/ErrorFallback";
 
 const onError: ErrorBoundaryPropsWithFallback["onError"] = (error, info) => {
     captureException(error, {

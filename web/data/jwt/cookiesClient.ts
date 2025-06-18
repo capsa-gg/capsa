@@ -1,8 +1,8 @@
 "use client";
 
+import Cookies from "js-cookie";
 import { jwtStorageKey } from "@/data/jwt/jwtData";
 import type { UserJwtData } from "@/types/api/auth";
-import Cookies from "js-cookie";
 
 export const setJwtCookie = (data: UserJwtData) => {
     Cookies.set(jwtStorageKey, data.token, {
