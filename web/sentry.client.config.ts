@@ -2,8 +2,8 @@
 // The config you add here will be used whenever a users loads a page in their browser.
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
-import { getEnv } from "@/data/env";
 import * as Sentry from "@sentry/nextjs";
+import { getEnv } from "@/data/env";
 
 const initSentry = async () => {
     const env = await getEnv();

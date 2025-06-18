@@ -1,13 +1,13 @@
 "use client";
 
-import { useSearch } from "@/api/hooks";
-import Spinner from "@/components/Spinner";
-import type { SearchResultItem } from "@/types/api/search";
 import { Alert, AlertTitle, Link, Tooltip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { useSearch } from "@/api/hooks";
+import Spinner from "@/components/Spinner";
+import type { SearchResultItem } from "@/types/api/search";
 
 const RenderMatch: React.FC<{ row: SearchResultItem }> = ({ row: { type, match, details } }) => {
     const router = useRouter();

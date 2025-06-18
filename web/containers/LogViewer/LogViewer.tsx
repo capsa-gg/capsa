@@ -1,6 +1,6 @@
-import useUser from "@/context/UserContext";
 import { Editor } from "@monaco-editor/react";
 import type * as React from "react";
+import useUser from "@/context/UserContext";
 import { initializeMonaco, monacoOptions, themes } from "./LogViewer.settings";
 
 const LogViewer: React.FC<LogViewerProps> = ({ data, absoluteLineNumbers }) => {

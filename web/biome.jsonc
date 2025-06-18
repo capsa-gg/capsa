@@ -1,167 +1,178 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
-  "files": {
-    "ignoreUnknown": false,
-    "ignore": []
-  },
-  "formatter": {
-    "enabled": true,
-    "useEditorconfig": true,
-    "formatWithErrors": false,
-    "indentStyle": "space",
-    "indentWidth": 4,
-    "lineEnding": "lf",
-    "lineWidth": 120,
-    "attributePosition": "auto",
-    "bracketSpacing": true,
-    "ignore": ["**/package.json", "**/package-lock.json", "**/.next/", "**/.swc/"]
-  },
-  "organizeImports": {
-    "enabled": true
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "a11y": {
-        "noBlankTarget": "error"
-      },
-      "complexity": {
-        "useArrowFunction": "warn"
-      },
-      "correctness": {
-        "noChildrenProp": "error",
-        "noInvalidUseBeforeDeclaration": "off",
-        "noUndeclaredVariables": "error",
-        "noUnusedImports": "warn",
-        "useJsxKeyInIterable": "error",
-        "useHookAtTopLevel": "error"
-      },
-      "nursery": {
-        "noImgElement": "error",
-        "noIrregularWhitespace": "warn",
-        "noNestedTernary": "warn",
-        "useCollapsedIf": "warn",
-        "useConsistentCurlyBraces": "warn",
-        "useExplicitType": "off",
-        "useImportRestrictions": "off"
-      },
-      "security": {
-        "all": true
-      },
-      "style": {
-        "noRestrictedGlobals": "error",
-        "useBlockStatements": "off",
-        "useConsistentArrayType": {
-          "level": "error",
-          "options": {
-            "syntax": "shorthand"
-          }
-        },
-        "useDefaultSwitchClause": "warn",
-        "useFragmentSyntax": "warn",
-        "useNamingConvention": {
-          "level": "warn",
-          "options": {
-            "strictCase": false,
-            "requireAscii": true,
-            "enumMemberCase": "PascalCase",
-            "conventions": [
-              {
-                "selector": {
-                  "kind": "typeLike"
-                },
-                // Types should be in pascal case, not with IPrefix (though this isn't checked
-                "formats": ["PascalCase"]
-              },
-              {
-                "selector": {
-                  "kind": "classMember",
-                  "modifiers": ["private"]
-                },
-                "match": "_?(.+)",
-                // Private class members in camelCase
-                "formats": ["camelCase"]
-              },
-              {
-                "selector": {
-                  "kind": "classMember",
-                  "modifiers": ["static"]
-                },
-                // Static class members in PascalCase
-                "formats": ["PascalCase"]
-              },
-              {
-                "selector": {
-                  "kind": "objectLiteralMember"
-                },
-                // camelCase is default, sometimes it needs PascalCase for MUI overrides, fe. theme
-                "formats": ["PascalCase", "camelCase"]
-              },
-              {
-                "selector": {
-                  "kind": "typeProperty"
-                },
-                // camelCase is default, sometimes it needs PascalCase for MUI overrides, fe. theme
-                "formats": ["PascalCase", "camelCase"]
-              },
-              {
-                "selector": {
-                  "kind": "const",
-                  "scope": "global"
-                },
-                // Constant values, React.FCs and regular functions
-                "formats": ["CONSTANT_CASE", "PascalCase", "camelCase"]
-              }
-            ]
-          }
-        },
-        "useShorthandArrayType": "warn",
-        "useThrowNewError": "warn",
-        "useThrowOnlyError": "warn"
-      },
-      "suspicious": {
-        "noCommentText": "error",
-        "noConfusingVoidType": "warn",
-        "noDuplicateJsxProps": "error",
-        "noDebugger": "error",
-        "noEvolvingTypes": "off"
-      }
-    }
-  },
-  "javascript": {
-    "formatter": {
-      "jsxQuoteStyle": "double",
-      "quoteProperties": "asNeeded",
-      "trailingCommas": "all",
-      "semicolons": "always",
-      "arrowParentheses": "asNeeded",
-      "bracketSameLine": false,
-      "quoteStyle": "double",
-      "attributePosition": "auto",
-      "bracketSpacing": true
+    "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true
     },
-    "globals": []
-  },
-  "overrides": [
-    {
-      "include": ["*.test.js", "*.test.jsx", "*.test.ts", "*.test.tsx"],
-      "linter": {
+    "files": {
+        "ignoreUnknown": false,
+        "includes": ["**"]
+    },
+    "formatter": {
+        "enabled": true,
+        "useEditorconfig": true,
+        "formatWithErrors": false,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineEnding": "lf",
+        "lineWidth": 120,
+        "attributePosition": "auto",
+        "bracketSpacing": true,
+        "includes": ["**", "!**/package.json", "!**/package-lock.json", "!**/.next/", "!**/.swc/"]
+    },
+    "assist": { "actions": { "source": { "organizeImports": "on" } } },
+    "linter": {
+        "enabled": true,
+        "domains": {
+            "next": "all"
+        },
         "rules": {
-          "correctness": {
-            "noUndeclaredDependencies": "off",
-            "noUndeclaredVariables": "off"
-          },
-          "suspicious": {
-            "noEmptyBlockStatements": "off"
-          }
+            "recommended": true,
+            "a11y": {},
+            "complexity": {
+                "useArrowFunction": "warn"
+            },
+            "correctness": {
+                "noChildrenProp": "error",
+                "noInvalidUseBeforeDeclaration": "off",
+                "noPrivateImports": "warn",
+                "noUndeclaredVariables": "error",
+                "noUnusedImports": "warn",
+                "useJsxKeyInIterable": "error",
+                "useHookAtTopLevel": "error"
+            },
+            "nursery": {
+                "useExplicitType": "off",
+                "noImportCycles": "off" // TODO: enable
+            },
+            "security": {
+                "noBlankTarget": "error"
+            },
+            "style": {
+                "noRestrictedGlobals": "error",
+                "useBlockStatements": "off",
+                "useConsistentArrayType": {
+                    "level": "error",
+                    "options": {
+                        "syntax": "shorthand"
+                    }
+                },
+                "useDefaultSwitchClause": "warn",
+                "useFragmentSyntax": "warn",
+                "useNamingConvention": {
+                    "level": "warn",
+                    "options": {
+                        "strictCase": false,
+                        "requireAscii": true,
+                        "conventions": [
+                            { "selector": { "kind": "enumMember" }, "formats": ["PascalCase"] },
+                            {
+                                "selector": {
+                                    "kind": "typeLike"
+                                },
+                                // Types should be in pascal case, not with IPrefix (though this isn't checked
+                                "formats": ["PascalCase"]
+                            },
+                            {
+                                "selector": {
+                                    "kind": "classMember",
+                                    "modifiers": ["private"]
+                                },
+                                "match": "_?(.+)",
+                                // Private class members in camelCase
+                                "formats": ["camelCase"]
+                            },
+                            {
+                                "selector": {
+                                    "kind": "classMember",
+                                    "modifiers": ["static"]
+                                },
+                                // Static class members in PascalCase
+                                "formats": ["PascalCase"]
+                            },
+                            {
+                                "selector": {
+                                    "kind": "objectLiteralMember"
+                                },
+                                // camelCase is default, sometimes it needs PascalCase for MUI overrides, fe. theme
+                                "formats": ["PascalCase", "camelCase"]
+                            },
+                            {
+                                "selector": {
+                                    "kind": "typeProperty"
+                                },
+                                // camelCase is default, sometimes it needs PascalCase for MUI overrides, fe. theme
+                                "formats": ["PascalCase", "camelCase"]
+                            },
+                            {
+                                "selector": {
+                                    "kind": "const",
+                                    "scope": "global"
+                                },
+                                // Constant values, React.FCs and regular functions
+                                "formats": ["CONSTANT_CASE", "PascalCase", "camelCase"]
+                            }
+                        ]
+                    }
+                },
+                "useThrowNewError": "warn",
+                "useThrowOnlyError": "warn",
+                "noParameterAssign": "error",
+                "useAsConstAssertion": "error",
+                "useDefaultParameterLast": "error",
+                "useEnumInitializers": "error",
+                "useSelfClosingElements": "error",
+                "useSingleVarDeclarator": "error",
+                "noUnusedTemplateLiteral": "error",
+                "useNumberNamespace": "error",
+                "noInferrableTypes": "error",
+                "noUselessElse": "error",
+                "noNestedTernary": "warn",
+                "useCollapsedIf": "warn",
+                "useConsistentCurlyBraces": "warn"
+            },
+            "suspicious": {
+                "noCommentText": "error",
+                "noConfusingVoidType": "warn",
+                "noDuplicateJsxProps": "error",
+                "noDebugger": "error",
+                "noEvolvingTypes": "off",
+                "noIrregularWhitespace": "warn"
+            },
+            "performance": {
+                "noImgElement": "error"
+            }
         }
-      }
-    }
-  ]
+    },
+    "javascript": {
+        "formatter": {
+            "jsxQuoteStyle": "double",
+            "quoteProperties": "asNeeded",
+            "trailingCommas": "all",
+            "semicolons": "always",
+            "arrowParentheses": "asNeeded",
+            "bracketSameLine": false,
+            "quoteStyle": "double",
+            "attributePosition": "auto",
+            "bracketSpacing": true
+        },
+        "globals": []
+    },
+    "overrides": [
+        {
+            "includes": ["**/*.test.js", "**/*.test.jsx", "**/*.test.ts", "**/*.test.tsx"],
+            "linter": {
+                "rules": {
+                    "correctness": {
+                        "noUndeclaredDependencies": "off",
+                        "noUndeclaredVariables": "off"
+                    },
+                    "suspicious": {
+                        "noEmptyBlockStatements": "off"
+                    }
+                }
+            }
+        }
+    ]
 }

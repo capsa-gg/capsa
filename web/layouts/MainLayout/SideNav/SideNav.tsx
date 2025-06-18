@@ -1,5 +1,9 @@
 "use client";
 
+import { Box, Divider, Drawer, List, Tooltip, Typography } from "@mui/material";
+import { grey } from "@mui/material/colors";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useAppContext } from "@/context/AppContext/AppContext";
 import useUser from "@/context/UserContext";
 import { BottomIcons, SideNavItem } from "@/layouts/MainLayout/SideNav/SideNav.components";
@@ -9,10 +13,6 @@ import {
     sideNavWidthPx,
 } from "@/layouts/MainLayout/SideNav/SideNav.data";
 import version from "@/version";
-import { Box, Divider, Drawer, List, Tooltip, Typography } from "@mui/material";
-import { grey } from "@mui/material/colors";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
 
 const SideNav = () => {
     const appContext = useAppContext();
@@ -57,7 +57,7 @@ const SideNav = () => {
         <Image src={require("../../../public/logo-without-by-darkmode.png")} alt="Capsa Logo" width={100} height={40} />
     );
 
-    const WelcomeText = () => (user ? <>Welcome, {user?.firstName}</> : <>Not logged in</>);
+    const WelcomeText = () => (user ? <>Welcome, {user?.firstName}</> : "Not logged in");
 
     return (
         <Drawer variant="permanent" open={true}>

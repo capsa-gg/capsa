@@ -1,11 +1,11 @@
 "use client";
 
+import type z from "zod";
+import type { ZodSchema } from "zod";
 import { getEnv } from "@/data/env";
 import { getJwtFromLocalStorage } from "@/data/jwt/localStorage";
 import type ApiError from "@/types/api/error";
 import { ErrorResponseSchema } from "@/types/api/error";
-import type z from "zod";
-import type { ZodSchema } from "zod";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: desired here
 class BaseUrl {

@@ -1,13 +1,13 @@
 "use client";
 
+import Box from "@mui/material/Box";
+import type React from "react";
 import LogViewer from "@/containers/LogViewer/LogViewer";
 import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
 import LogLineFilterDrawer from "@/views/SingleLogView/LogLineFilterDrawer/LogLineFilterDrawer";
 import LogMetadataPage from "@/views/SingleLogView/LogMetadataPage/LogMetadataPage";
 import LogMetadataTopBar from "@/views/SingleLogView/LogMetadataTopBar/LogMetadataTopBar";
 import MergeLogsDrawer from "@/views/SingleLogView/MergeLogsDrawer/MergeLogsDrawer";
-import Box from "@mui/material/Box";
-import type React from "react";
 
 const SingleLogView: React.FC = () => {
     const {

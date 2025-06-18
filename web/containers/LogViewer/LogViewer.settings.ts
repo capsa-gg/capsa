@@ -1,5 +1,5 @@
-import { LogsColorsDarkMode, LogsColorsLightMode } from "@/styles/LogsColors";
 import type * as Monaco from "monaco-editor";
+import { LogsColorsDarkMode, LogsColorsLightMode } from "@/styles/LogsColors";
 
 export const monacoOptions: Monaco.editor.IStandaloneEditorConstructionOptions = {
     readOnly: true,
@@ -15,7 +15,7 @@ export const themes = {
 
 export const initializeMonaco =
     (initialTheme: string) =>
-    (editor: Monaco.editor.IStandaloneCodeEditor, monaco: typeof Monaco): void => {
+    (_editor: Monaco.editor.IStandaloneCodeEditor, monaco: typeof Monaco): void => {
         monaco.languages.register({ id: "capsalog" });
         monaco.languages.setMonarchTokensProvider("capsalog", {
             tokenizer: {

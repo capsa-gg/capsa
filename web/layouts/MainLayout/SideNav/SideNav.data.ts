@@ -1,8 +1,8 @@
-import type { SideNavItemProps } from "@/layouts/MainLayout/SideNav/SideNav.types";
 import HomeIcon from "@mui/icons-material/Home";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import PersonIcon from "@mui/icons-material/Person";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
+import type { SideNavItemProps } from "@/layouts/MainLayout/SideNav/SideNav.types";
 
 export const sideNavWidthPx = 200;
 

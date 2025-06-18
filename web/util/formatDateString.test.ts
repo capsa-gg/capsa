@@ -1,5 +1,5 @@
-import { formatDate } from "@/util/formatDate";
 import { describe, it } from "@jest/globals";
+import { formatDate } from "@/util/formatDate";
 
 describe("formatDateString", () => {
     it("formats strings correctly", () => {

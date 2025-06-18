@@ -1,7 +1,7 @@
 "use client";
 
 import { amber, green } from "@mui/material/colors";
-import { type Theme, createTheme } from "@mui/material/styles";
+import { createTheme, type Theme } from "@mui/material/styles";
 import { Roboto } from "next/font/google";
 
 const roboto = Roboto({

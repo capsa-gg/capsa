@@ -1,14 +1,14 @@
 "use client";
 
-import { useAddTitle, useGetAllTitles } from "@/api/hooks";
-import { useNotificationsContext } from "@/context/NotificationsContext/NotificationsContext";
-import { yupTitleEnvValidation } from "@/types/api/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import type React from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
+import { useAddTitle, useGetAllTitles } from "@/api/hooks";
+import { useNotificationsContext } from "@/context/NotificationsContext/NotificationsContext";
+import { yupTitleEnvValidation } from "@/types/api/validation";
 
 interface AddTitleForm {
     title: string;
@@ -27,7 +27,6 @@ export const AddTitle: React.FC<AddTitleProps> = ({ onTitleAdded }) => {
         register,
         handleSubmit,
         formState: { errors, isValid },
-        control,
         resetField,
     } = useForm<AddTitleForm>({
         resolver: yupResolver(validationSchemaAddTitle),

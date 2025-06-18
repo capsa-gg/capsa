@@ -1,5 +1,5 @@
-import { type JwkJwt, type JwkResponse, JwkResponseSchema } from "@/types/api/jwk-jwt";
 import * as jose from "jose";
+import { type JwkJwt, type JwkResponse, JwkResponseSchema } from "@/types/api/jwk-jwt";
 
 const tokenId = "capsa-server-jwk";
 const algorithm = "RS256";

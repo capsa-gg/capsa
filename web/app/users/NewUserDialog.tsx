@@ -1,6 +1,3 @@
-import useAdminUsers from "@/app/users/useAdminUsers";
-import type { CreateUserRequest } from "@/types/api/users";
-import { yupNewUserValidation } from "@/types/api/validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
     Box,
@@ -18,6 +15,9 @@ import {
 import type React from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
+import useAdminUsers from "@/app/users/useAdminUsers";
+import type { CreateUserRequest } from "@/types/api/users";
+import { yupNewUserValidation } from "@/types/api/validation";
 
 const validationSchema = yup.object().shape({
     email: yupNewUserValidation.email,

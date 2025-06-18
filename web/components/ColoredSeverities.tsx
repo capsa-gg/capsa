@@ -1,8 +1,8 @@
-import useUser from "@/context/UserContext";
-import { type LogsColors, getModeLogColors } from "@/styles/LogsColors";
-import logSeverities from "@/types/logSeverities";
 import { Tooltip, Typography } from "@mui/material";
 import type * as React from "react";
+import useUser from "@/context/UserContext";
+import { getModeLogColors, type LogsColors } from "@/styles/LogsColors";
+import logSeverities from "@/types/logSeverities";
 
 const ColoredSeverities: React.FC<{ severities: Record<string, number> }> = ({ severities }) => {
     const severityItems = logSeverities.map(s => <Severity key={s} severity={s} count={severities[s] ?? 0} />);

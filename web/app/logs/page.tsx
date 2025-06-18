@@ -1,16 +1,15 @@
 "use client";
 
+import { Alert, AlertTitle, Box, Stack, Typography } from "@mui/material";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import { type ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 import { getLogsOverview, useGetAllEnvironments } from "@/api/hooks";
 import ColoredSeverities from "@/components/ColoredSeverities";
 import Spinner from "@/components/Spinner";
 import { useNotificationsContext } from "@/context/NotificationsContext/NotificationsContext";
 import type { LogOverviewItem } from "@/types/api/logs";
 import { formatDate } from "@/util/formatDate";
-import { Alert, AlertTitle, Box, Stack, Typography } from "@mui/material";
-import { DataGrid, type GridColDef } from "@mui/x-data-grid";
-import { type ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
-import { useEffect, useState } from "react";
 import { EnvironmentSelector, LogLink, LogTypeSelector, PlatformInput } from "./components";
 
 const columns: GridColDef<LogOverviewItem>[] = [

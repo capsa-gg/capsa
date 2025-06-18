@@ -1,12 +1,12 @@
+import CssBaseline from "@mui/material/CssBaseline";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import type { Metadata } from "next";
+import type React from "react";
 import { SWRProvider } from "@/app/swr-provider";
 import ErrorSnackbar from "@/containers/NotificationSnackbar/NotificationSnackbar";
 import { NotificationsContextProvider } from "@/context/NotificationsContext/NotificationsContext";
 import MainLayout from "@/layouts/MainLayout/MainLayout";
 import ScreenTooSmall from "@/layouts/ScreenTooSmall/ScreenTooSmall";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
-import CssBaseline from "@mui/material/CssBaseline";
-import type { Metadata } from "next";
-import type React from "react";
 import "./globals.css";
 import ThemeProviderWithMode from "@/app/ThemeProviderWithMode";
 import { AppContextProvider } from "@/context/AppContext/AppContext";

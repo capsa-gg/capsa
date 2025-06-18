@@ -1,8 +1,8 @@
 {
-  "extends": "next",
-  "settings": {
-    "next": {
-      "rootDir": "."
+    "extends": "next",
+    "settings": {
+        "next": {
+            "rootDir": "."
+        }
     }
-  }
 }
