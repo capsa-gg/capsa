@@ -36,7 +36,7 @@
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
     "@mui/material-nextjs": "^7.1.1",
-    "@mui/system": "^7.1.0",
+    "@mui/system": "^7.1.1",
     "@mui/x-data-grid": "^8.5.2",
     "@sentry/nextjs": "^9.30.0",
     "@types/jest": "^29.5.14",
