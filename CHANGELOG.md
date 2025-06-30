@@ -1,3 +1,14 @@
+# [0.2.0](https://github.com/capsa-gg/capsa/compare/v0.1.0...v0.2.0) (2025-06-30)
+
+
+### Bug Fixes
+
+* **server:** include missing typ field for jwt ([efaf7fb](https://github.com/capsa-gg/capsa/commit/efaf7fb604dc9f8ec36839e8e19ef82581523b6d))
+* **server:** include missing typ field for jwt ([#334](https://github.com/capsa-gg/capsa/issues/334)) ([db2a88c](https://github.com/capsa-gg/capsa/commit/db2a88c71931fc4c5f0ec47e6650ad80b82da28d))
+* **web:** correctly handle leftover bytes from chunks ([c43f361](https://github.com/capsa-gg/capsa/commit/c43f36163d475d8e7702569aee10b2799836294c))
+* **web:** load logs on refresh or direct url ([6565faa](https://github.com/capsa-gg/capsa/commit/6565faac1c660b862ea7a5dcd30bd4f4543d894a))
+* **web:** use decode streaming ([c4f65c2](https://github.com/capsa-gg/capsa/commit/c4f65c2a170af2ec386e025f35752c8384c7f54b))
+
 # [0.1.0](https://github.com/capsa-gg/capsa/compare/v0.0.7...v0.1.0) (2025-02-16)
 
 ## [0.0.7](https://github.com/capsa-gg/capsa/compare/v0.0.6...v0.0.7) (2025-02-16)
