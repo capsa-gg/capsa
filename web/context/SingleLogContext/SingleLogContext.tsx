@@ -40,6 +40,7 @@ export const SingleLogContextProvider: React.FC<SingleLogContextProviderProps> =
     const [filterState] = filters;
 
     const saveFilters = () => {
+        console.log("Saving filters!");
         setSingleLogFilterStateInLocalStorage(filterState);
 
         const params = generateUrlParamString(filterState);
@@ -47,14 +48,15 @@ export const SingleLogContextProvider: React.FC<SingleLogContextProviderProps> =
 
         filterDrawerState[1](false); // Hide drawer
         mergeDrawerState[1](false); // Hide drawer
-        logProcessor.stopFetchingLog; // Stop fetching current log
+        logProcessor.stopFetchingLog(); // Stop fetching current log
         logProcessor.startFetchingLog(logUUID, filterState); // Start fetching log with set filters
     };
 
     // Start loading logs with the initial filter state on load
     // biome-ignore lint/correctness/useExhaustiveDependencies: fine here, for now
     useEffect(() => {
-        saveFilters();
+        // HACK
+        setTimeout(saveFilters, 2000);
     }, []);
 
     const context: SingleLogContextData = {

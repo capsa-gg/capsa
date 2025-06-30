@@ -1,54 +1,68 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import * as Comlink from "comlink";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { FilterState } from "@/context/SingleLogContext/SingleLogContext.types";
-import LogProcessor from "@/data/LogProcessor/LogProcessor";
+import { getEnv } from "@/data/env";
+import { getJwtFromLocalStorage } from "@/data/jwt/localStorage";
+import { createLogProcessor } from "@/data/LogProcessor/LogProcessor";
 import type { LogFilters, LogMode } from "@/data/LogProcessor/LogProcessor.types";
-import type { UseLogProcessorHook } from "@/hooks/useLogProcessor/useLogProcessor.types";
 
-const useLogProcessor: UseLogProcessorHook = () => {
-    const [logWorkerManager] = useState(() => new LogProcessor());
+const useLogProcessor = () => {
     const [fullLog, setFullLog] = useState("Log not loaded");
     const [absoluteLineNumbers, setAbsoluteLineNumbers] = useState<string[] | null>(null);
     const [logMode, setLogMode] = useState<LogMode | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isDone, setIsDone] = useState(false);
 
-    useEffect(() => {
-        logWorkerManager.setOnLogContentsUpdated((newFullLog, _newChunk, lineNumbers) => {
-            setFullLog(newFullLog);
-            setAbsoluteLineNumbers(lineNumbers);
-        });
+    const workerRef = useRef<Worker | null>(null);
 
-        logWorkerManager.setOnError(newError => {
-            setError(newError);
-        });
+    const startFetchingLog = useCallback(async (id: string, filters: FilterState) => {
+        setError(null);
+        setIsDone(false);
+        setFullLog("Loading...");
+        setAbsoluteLineNumbers(null);
 
-        logWorkerManager.setOnDone(() => {
+        try {
+            const env = await getEnv();
+
+            const jwt = getJwtFromLocalStorage()?.token;
+            if (!jwt) throw new Error("JWT not found");
+
+            const { api, worker } = await createLogProcessor();
+            workerRef.current = worker;
+
+            await api.fetchLog(
+                `${env.serverUrl}/v1/user/logs/${id}/log`,
+                jwt,
+                filterStateToWorkerFilters(filters),
+                Comlink.proxy((newFullLog, lineNumbers) => {
+                    setFullLog(newFullLog);
+                    setAbsoluteLineNumbers(lineNumbers);
+                }),
+                Comlink.proxy(mode => {
+                    setLogMode(mode);
+                }),
+            );
+
             setIsDone(true);
-        });
-
-        logWorkerManager.setOnLogModeReceived(logModeVal => {
-            setLogMode(logModeVal);
-        });
-
-        return () => {
-            logWorkerManager.stopFetchingLog();
-        };
-    }, [logWorkerManager]);
-
-    const startFetchingLog = useCallback(
-        (id: string, filters: FilterState) => {
-            setError(null);
-            setIsDone(false);
-            logWorkerManager.startFetchingLog(id, filterStateToWorkerFilters(filters));
-        },
-        [logWorkerManager],
-    );
+        } catch (err) {
+            setError(`${err}`);
+        }
+    }, []);
 
     const stopFetchingLog = useCallback(() => {
-        logWorkerManager.stopFetchingLog();
-    }, [logWorkerManager]);
+        if (workerRef.current) {
+            workerRef.current.terminate();
+            workerRef.current = null;
+        }
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            stopFetchingLog();
+        };
+    }, [stopFetchingLog]);
 
     return {
         fullLog,
