@@ -9,102 +9,20 @@ type LogModeReceivedCallback = (logMode: LogMode | null) => void;
 type ErrorCallback = (error: string) => void;
 type DoneCallback = () => void;
 
-export default class LogProcessor {
-    private worker: Worker;
+import * as Comlink from "comlink";
 
-    private logContentsUpdatedCallback: LogContentsUpdatedCallback | null = null;
-    private logModeReceivedCallback: LogModeReceivedCallback | null = null;
-    private errorCallback: ErrorCallback | null = null;
-    private doneCallback: DoneCallback | null = null;
+export type LogProcessorApi = {
+    fetchLog: (
+        logUrlBase: string,
+        jwt: string,
+        filters: LogFilters,
+        onUpdate: (chunk: string, lineNumbers: string[] | null) => void,
+        onMode: (mode: LogMode) => void,
+    ) => Promise<void>;
+};
 
-    constructor() {
-        this.worker = new Worker(new URL("./LogProcessor.worker.ts", import.meta.url));
-        this.setupEventListeners();
-    }
-
-    private setupEventListeners() {
-        this.worker.addEventListener("message", event => {
-            const { type, payload } = event.data as WorkerPostMessage;
-
-            switch (type) {
-                case "LOG_CONTENTS_UPDATED":
-                    console.log("[LogProcessor]: LOG_CONTENTS_UPDATED");
-                    if (this.logContentsUpdatedCallback) {
-                        this.logContentsUpdatedCallback(payload.fullLog, payload.newChunk, payload.lineNumbers);
-                    }
-                    break;
-                case "LOG_MODE_RECEIVED":
-                    console.log(`[LogProcessor]: LOG_MODE_RECEIVED, ${payload.logMode}`);
-                    if (this.logModeReceivedCallback) {
-                        this.logModeReceivedCallback(payload.logMode);
-                    }
-                    break;
-                case "ERROR":
-                    console.log(`[LogProcessor]: ERROR, ${payload.error}`);
-                    if (this.errorCallback) {
-                        this.errorCallback(payload.error);
-                    }
-                    break;
-                case "LOG_FETCHING_DONE":
-                    console.log("[LogProcessor]: LOG_FETCHING_DONE");
-                    if (this.doneCallback) {
-                        this.doneCallback();
-                    }
-                    break;
-                default:
-                    console.error("[LogProcessor]: Unsupported action", type);
-            }
-        });
-    }
-
-    public async startFetchingLog(id: string, filters: LogFilters) {
-        if (this.logModeReceivedCallback) {
-            this.logModeReceivedCallback(null);
-        }
-        if (this.logContentsUpdatedCallback) {
-            this.logContentsUpdatedCallback("", "", null);
-        }
-
-        const path = `/user/logs/${id}/log`;
-        const reqUrl = await getRequestUrl(path);
-
-        const jwtData = getJwtFromLocalStorage();
-        const jwt = jwtData?.token;
-        if (!jwt) {
-            if (this.errorCallback) {
-                this.errorCallback("JWT cannot be fetched using getJwtFromLocalStorage");
-            }
-            return;
-        }
-
-        const message: WorkerCommandMessage = {
-            type: "START_FETCHING_LOG",
-            payload: { logUrlBase: reqUrl, jwt, filters },
-        };
-        this.worker.postMessage(message);
-    }
-
-    public stopFetchingLog() {
-        const message: WorkerCommandMessage = { type: "STOP_FETCHING_LOG", payload: undefined };
-        if (this.logModeReceivedCallback) {
-            this.logModeReceivedCallback(null);
-        }
-        this.worker.postMessage(message);
-    }
-
-    public setOnLogContentsUpdated(callback: LogContentsUpdatedCallback) {
-        this.logContentsUpdatedCallback = callback;
-    }
-
-    public setOnLogModeReceived(callback: LogModeReceivedCallback) {
-        this.logModeReceivedCallback = callback;
-    }
-
-    public setOnError(callback: ErrorCallback) {
-        this.errorCallback = callback;
-    }
-
-    public setOnDone(callback: DoneCallback) {
-        this.doneCallback = callback;
-    }
-}
+export const createLogProcessor = async () => {
+    const worker = new Worker(new URL("./LogProcessor.worker.ts", import.meta.url), { type: "module" });
+    const api = Comlink.wrap<LogProcessorApi>(worker);
+    return { api, worker };
+};

@@ -3,128 +3,68 @@
 import logSeverities from "@/types/logSeverities";
 import type { LogFilters, LogMode, WorkerCommandMessage, WorkerPostMessage } from "./LogProcessor.types";
 
-let abortController: AbortController | null = null;
+import * as Comlink from "comlink";
 
-self.addEventListener("message", async (event: MessageEvent<WorkerCommandMessage>) => {
-    const { type, payload } = event.data;
+const fetchLog = async (
+    logUrlBase: string,
+    jwt: string,
+    filters: LogFilters,
+    onUpdate: (chunk: string, lineNumbers: string[] | null) => void,
+    onMode: (mode: LogMode) => void,
+): Promise<void> => {
+    const reqUrl = generateLogUrlWithParams(logUrlBase, filters);
+    const res = await fetch(reqUrl, {
+        method: "GET",
+        headers: {
+            accept: "text/plain",
+            authorization: `Bearer ${jwt}`,
+        },
+    });
 
-    switch (type) {
-        case "START_FETCHING_LOG": {
-            // Abort old request if still loading
-            if (abortController) {
-                abortController.abort();
-            }
+    if (!res.ok) throw new Error(`API call responded with ${res.status}`);
 
-            const reqUrl = generateLogUrlWithParams(payload.logUrlBase, payload.filters);
-            await fetchLog(reqUrl, payload.jwt);
-            break;
-        }
-        case "STOP_FETCHING_LOG":
-            if (abortController) {
-                abortController.abort();
-            }
-            break;
-        default:
-            break;
-    }
-});
+    const logMode = res.headers.get("x-capsa-log-mode") as LogMode;
+    if (!logMode) throw new Error("Log mode header not set");
 
-async function fetchLog(reqUrl: URL, jwt: string): Promise<void> {
-    abortController = new AbortController();
+    onMode(logMode);
 
-    try {
-        const res = await fetch(reqUrl, {
-            method: "GET",
-            headers: {
-                accept: "text/plain",
-                authorization: `Bearer ${jwt}`,
-            },
-            signal: abortController.signal,
-        });
+    const reader = res.body?.getReader();
+    if (!reader) throw new Error("ReadableStream not supported");
 
-        if (!res.ok) {
-            throw new Error(`API call responded with code ${res.status} ${res.statusText}`);
-        }
+    const decoder = new TextDecoder();
+    let fullLog = "";
+    let absoluteLineNumbers: string[] = [];
 
-        const logMode = res.headers.get("x-capsa-log-mode") as LogMode;
-        if (!logMode) {
-            throw new Error("Log mode header not set");
-        }
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
 
-        const message: WorkerPostMessage = { type: "LOG_MODE_RECEIVED", payload: { logMode } };
-        self.postMessage(message);
+        const chunk = decoder.decode(value, { stream: true });
 
-        const reader = res.body?.getReader();
-        if (!reader) {
-            throw new Error("ReadableStream not supported");
-        }
-
-        const decoder = new TextDecoder();
-
-        let fullLog = "";
-        let absoluteLineNumbers: string[] = [];
-
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) {
+        switch (logMode) {
+            case "SingleUnfiltered":
+                fullLog += chunk;
+                onUpdate(fullLog, null);
+                break;
+            case "SingleFiltered": {
+                const [text, lines] = await processFilteredChunkSingleLog(chunk);
+                fullLog += text;
+                absoluteLineNumbers = [...absoluteLineNumbers, ...lines];
+                onUpdate(fullLog, absoluteLineNumbers);
                 break;
             }
-            const chunk = decoder.decode(value, { stream: true });
-
-            switch (logMode) {
-                case "SingleUnfiltered": {
-                    fullLog += chunk;
-
-                    const updateMessage: WorkerPostMessage = {
-                        type: "LOG_CONTENTS_UPDATED",
-                        payload: { fullLog, newChunk: chunk, lineNumbers: null },
-                    };
-                    self.postMessage(updateMessage);
-
-                    break;
-                }
-                case "SingleFiltered": {
-                    const [chunkText, lineNumbers] = await processFilteredChunkSingleLog(chunk);
-                    fullLog += chunkText;
-                    absoluteLineNumbers = [...absoluteLineNumbers, ...lineNumbers];
-
-                    const updateMessage: WorkerPostMessage = {
-                        type: "LOG_CONTENTS_UPDATED",
-                        payload: { fullLog, newChunk: chunkText, lineNumbers: absoluteLineNumbers },
-                    };
-                    self.postMessage(updateMessage);
-
-                    break;
-                }
-                case "MergedFiltered": {
-                    const [chunkText, lineNumbers] = await processFilteredChunkMergedLog(chunk);
-                    fullLog += chunkText;
-                    absoluteLineNumbers = [...absoluteLineNumbers, ...lineNumbers];
-
-                    const updateMessage: WorkerPostMessage = {
-                        type: "LOG_CONTENTS_UPDATED",
-                        payload: { fullLog, newChunk: chunkText, lineNumbers: absoluteLineNumbers },
-                    };
-                    console.log(updateMessage);
-
-                    self.postMessage(updateMessage);
-
-                    break;
-                }
-                default:
-                    throw new Error(`log mode ${logMode} not supported`);
+            case "MergedFiltered": {
+                const [text, lines] = await processFilteredChunkMergedLog(chunk);
+                fullLog += text;
+                absoluteLineNumbers = [...absoluteLineNumbers, ...lines];
+                onUpdate(fullLog, absoluteLineNumbers);
+                break;
             }
         }
-
-        const doneMessage: WorkerPostMessage = { type: "LOG_FETCHING_DONE", payload: undefined };
-        self.postMessage(doneMessage);
-    } catch (error) {
-        const errorMessage: WorkerPostMessage = { type: "ERROR", payload: { error: `${error}` } };
-        self.postMessage(errorMessage);
-    } finally {
-        abortController = null;
     }
-}
+};
+
+Comlink.expose({ fetchLog });
 
 async function processFilteredChunkSingleLog(chunk: string): Promise<[string, string[]]> {
     const absoluteLineNumbers = [];
