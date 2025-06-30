@@ -69,7 +69,7 @@ async function fetchLog(reqUrl: URL, jwt: string): Promise<void> {
             if (done) {
                 break;
             }
-            const chunk = decoder.decode(value);
+            const chunk = decoder.decode(value, { stream: true });
 
             switch (logMode) {
                 case "SingleUnfiltered": {
