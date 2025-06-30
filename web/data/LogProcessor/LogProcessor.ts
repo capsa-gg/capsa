@@ -1,15 +1,7 @@
 "use client";
 
-import { getRequestUrl } from "@/api/apibase";
-import { getJwtFromLocalStorage } from "@/data/jwt/localStorage";
-import type { LogFilters, LogMode, WorkerCommandMessage, WorkerPostMessage } from "./LogProcessor.types";
-
-type LogContentsUpdatedCallback = (fullLog: string, addedChunk: string, absoluteLineNumbers: string[] | null) => void;
-type LogModeReceivedCallback = (logMode: LogMode | null) => void;
-type ErrorCallback = (error: string) => void;
-type DoneCallback = () => void;
-
 import * as Comlink from "comlink";
+import type { LogFilters, LogMode } from "./LogProcessor.types";
 
 export type LogProcessorApi = {
     fetchLog: (

@@ -1,9 +1,8 @@
 "use client";
 
-import logSeverities from "@/types/logSeverities";
-import type { LogFilters, LogMode, WorkerCommandMessage, WorkerPostMessage } from "./LogProcessor.types";
-
 import * as Comlink from "comlink";
+import logSeverities from "@/types/logSeverities";
+import type { LogFilters, LogMode } from "./LogProcessor.types";
 
 const fetchLog = async (
     logUrlBase: string,
@@ -31,36 +30,86 @@ const fetchLog = async (
     const reader = res.body?.getReader();
     if (!reader) throw new Error("ReadableStream not supported");
 
-    const decoder = new TextDecoder();
+    const decoder = new TextDecoder("utf-8");
     let fullLog = "";
-    let absoluteLineNumbers: string[] = [];
+    const absoluteLineNumbers: string[] = [];
 
+    let leftoverBytes = new Uint8Array(0);
+
+    // TODO: This is horrible
     while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value, { stream: true });
+        // Combine leftover + new chunk
+        const combined = new Uint8Array(leftoverBytes.length + value.length);
+        combined.set(leftoverBytes);
+        combined.set(value, leftoverBytes.length);
+
+        let start = 0;
+        for (let i = 0; i < combined.length; ++i) {
+            if (combined[i] === 0x0a /* \n */) {
+                const lineBytes = combined.subarray(start, i + 1); // include \n
+                const line = decoder.decode(lineBytes, { stream: true });
+
+                switch (logMode) {
+                    case "SingleUnfiltered":
+                        fullLog += line;
+                        break;
+                    case "SingleFiltered": {
+                        const [text, lines] = await processFilteredChunkSingleLog(line);
+                        fullLog += text;
+                        absoluteLineNumbers.push(...lines);
+                        break;
+                    }
+                    case "MergedFiltered": {
+                        const [text, lines] = await processFilteredChunkMergedLog(line);
+                        fullLog += text;
+                        absoluteLineNumbers.push(...lines);
+                        break;
+                    }
+                    default: {
+                        throw new Error(`Log mode not supported: ${logMode}`);
+                    }
+                }
+
+                start = i + 1;
+            }
+        }
+
+        // Save leftover bytes (incomplete line)
+        leftoverBytes = combined.subarray(start);
+
+        // Send update
+        onUpdate(fullLog, logMode === "SingleUnfiltered" ? null : [...absoluteLineNumbers, " "]);
+    }
+
+    // Flush any remaining bytes
+    if (leftoverBytes.length > 0) {
+        const line = decoder.decode(leftoverBytes, { stream: false });
 
         switch (logMode) {
             case "SingleUnfiltered":
-                fullLog += chunk;
-                onUpdate(fullLog, null);
+                fullLog += line;
                 break;
             case "SingleFiltered": {
-                const [text, lines] = await processFilteredChunkSingleLog(chunk);
+                const [text, lines] = await processFilteredChunkSingleLog(line);
                 fullLog += text;
-                absoluteLineNumbers = [...absoluteLineNumbers, ...lines];
-                onUpdate(fullLog, absoluteLineNumbers);
+                absoluteLineNumbers.push(...lines);
                 break;
             }
             case "MergedFiltered": {
-                const [text, lines] = await processFilteredChunkMergedLog(chunk);
+                const [text, lines] = await processFilteredChunkMergedLog(line);
                 fullLog += text;
-                absoluteLineNumbers = [...absoluteLineNumbers, ...lines];
-                onUpdate(fullLog, absoluteLineNumbers);
+                absoluteLineNumbers.push(...lines);
                 break;
             }
+            default: {
+                throw new Error(`Log mode not supported: ${logMode}`);
+            }
         }
+
+        onUpdate(fullLog, logMode === "SingleUnfiltered" ? null : [...absoluteLineNumbers, " "]);
     }
 };
 
@@ -78,10 +127,10 @@ async function processFilteredChunkSingleLog(chunk: string): Promise<[string, st
     // biome-ignore lint/suspicious/noAssignInExpressions: this is preferred
     while ((match = regex.exec(chunk)) !== null) {
         absoluteLineNumbers.push(match[1]);
-        cleanedLines.push(match[2]);
+        cleanedLines.push(`${match[2]}\n`);
     }
 
-    return [cleanedLines.join("\n"), absoluteLineNumbers];
+    return [cleanedLines.join(""), absoluteLineNumbers];
 }
 
 async function processFilteredChunkMergedLog(chunk: string): Promise<[string, string[]]> {
@@ -102,10 +151,10 @@ async function processFilteredChunkMergedLog(chunk: string): Promise<[string, st
         const newAbsLineNumber = `${description === "--" ? "  " : description}${"&nbsp;".repeat(spacesCount)}${lineNumber}`;
 
         absoluteLineNumbers.push(newAbsLineNumber);
-        cleanedLines.push(match[3]);
+        cleanedLines.push(`${match[3]}\n`);
     }
 
-    return [cleanedLines.join("\n"), absoluteLineNumbers];
+    return [cleanedLines.join(""), absoluteLineNumbers];
 }
 
 function generateLogUrlWithParams(urlBase: string, filters: LogFilters): URL {

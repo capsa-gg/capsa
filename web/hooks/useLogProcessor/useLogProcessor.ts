@@ -1,12 +1,12 @@
 "use client";
 
-import type { LogFilters, LogMode } from "@/data/LogProcessor/LogProcessor.types";
+import * as Comlink from "comlink";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { FilterState } from "@/context/SingleLogContext/SingleLogContext.types";
-import { createLogProcessor } from "@/data/LogProcessor/LogProcessor";
-import * as Comlink from "comlink";
-import { getJwtFromLocalStorage } from "@/data/jwt/localStorage";
 import { getEnv } from "@/data/env";
+import { getJwtFromLocalStorage } from "@/data/jwt/localStorage";
+import { createLogProcessor } from "@/data/LogProcessor/LogProcessor";
+import type { LogFilters, LogMode } from "@/data/LogProcessor/LogProcessor.types";
 
 const useLogProcessor = () => {
     const [fullLog, setFullLog] = useState("Log not loaded");
