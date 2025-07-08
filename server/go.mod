@@ -3,7 +3,7 @@ module github.com/capsa-gg/capsa/server
 go 1.24.2
 
 require (
-	github.com/getsentry/sentry-go v0.34.0
+	github.com/getsentry/sentry-go v0.34.1
 	github.com/getsentry/sentry-go/gin v0.34.0
 	github.com/gin-contrib/cors v1.7.6
 	github.com/gin-gonic/gin v1.10.1
