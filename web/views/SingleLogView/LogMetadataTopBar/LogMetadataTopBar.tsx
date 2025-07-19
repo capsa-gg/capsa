@@ -7,8 +7,8 @@ import Box from "@mui/material/Box";
 import { Stack } from "@mui/system";
 import type React from "react";
 import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
-import { LogMetadataList } from "@/views/SingleLogView/LogMetadataTopBar/LogMetadataTopBar.components";
 import DownloadFullLogButton from "@/views/SingleLogView/DownloadFullLogButton/DownloadFullLogButton";
+import { LogMetadataList } from "@/views/SingleLogView/LogMetadataTopBar/LogMetadataTopBar.components";
 
 const LogMetadataTopBar: React.FC = () => {
     const {
