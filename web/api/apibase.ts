@@ -8,7 +8,7 @@ import type ApiError from "@/types/api/error";
 import { ErrorResponseSchema } from "@/types/api/error";
 
 // biome-ignore lint/complexity/noStaticOnlyClass: desired here
-class BaseUrl {
+export class BaseUrl {
     private static _baseUrl?: string;
 
     public static async GetBaseUrl(): Promise<string> {
