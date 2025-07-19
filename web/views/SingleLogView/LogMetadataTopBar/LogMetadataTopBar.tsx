@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import { Stack } from "@mui/system";
 import type React from "react";
 import { useSingleLogContext } from "@/context/SingleLogContext/SingleLogContext";
+import DownloadFullLogButton from "@/views/SingleLogView/DownloadFullLogButton/DownloadFullLogButton";
 import { LogMetadataList } from "@/views/SingleLogView/LogMetadataTopBar/LogMetadataTopBar.components";
 
 const LogMetadataTopBar: React.FC = () => {
@@ -47,6 +48,11 @@ const LogMetadataTopBar: React.FC = () => {
         >
             <LogMetadataList logMetadata={data} />
             <Box>
+                <Badge color="primary">
+                    <Tooltip title="Download full log">
+                        <DownloadFullLogButton />
+                    </Tooltip>
+                </Badge>
                 <Badge color="primary">
                     <Tooltip title="Switch view mode between log and metadata">
                         {viewMode === "Log" ? (
