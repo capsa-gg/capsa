@@ -628,7 +628,7 @@ the exclusion of warranty; and each file should have at least the
 "copyright" line and a pointer to where the full notice is found.
 
         Capsa: an Unreal Engine logging solution
-        Copyright (C) 2024  Companion Group Ltd.
+        Copyright (C) 2025  Luciano Nooijen
 
         This program is free software: you can redistribute it and/or modify
         it under the terms of the GNU Affero General Public License as

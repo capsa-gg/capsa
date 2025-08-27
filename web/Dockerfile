@@ -4,7 +4,7 @@ FROM node:22-alpine AS base
 LABEL org.opencontainers.image.source="https://github.com/capsa-gg/capsa"
 LABEL org.opencontainers.image.description="Capsa Webapp"
 LABEL org.opencontainers.image.licenses="AGPL-3.0"
-LABEL org.opencontainers.image.vendor="Companion Group Ltd"
+LABEL org.opencontainers.image.vendor="Luciano Nooijen"
 
 # Install dependencies only when needed
 FROM base AS deps

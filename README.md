@@ -64,7 +64,7 @@ Make sure to run the linting locally before pushing commits to prevent the CI fr
 
 Secrets should _never_ be pushed to the Git repository. These files should always be gitignored.
 
-When writing tests using logs, make sure that these logs are allowed to be made public at some point, don't break NDAs or leak codenames and have no identifiable data in them. It is best to only use internal Companion Group project logs for this, with some search-replace logic to make the logs generic.
+When writing tests using logs, make sure that these logs are allowed to be made public at some point, don't break NDAs or leak codenames and have no identifiable data in them. It is best to only use internal project logs for this, with some search-replace logic to make the logs generic.
 
 ## Changing API types
 

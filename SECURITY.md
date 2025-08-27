@@ -11,6 +11,6 @@ Currently, the following versions are supported:
 
 ## Reporting a Vulnerability
 
-To report a vulnerability, please sent an email to [luciano@companiongroup.io](mailto:luciano@companiongroup.io)
+To report a vulnerability, please email [capsa@lucianonooijen.com](mailto:capsa@lucianonooijen.com)
 
 Please do not announce vulnerabilities publically until they have been resolved.
