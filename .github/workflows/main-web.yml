@@ -31,9 +31,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22.x
       - name: NPM Cache
@@ -93,7 +93,7 @@ jobs:
           tags: ${{ env.GHCR_REGISTRY }}/${{ env.DOCKER_CONTAINER_NAME}}:latest,${{ env.DIGITALOCEAN_REGISTRY }}/${{ env.DOCKER_CONTAINER_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v3
         with:
           subject-name: ${{ env.GHCR_REGISTRY }}/${{ env.DOCKER_CONTAINER_NAME}}
           subject-digest: ${{ steps.push.outputs.digest }}
