@@ -1,6 +1,6 @@
 {
   "name": "capsa-webpanel",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Webapp for Project Capsa, an Unreal Engine log solution",
   "author": "Luciano Nooijen <luciano@lucianonooijen.com>",
   "license": "AGPL-3.0-only",

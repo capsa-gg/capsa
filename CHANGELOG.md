@@ -1,3 +1,17 @@
+# [0.3.0](https://github.com/capsa-gg/capsa/compare/v0.2.0...v0.3.0) (2025-09-29)
+
+
+### Features
+
+* **web:** add full log download button ([550b79c](https://github.com/capsa-gg/capsa/commit/550b79c302404291cf74eef4824922ace78965c3))
+* **web:** add full log download button ([#458](https://github.com/capsa-gg/capsa/issues/458)) ([add0ccf](https://github.com/capsa-gg/capsa/commit/add0ccf4b3e0d2660d5eb955c4bbb0d48dc76148))
+
+
+### Performance Improvements
+
+* **server:** add db indexes for listing logs ([c2f4ef8](https://github.com/capsa-gg/capsa/commit/c2f4ef8862e683fb169a07686903a0e66a5bdbf9))
+* **server:** improve metadata/list query to only fetch required log data ([a73fd1c](https://github.com/capsa-gg/capsa/commit/a73fd1c4456b35dc4296847662ae45d9aa04ab26))
+
 # [0.2.0](https://github.com/capsa-gg/capsa/compare/v0.1.0...v0.2.0) (2025-06-30)
 
 
