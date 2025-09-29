@@ -1,6 +1,6 @@
 module github.com/capsa-gg/capsa/server
 
-go 1.24.2
+go 1.25.1
 
 require (
 	github.com/getsentry/sentry-go v0.35.3

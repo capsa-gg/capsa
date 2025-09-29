@@ -63,12 +63,12 @@ export const IncludedCategoriesFilters: React.FC = () => {
         details?: AutocompleteChangeDetails,
     ) => {
         if (reason === "createOption" || reason === "selectOption") {
-            // @ts-ignore // always set for these options
+            // @ts-expect-error // always set for these options
             const value = details.option;
             filterDispatch({ type: "INCLUDED_CATEGORY_ADD", category: value });
         }
         if (reason === "removeOption") {
-            // @ts-ignore // always set for these options
+            // @ts-expect-error // always set for these options
             const value = details.option;
             filterDispatch({ type: "INCLUDED_CATEGORY_REMOVE", category: value });
         }
@@ -109,12 +109,12 @@ export const ExcludedCategoriesFilters: React.FC = () => {
         details?: AutocompleteChangeDetails,
     ) => {
         if (reason === "createOption" || reason === "selectOption") {
-            // @ts-ignore // always set for these options
+            // @ts-expect-error // always set for these options
             const value = details.option;
             filterDispatch({ type: "EXCLUDED_CATEGORY_ADD", category: value });
         }
         if (reason === "removeOption") {
-            // @ts-ignore // always set for these options
+            // @ts-expect-error // always set for these options
             const value = details.option;
             filterDispatch({ type: "EXCLUDED_CATEGORY_REMOVE", category: value });
         }

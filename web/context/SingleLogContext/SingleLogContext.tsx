@@ -23,7 +23,7 @@ const searchParamIncludedCategories = "included_categories";
 const searchParamExcludedCategories = "excluded_categories";
 const searchParamMergeLogs = "merge_logs";
 
-//@ts-ignore // This is fine, we are checking with the use hook
+//@ts-expect-error // This is fine, we are checking with the use hook
 export const SingleLogContext = createContext<SingleLogContextData>(undefined);
 
 export const SingleLogContextProvider: React.FC<SingleLogContextProviderProps> = ({ logUUID, children }) => {

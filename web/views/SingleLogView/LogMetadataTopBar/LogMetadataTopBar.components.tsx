@@ -6,7 +6,7 @@ import type { LogMetadata } from "@/types/api/logs";
 import { formatDate } from "@/util/formatDate";
 
 const MetadataItem = styled(Paper)(({ theme }) => ({
-    // @ts-ignore
+    // @ts-expect-error
     ...theme.typography.body,
     textAlign: "center",
     color: theme.palette.text.secondary,
