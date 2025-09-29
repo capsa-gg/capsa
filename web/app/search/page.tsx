@@ -23,7 +23,7 @@ const RenderMatch: React.FC<{ row: SearchResultItem }> = ({ row: { type, match, 
             );
         }
         return (
-            // @ts-ignore
+            // @ts-expect-error
             <Tooltip title="This log does not have any chunks">{match}</Tooltip>
         );
     }

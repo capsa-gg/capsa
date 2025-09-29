@@ -132,9 +132,9 @@ export const call = async <TReq, TResSchema extends ZodSchema>(
         if (authenticate) {
             const jwtData = getJwtFromLocalStorage();
             const jwt = jwtData?.token;
-            return await callWithoutResponse(method, path, body, jwt);
+            return (await callWithoutResponse(method, path, body, jwt)) as ApiResponse<z.infer<TResSchema>>; // HACK: Fix compilation with zod v4
         }
-        return await callWithoutResponse(method, path, body);
+        return (await callWithoutResponse(method, path, body)) as ApiResponse<z.infer<TResSchema>>; // HACK: Fix compilation with zod v4
     } catch (e) {
         console.error(e);
         return formatUnexpectedErrorResponse(path, e);

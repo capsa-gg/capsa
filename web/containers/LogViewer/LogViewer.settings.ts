@@ -34,7 +34,6 @@ export const initializeMonaco =
         });
 
         monaco.editor.defineTheme(themes.lightMode, {
-            // @ts-ignore
             base: "vs",
             inherit: true,
             colors: {
@@ -58,7 +57,6 @@ export const initializeMonaco =
         });
 
         monaco.editor.defineTheme(themes.darkMode, {
-            // @ts-ignore
             base: "vs-dark",
             inherit: true,
             colors: {

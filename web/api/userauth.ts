@@ -39,6 +39,6 @@ export class UserAuth {
     }
 
     public static async PasswordResetComplete(req: UserPasswordResetConfirmation): Promise<ApiResponse<null>> {
-        return await call("POST", "/user/auth/password-reset", null, false, req);
+        return (await call("POST", "/user/auth/password-reset", null, false, req)) as ApiResponse<null>; // HACK: Fix compilation for zod v4
     }
 }
