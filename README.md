@@ -5,6 +5,8 @@
 
 > Open-source, cloud-native logging solution built specifically for Unreal Engine projects. Designed to integrate effortlessly with Unreal Engine to enhance debugging, monitoring, and observability without disrupting your workflow.
 
+*Note: Capsa is currently pre-alpha, still in development and not yet stable, breaking changes might occur. Though Capsa has already been tested with large Unreal Engine projects, bugs might occur and no official support is offered.*
+
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Server](https://github.com/capsa-gg/capsa/actions/workflows/main-server.yml/badge.svg?branch=main)](https://github.com/capsa-gg/capsa/actions/workflows/main-server.yml)
 [![Web](https://github.com/capsa-gg/capsa/actions/workflows/main-web.yml/badge.svg?branch=main)](https://github.com/capsa-gg/capsa/actions/workflows/main-web.yml)
