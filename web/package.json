@@ -39,7 +39,7 @@
     "@mui/material-nextjs": "^7.3.2",
     "@mui/system": "^7.3.2",
     "@mui/x-data-grid": "^8.12.1",
-    "@sentry/nextjs": "^10.15.0",
+    "@sentry/nextjs": "^10.21.0",
     "@types/jest": "^30.0.0",
     "comlink": "^4.4.2",
     "jose": "^6.1.0",
