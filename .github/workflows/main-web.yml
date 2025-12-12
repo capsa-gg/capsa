@@ -37,19 +37,19 @@ jobs:
         with:
           node-version: 22.x
       - name: NPM Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-npm-
       - name: Node Modules Cache
         id: nodemodulescache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/node_modules
           key: ${{ runner.os }}-nodemodules-${{ hashFiles('**/package-lock.json') }}
       - name: NextJS cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .next/cache
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
