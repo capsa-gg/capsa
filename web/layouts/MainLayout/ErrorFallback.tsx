@@ -7,6 +7,7 @@ import type { FallbackProps } from "react-error-boundary";
 
 const ErrorFallback: React.FC<FallbackProps> = ({ error }) => {
     const [showStack, setShowStack] = useState(false);
+    const { message, stack } = error as { message: string; stack: string };
 
     return (
         <Paper
@@ -20,7 +21,7 @@ const ErrorFallback: React.FC<FallbackProps> = ({ error }) => {
         >
             <Alert severity="error" sx={{ mb: 2 }}>
                 <AlertTitle>An error occurred</AlertTitle>
-                {error.message}
+                {message}
             </Alert>
 
             <Button variant="outlined" color="primary" onClick={() => setShowStack(!showStack)} sx={{ mb: 2 }}>
@@ -30,7 +31,7 @@ const ErrorFallback: React.FC<FallbackProps> = ({ error }) => {
             <Collapse in={showStack}>
                 <Paper variant="outlined" sx={{ p: 2, mb: 2, maxHeight: 200, overflow: "auto" }}>
                     <Typography variant="body2" component="pre" sx={{ whiteSpace: "pre-wrap", wordBreak: "break-all" }}>
-                        {error.stack}
+                        {stack}
                     </Typography>
                 </Paper>
             </Collapse>

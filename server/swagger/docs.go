@@ -1401,6 +1401,16 @@ const docTemplate = `{
                         "description": "Excluded log categories, will be ignored if included_categories is set, optional",
                         "name": "excluded_categories",
                         "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "Comma separated log UUIDs that should be merged",
+                        "name": "merge_logs",
+                        "in": "query"
                     }
                 ],
                 "responses": {

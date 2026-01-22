@@ -8,7 +8,7 @@ bootstrap: ## Installs Go packages
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	go install golang.org/x/tools/cmd/goimports@latest
 	go install github.com/air-verse/air@latest
-	go install go101.org/golds@latest
+	go install go101.org/golds@v0.7.9
 	go install golang.org/x/lint/golint@latest
 	go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 	go install github.com/jstemmer/go-junit-report@latest
@@ -49,8 +49,6 @@ fmt: ## Code style formatting and linting check for the project
 	@echo "Checking linting:"
 	golangci-lint run --sort-results
 	nilaway -include-pkgs="github.com/capsa-gg/capsa/server" ./...
-
-
 
 .PHONY: docs
 docs: ## Runs documentation website
