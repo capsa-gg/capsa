@@ -23,18 +23,18 @@
     "semantic-release": "semantic-release"
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.0.0",
-    "@commitlint/config-conventional": "^20.0.0",
+    "@commitlint/cli": "^20.3.1",
+    "@commitlint/config-conventional": "^20.3.1",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/exec": "^7.1.0",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^11.0.6",
+    "@semantic-release/github": "^12.0.2",
     "@semantic-release/release-notes-generator": "^14.1.0",
-    "semantic-release": "^24.2.9"
+    "semantic-release": "^25.0.2"
   },
   "dependencies": {
     "comlink": "^4.4.2",
-    "replace-in-file": "^8.3.0"
+    "replace-in-file": "^8.4.0"
   }
 }
