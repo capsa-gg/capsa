@@ -7,7 +7,7 @@ import type { FallbackProps } from "react-error-boundary";
 
 const ErrorFallback: React.FC<FallbackProps> = ({ error }) => {
     const [showStack, setShowStack] = useState(false);
-    const { message, stack } = error as any;
+    const { message, stack } = error as { message: string; stack: string };
 
     return (
         <Paper
