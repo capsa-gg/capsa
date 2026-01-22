@@ -1197,6 +1197,13 @@ paths:
         in: query
         name: excluded_categories
         type: string
+      - collectionFormat: csv
+        description: Comma separated log UUIDs that should be merged
+        in: query
+        items:
+          type: string
+        name: merge_logs
+        type: array
       produces:
       - text/plain
       - application/json
