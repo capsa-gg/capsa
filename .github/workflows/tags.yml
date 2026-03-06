@@ -44,7 +44,7 @@ jobs:
       # Server
       - name: Extract metadata (labels) for Docker (Server)
         id: metaserver
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_SERVER }}
       - name: Build and push Docker image (Server)
@@ -65,7 +65,7 @@ jobs:
       # Web
       - name: Extract metadata (labels) for Docker (Web)
         id: metaweb
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_WEBAPP }}
       - name: Build and push Docker image (Web)
