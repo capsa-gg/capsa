@@ -49,7 +49,7 @@ jobs:
           images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_SERVER }}
       - name: Build and push Docker image (Server)
         id: pushserver
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: server
           push: true
@@ -70,7 +70,7 @@ jobs:
           images: ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_WEBAPP }}
       - name: Build and push Docker image (Web)
         id: pushweb
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: web
           push: true
